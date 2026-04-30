@@ -751,9 +751,9 @@ input:hover, textarea:hover {
 }
 
 @media (max-width: 900px) {
-    .app-shell { flex-direction: column; overflow-y: auto; }
-    .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid rgba(15, 159, 255, 0.15); }
-    .preview-stage { padding: 15px; display: block; }
+    .app-shell { flex-direction: column; overflow-y: auto; height: auto; min-height: 100vh; }
+    .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid rgba(15, 159, 255, 0.15); overflow-y: auto; }
+    .preview-stage { padding: 15px; display: block; overflow-y: auto; }
     .canvas-a4 { width: 100% !important; min-height: auto; padding: 10mm; box-shadow: 0 4px 12px rgba(15, 159, 255, 0.1); }
 }
 .fullscreen-active .sidebar { display: none; }
