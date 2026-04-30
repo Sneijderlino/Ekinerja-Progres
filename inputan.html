@@ -15,6 +15,26 @@
     <link rel="stylesheet" href="assets/css/index.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
+      html,
+      body {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      .app-shell {
+        height: 100vh;
+        overflow: hidden;
+      }
+      .sidebar {
+        overflow-y: auto;
+        min-height: 0;
+      }
+      .preview-stage {
+        overflow-y: auto;
+        min-height: 0;
+      }
+    </style>
+    <style>
       :root {
         --glass: rgba(17, 24, 39, 0.7);
         --border: rgba(255, 255, 255, 0.06);
