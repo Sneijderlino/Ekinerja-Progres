@@ -1,25 +1,47 @@
-# Static site ignores for Cloudflare Pages
+# Gradle build files
+/build/
+/app/build/
+/.gradle/
+
+# Android Studio / IntelliJ
+/.idea/
+*.iml
+*.hprof
+
+# Local configuration files
+/local.properties
+
+# Generated files
+**/build/
+**/captures/
+
+# Android generated assets
+/app/**/*.apk
+/app/**/*.ap_
+/app/**/*.dex
+/app/**/*.class
+
+# MacOS
 .DS_Store
-Thumbs.db
+
+# Logs
 *.log
+
+# Temporary files
 *.tmp
 *.temp
 *~
 
-# Node/npm local files
-node_modules/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Node modules (if any web tooling is added later)
+/node_modules/
 
-# Build output folders
-dist/
-build/
-.cache/
+# Secrets and keys
+*.jks
+*.keystore
 
-# Editor configs
-.vscode/
+# Ignore generated Gradle wrapper files if re-generated locally
+/gradle/wrapper/gradle-wrapper.jar
 
-# Environment files
-.env
-.env.*
+/platforms/
+/plugins/
+/node_modules/

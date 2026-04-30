@@ -162,89 +162,17 @@ function checkLoginAccess() {
 const inputs = ['in-instansi', 'in-kab', 'in-kota', 'in-nama', 'in-nip', 'in-jabatan', 'in-uraian', 'in-report-title', 'in-report-subtitle'];
 let savedReportFilter = { query: '', type: 'all' };
 
-const REPORT_DB = {
-    name: 'APLOAD_EKIN_REPORTS_DB',
-    version: 1,
-    storeName: 'saved_reports',
-    db: null,
-
-    open() {
-        if (this.db) return Promise.resolve(this.db);
-        return new Promise((resolve, reject) => {
-            const request = window.indexedDB.open(this.name, this.version);
-            request.onupgradeneeded = (event) => {
-                const db = event.target.result;
-                if (!db.objectStoreNames.contains(this.storeName)) {
-                    db.createObjectStore(this.storeName, { keyPath: 'userKey' });
-                }
-            };
-            request.onsuccess = () => {
-                this.db = request.result;
-                resolve(this.db);
-            };
-            request.onerror = () => reject(request.error || new Error('IndexedDB error'));
-        });
-    },
-
-    async getUserReports(userKey) {
-        const db = await this.open();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(this.storeName, 'readonly');
-            const store = tx.objectStore(this.storeName);
-            const request = store.get(userKey);
-            request.onsuccess = () => {
-                resolve(request.result ? request.result.reports || [] : []);
-            };
-            request.onerror = () => reject(request.error || new Error('Failed to read reports from IndexedDB'));
-        });
-    },
-
-    async setUserReports(userKey, reports) {
-        const db = await this.open();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(this.storeName, 'readwrite');
-            const store = tx.objectStore(this.storeName);
-            const request = store.put({ userKey, reports });
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error || new Error('Failed to save reports to IndexedDB'));
-        });
-    }
-};
-
-function supportsIndexedDB() {
-    return typeof window.indexedDB !== 'undefined';
-}
-
-async function getSavedReports() {
+function getSavedReports() {
     const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
     if (!currentUser) return [];
     const key = `laporan_${currentUser.username}`;
-
-    if (supportsIndexedDB()) {
-        try {
-            return await REPORT_DB.getUserReports(key);
-        } catch (err) {
-            console.warn('IndexedDB read failed, fallback to localStorage:', err);
-        }
-    }
-
     return JSON.parse(localStorage.getItem(key) || '[]');
 }
 
-async function setSavedReports(reports) {
+function setSavedReports(reports) {
     const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
     if (!currentUser) return;
     const key = `laporan_${currentUser.username}`;
-
-    if (supportsIndexedDB()) {
-        try {
-            await REPORT_DB.setUserReports(key, reports);
-            return;
-        } catch (err) {
-            console.warn('IndexedDB save failed, fallback to localStorage:', err);
-        }
-    }
-
     localStorage.setItem(key, JSON.stringify(reports));
 }
 
@@ -477,38 +405,6 @@ function deleteTask(index) {
     showToast('Item kegiatan berhasil dihapus!');
 }
 
-// Fungsi untuk kompresi foto lebih agresif
-async function compressPhotoAggressively(src) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = Math.min(img.width, 400);
-            canvas.height = (canvas.width / img.width) * img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            // Kompresi lebih kuat (quality 0.5 = 50%)
-            const compressed = canvas.toDataURL('image/jpeg', 0.5);
-            resolve(compressed);
-        };
-        img.onerror = () => resolve('');
-        img.src = src;
-    });
-}
-
-// Fungsi untuk hapus laporan lama otomatis (hanya simpan 15 laporan terbaru)
-async function enforceReportLimit() {
-    const MAX_REPORTS = 15; // Batas maksimal laporan
-    const savedReports = await getSavedReports();
-    
-    if (savedReports.length > MAX_REPORTS) {
-        const excess = savedReports.length - MAX_REPORTS;
-        savedReports.splice(MAX_REPORTS, excess);
-        await setSavedReports(savedReports);
-        showToast(`${excess} laporan lama otomatis dihapus untuk menghemat penyimpanan.`);
-    }
-}
-
 async function saveReport() {
     const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
     if (!currentUser) {
@@ -517,15 +413,6 @@ async function saveReport() {
         return;
     }
     const dateInput = document.getElementById('in-report-date');
-    
-    // Kompresi foto lebih agresif
-    const photoSources = getReportPhotoSources();
-    const compressedPhotos = [];
-    for (const photoSrc of photoSources) {
-        const compressed = await compressPhotoAggressively(photoSrc);
-        if (compressed) compressedPhotos.push(compressed);
-    }
-    
     const report = {
         id: Date.now(),
         title: document.getElementById('in-report-title').value.trim(),
@@ -539,8 +426,8 @@ async function saveReport() {
         kota: document.getElementById('in-kota').value.trim(),
         uraian: document.getElementById('in-uraian').value.trim(),
         tasks: JSON.parse(localStorage.getItem('ghost_tasks') || '[]'),
-        // Jangan simpan logo di setiap laporan, ambil dari localStorage saat render
-        photos: compressedPhotos,
+        logo: localStorage.getItem('ghost_logo') || document.getElementById('out-logo').src,
+        photos: await compressReportPhotos(getReportPhotoSources()),
         createdAt: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
     };
 
@@ -563,12 +450,11 @@ async function saveReport() {
         return alert('Tuliskan uraian kegiatan sebelum menyimpan laporan!');
     }
 
-    const savedReports = await getSavedReports();
+    const savedReports = getSavedReports();
     savedReports.unshift(report);
 
     try {
-        await setSavedReports(savedReports);
-        await enforceReportLimit(); // Enforce batas laporan setelah simpan
+        setSavedReports(savedReports);
     } catch (err) {
         if (isQuotaExceeded(err)) {
             // Hapus beberapa laporan lama jika penyimpanan gagal karena quota
@@ -577,8 +463,7 @@ async function saveReport() {
                 savedReports.splice(1, 1); // Hapus laporan terlama (index 1)
                 deletedCount++;
                 try {
-                    await setSavedReports(savedReports);
-                    await enforceReportLimit(); // Enforce batas laporan
+                    setSavedReports(savedReports);
                     showToast(`Laporan tersimpan. ${deletedCount} laporan lama dihapus untuk menghemat ruang penyimpanan.`);
                     return;
                 } catch (retryErr) {
@@ -592,13 +477,13 @@ async function saveReport() {
         }
     }
 
-    await renderSavedReports();
+    renderSavedReports();
     resetReportForm(true);
     showToast('Laporan tersimpan dan form otomatis disiapkan untuk laporan baru.');
 }
 
-async function previewReport(index) {
-    const savedReports = await getSavedReports();
+function previewReport(index) {
+    const savedReports = getSavedReports();
     const report = savedReports[index];
     if (!report) return;
     renderPreviewData(report);
@@ -607,8 +492,8 @@ async function previewReport(index) {
     }
 }
 
-async function editReport(index) {
-    const savedReports = await getSavedReports();
+function editReport(index) {
+    const savedReports = getSavedReports();
     const report = savedReports[index];
     if (!report) return;
 
@@ -639,11 +524,11 @@ async function editReport(index) {
     showToast('Laporan berhasil dimuat untuk diedit.');
 }
 
-async function deleteSavedReport(index) {
-    const savedReports = await getSavedReports();
+function deleteSavedReport(index) {
+    const savedReports = getSavedReports();
     savedReports.splice(index, 1);
-    await setSavedReports(savedReports);
-    await renderSavedReports();
+    setSavedReports(savedReports);
+    renderSavedReports();
     showToast('Laporan tersimpan berhasil dihapus.');
 }
 
@@ -678,10 +563,7 @@ function renderPreviewData(report) {
     document.getElementById('out-tanggal').innerText = tanggal.toLocaleDateString('id-ID', {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
-    // Ambil logo dari localStorage, bukan dari report (untuk menghemat ruang)
-    const logoSrc = localStorage.getItem('ghost_logo') || document.getElementById('out-logo').src;
-    document.getElementById('out-logo').src = logoSrc;
-    
+    document.getElementById('out-logo').src = report.logo || document.getElementById('out-logo').src;
     ['img1','img2','img3','img4'].forEach((id, i) => {
         const target = document.getElementById(id);
         if (report.photos && report.photos[i]) {
@@ -692,8 +574,8 @@ function renderPreviewData(report) {
     });
 }
 
-async function exportSavedReportPDF(index) {
-    const savedReports = await getSavedReports();
+function exportSavedReportPDF(index) {
+    const savedReports = JSON.parse(localStorage.getItem('ghost_saved_reports') || '[]');
     const report = savedReports[index];
     if (!report) return;
 
@@ -765,7 +647,7 @@ function filterSavedReports(reports) {
         });
 }
 
-async function renderSavedReports() {
+function renderSavedReports() {
     const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
     if (!currentUser) {
         const container = document.getElementById('saved-reports');
@@ -773,7 +655,7 @@ async function renderSavedReports() {
         return;
     }
 
-    const savedReports = await getSavedReports();
+    const savedReports = getSavedReports();
     const filtered = filterSavedReports(savedReports);
     const container = document.getElementById('saved-reports');
     container.innerHTML = '';
@@ -1048,7 +930,7 @@ async function exportToPDF() {
 }
 
 // INITIALIZATION
-window.onload = async () => {
+window.onload = () => {
     const currentUUID = generateUUID();
     document.getElementById('display-uuid').innerText = currentUUID;
 
@@ -1061,7 +943,7 @@ window.onload = async () => {
     renderIdentity();
     renderKop();
     renderTaskList();
-    await renderSavedReports();
+    renderSavedReports();
 
     const dateInput = document.getElementById('in-report-date');
     const customCheckbox = document.getElementById('use-custom-date');
@@ -1101,7 +983,7 @@ window.onload = async () => {
             savedReportFilter.query = event.target.value;
             // Sinkronisasi dengan nav search
             if (navSearchInput) navSearchInput.value = event.target.value;
-            renderSavedReports().catch(console.error);
+            renderSavedReports();
         });
     }
     if (navSearchInput) {
@@ -1109,13 +991,13 @@ window.onload = async () => {
             savedReportFilter.query = event.target.value;
             // Sinkronisasi dengan report search
             if (searchInput) searchInput.value = event.target.value;
-            renderSavedReports().catch(console.error);
+            renderSavedReports();
         });
     }
     if (filterSelect) {
         filterSelect.addEventListener('change', (event) => {
             savedReportFilter.type = event.target.value;
-            renderSavedReports().catch(console.error);
+            renderSavedReports();
         });
     }
 };
