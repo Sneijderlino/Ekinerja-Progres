@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Masuk | E-Kinerja</title>
+    <meta
+      property="og:image"
+      content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body id="main-body">
+    <style>
+      .nav-hamburger {
+        display: none;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.3rem;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 8px;
+      }
+      .mobile-nav-menu {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        padding: 10px;
+        background: rgba(15, 25, 41, 0.98);
+        border-top: 1px solid rgba(15, 159, 255, 0.15);
+      }
+      .mobile-nav-menu.open { display: flex; }
+      @media (max-width: 768px) {
+        .nav-hamburger { display: block !important; margin-left: auto; }
+        .nav-container { flex-wrap: wrap; }
+        .nav-container > .nav-link { display: none !important; }
+        .nav-container > .nav-link.active { display: flex !important; }
+        .mobile-nav-menu { width: 100%; }
+      }
+    </style>
+
+    <div id="app-shell" style="visibility: visible">
+      <nav class="navbar animate__animated animate__fadeInDown">
+        <div class="nav-container">
+          <a href="../index.html" class="nav-link"
+            ><i class="fas fa-home"></i> Beranda</a>
+          <a href="#" class="nav-link active"
+            ><i class="fas fa-sign-in-alt"></i> Masuk</a>
+          <a href="daftar.html" class="nav-link"
+            ><i class="fas fa-user-plus"></i> Daftar</a>
+          <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+        <div class="mobile-nav-menu" id="mobileNavMenu">
+          <a href="../index.html" class="nav-link"><i class="fas fa-home"></i> Beranda</a>
+          <a href="#" class="nav-link active"><i class="fas fa-sign-in-alt"></i> Masuk</a>
+          <a href="daftar.html" class="nav-link"><i class="fas fa-user-plus"></i> Daftar</a>
+        </div>
+      </nav>
+
+      <div class="container">
+        <div class="form-container" data-aos="fade-up">
+          <h1
+            style="
+              text-align: center;
+              margin-bottom: 30px;
+              color: var(--primary);
+            "
+          >
+            <i class="fas fa-sign-in-alt" style="margin-right: 10px"></i>
+            MASUK KE AKUN
+          </h1>
+
+          <p
+            style="
+              text-align: center;
+              color: #94a3b8;
+              margin-bottom: 30px;
+              font-size: 0.9rem;
+            "
+          >
+            Masukkan kredensial Anda untuk melanjutkan
+          </p>
+
+          <form id="loginForm" class="report-form">
+            <div class="form-group">
+              <label for="loginEmail">Email atau Username *</label>
+              <input
+                type="text"
+                id="loginEmail"
+                name="loginEmail"
+                placeholder="Masukkan email atau username Anda"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="loginPassword">Password *</label>
+              <input
+                type="password"
+                id="loginPassword"
+                name="loginPassword"
+                placeholder="Masukkan password Anda"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="rememberMe" />
+                <span>Ingat saya</span>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="location.href = '../index.html'"
+              >
+                <i class="fas fa-arrow-left"></i> Kembali
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Masuk
+              </button>
+            </div>
+          </form>
+
+          <div
+            style="
+              text-align: center;
+              margin-top: 20px;
+              color: #94a3b8;
+              font-size: 0.9rem;
+            "
+          >
+            Belum punya akun?
+            <a
+              href="daftar.html"
+              style="color: var(--primary); text-decoration: none"
+              >Daftar di sini</a>
+          </div>
+
+          <div style="text-align: center; margin-top: 15px">
+            <a
+              href="lupa-password.html"
+              style="color: #94a3b8; font-size: 0.85rem; text-decoration: none"
+              >Lupa password?</a>
+          </div>
+      </div>
+
+    <div id="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p>Memuat aplikasi...</p>
+    </div>
+
+    <script>
+      function toggleMobileMenu() {
+        document.getElementById('mobileNavMenu').classList.toggle('open');
+      }
+
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        once: true,
+      });
+
+      // Load data on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check if user is already logged in
+        const currentUser = localStorage.getItem("ekin_session");
+        if (currentUser) {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        // Form validation and submission
+        const form = document.getElementById("loginForm");
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const loginInput = document.getElementById("loginEmail").value.trim();
+          const password = document.getElementById("loginPassword").value;
+          const rememberMe = document.getElementById("rememberMe").checked;
+
+          if (!loginInput || !password) {
+            showToast("Email/Username dan password harus diisi!");
+            return;
+          }
+
+          // Check against registered users using ekin_users
+          const users = JSON.parse(
+            localStorage.getItem("ekin_users") || "[]",
+          );
+          const user = users.find(
+            (u) => u.email.toLowerCase() === loginInput.toLowerCase() || u.username.toLowerCase() === loginInput.toLowerCase(),
+          );
+
+          if (!user) {
+            showToast("Akun tidak ditemukan!");
+            return;
+          }
+
+          if (user.password !== password) {
+            showToast("Password salah!");
+            return;
+          }
+
+          // Login successful - save session
+          const session = { id: user.id, username: user.username, email: user.email };
+          localStorage.setItem("ekin_session", JSON.stringify(session));
+
+          showToast("Login berhasil! Mengalihkan...");
+
+          setTimeout(() => {
+            window.location.href = "../index.html";
+          }, 1000);
+        });
+      });
+
+      function showToast(message) {
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.add("show"), 100);
+
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+          }, 300);
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#004a80" />
+    <title>GHOST-DATABASE | Command Center</title>
+    <meta property="og:image"
+    content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      :root {
+        --bg: #060912; /* Deeper dark for more contrast */
+        --surface: #111827;
+        --primary: #3b82f6;
+        --secondary: #2dd4bf;
+        --accent: #f59e0b;
+        --text: #f8fafc;
+        --text-dim: #94a3b8;
+        --border: rgba(255, 255, 255, 0.06);
+        --glass: rgba(17, 24, 39, 0.7);
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            circle at 10% 20%,
+            rgba(59, 130, 246, 0.12) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 80%,
+            rgba(45, 212, 191, 0.08) 0%,
+            transparent 40%
+          );
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      /* Fixed Glass Navbar */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        z-index: 1000;
+        padding: 10px 0;
+        width: 100%;
+      }
+
+      .nav-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .nav-link {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.3s;
+        padding: 8px 12px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .nav-link i {
+        font-size: 16px;
+      }
+
+      .nav-link.active {
+        color: var(--primary);
+        background: rgba(59, 130, 246, 0.2);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+
+      .nav-link:hover {
+        color: var(--text);
+        background: rgba(59, 130, 246, 0.15);
+      }
+
+      /* Responsive Design */
+      /* Extra small screens (< 360px) */
+      @media (max-width: 359px) {
+        .navbar {
+          padding: 8px 0;
+        }
+
+        .nav-container {
+          padding: 8px 5px;
+          gap: 3px;
+        }
+
+        .nav-link {
+          font-size: 10px;
+          padding: 5px 8px;
+          gap: 4px;
+        }
+
+        .nav-link i {
+          font-size: 14px;
+        }
+
+        body {
+          padding-top: 90px;
+        }
+
+        .container {
+          padding: 100px 15px 120px;
+        }
+      }
+
+      /* Small mobile (360px - 480px) */
+      @media (min-width: 360px) and (max-width: 480px) {
+        .navbar {
+          padding: 10px 0;
+        }
+
+        .nav-container {
+          padding: 8px 8px;
+          gap: 4px;
+        }
+
+        .nav-link {
+          font-size: 11px;
+          padding: 6px 10px;
+          gap: 4px;
+        }
+
+        .nav-link i {
+          font-size: 15px;
+        }
+
+        body {
+          padding-top: 90px;
+        }
+
+        .container {
+          padding: 100px 15px 120px;
+        }
+      }
+
+      /* Mobile (480px - 768px) */
+      @media (min-width: 481px) and (max-width: 768px) {
+        .navbar {
+          padding: 10px 0;
+        }
+
+        .nav-container {
+          padding: 0 10px;
+          gap: 6px;
+        }
+
+        .nav-link {
+          font-size: 12px;
+          padding: 8px 12px;
+          gap: 5px;
+        }
+
+        .nav-link i {
+          font-size: 16px;
+        }
+
+        body {
+          padding-top: 95px;
+        }
+
+        .container {
+          padding: 110px 15px 120px;
+        }
+      }
+
+      /* Tablet (768px - 1024px) */
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .navbar {
+          padding: 12px 0;
+        }
+
+        .nav-container {
+          padding: 0 15px;
+          gap: 8px;
+        }
+
+        .nav-link {
+          font-size: 13px;
+          padding: 9px 14px;
+          gap: 6px;
+        }
+
+        .nav-link i {
+          font-size: 17px;
+        }
+
+        body {
+          padding-top: 100px;
+        }
+
+        .container {
+          padding: 120px 20px 120px;
+        }
+      }
+
+      /* Desktop (1025px+) */
+      @media (min-width: 1025px) {
+        .navbar {
+          padding: 12px 0;
+        }
+
+        .nav-container {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 0 20px;
+          gap: 10px;
+        }
+
+        .nav-link {
+          font-size: 13px;
+          padding: 10px 16px;
+          gap: 7px;
+        }
+
+        .nav-link i {
+          font-size: 18px;
+        }
+
+        body {
+          padding-top: 105px;
+        }
+
+        .container {
+          padding: 130px 20px 120px;
+        }
+      }
+
+      /* Large desktop (1440px+) */
+      @media (min-width: 1440px) {
+        .nav-container {
+          max-width: 1200px;
+          padding: 0 30px;
+          gap: 12px;
+        }
+
+        .nav-link {
+          font-size: 14px;
+          padding: 11px 18px;
+          gap: 8px;
+        }
+
+        .nav-link i {
+          font-size: 19px;
+        }
+
+        .container {
+          padding: 140px 30px 120px;
+        }
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 100px 20px 120px; /* Extra padding for FAB */
+      }
+
+      /* Header Section with Animation */
+      .welcome-back {
+        margin-bottom: 40px;
+        text-align: center;
+      }
+      .welcome-back .date-badge {
+        display: inline-block;
+        padding: 6px 14px;
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary);
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+      }
+      .welcome-back h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -1px;
+      }
+      .welcome-back p {
+        color: var(--text-dim);
+        font-size: 1rem;
+        margin: 8px 0 0;
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 24px;
+        border-radius: 28px;
+        position: relative;
+        overflow: hidden;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+      }
+
+      .stat-card .icon-bg {
+        position: absolute;
+        right: -15px;
+        bottom: -15px;
+        font-size: 5rem;
+        opacity: 0.03;
+        color: var(--primary);
+        transform: rotate(-15deg);
+      }
+
+      .stat-card span {
+        display: block;
+        color: var(--text-dim);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .stat-card h2 {
+        margin: 12px 0 0;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--secondary);
+        letter-spacing: -1px;
+      }
+
+      /* Chart Section with Glassmorphism */
+      .chart-container {
+        background: rgba(17, 24, 39, 0.5);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        padding: 25px;
+        margin-bottom: 30px;
+      }
+
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+      .chart-header h3 {
+        font-size: 1.1rem;
+        margin: 0;
+        font-weight: 700;
+      }
+      .chart-header .chart-loader {
+        width: 15px;
+        height: 15px;
+        border: 2px solid var(--secondary);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Recent Activity with Interaction */
+      .activity-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 18px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        transition: 0.3s;
+      }
+
+      .activity-item:hover {
+        background: rgba(59, 130, 246, 0.05);
+        border-color: rgba(59, 130, 246, 0.2);
+      }
+
+      .activity-icon {
+        width: 44px;
+        height: 44px;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        flex-shrink: 0;
+        font-size: 1.1rem;
+      }
+
+      .activity-info h4 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+      .activity-info p {
+        margin: 3px 0 0;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+      }
+
+      /* Floating Action Button (Tombol Masuk) */
+      .fab-add {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 65px;
+        height: 65px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        border: none;
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 999;
+        transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: pulse 2s infinite;
+      }
+
+      .fab-add:hover {
+        transform: scale(1.1) rotate(90deg);
+        background: var(--secondary);
+        box-shadow: 0 10px 25px rgba(45, 212, 191, 0.5);
+      }
+      .fab-add i {
+        transition: 0.3s;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+        }
+        70% {
+          box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        }
+      }
+
+      .footer {
+        text-align: center;
+        padding: 50px 0;
+        color: var(--text-dim);
+        font-family: "JetBrains Mono";
+        font-size: 0.7rem;
+        border-top: 1px solid var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar animate__animated animate__fadeInDown">
+      <div class="nav-container">
+        <a href="#" class="nav-link active"
+          ><i class="fas fa-tower-broadcast"></i> Dash</a
+        >
+        <a href="inputan.html" class="nav-link"
+          ><i class="fas fa-edit"></i> Input</a
+        >
+        <a href="rekapan.html" class="nav-link"
+          ><i class="fas fa-database"></i> Rekapan</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Info</a
+        >
+        <div class="nav-dropdown">
+          <button class="nav-link dropdown-btn" id="accountBtn">
+            <i class="fas fa-user"></i> Akun <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-content" id="accountDropdown">
+            <a href="#" onclick="showChangePasswordModal()"
+              ><i class="fas fa-key"></i> Ubah Password</a
+            >
+            <a href="#" onclick="logout()"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <button
+      class="fab-add"
+      onclick="location.href = 'inputan.html'"
+      title="Buat Laporan Baru"
+    >
+      <i class="fas fa-plus"></i>
+    </button>
+
+    <div class="container">
+      <div class="welcome-back" data-aos="fade-down">
+        <div class="date-badge" id="currentDate">Senin, 20 April 2026</div>
+        <h1 id="greetingTeks">Halo, User ASN</h1>
+        <p>Selamat datang di Aplikasi Laporan E-Kinerja.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" data-aos="fade-right" data-aos-delay="100">
+          <span>Total Laporan</span>
+          <h2 id="totalReports">124</h2>
+          <div class="icon-bg"><i class="fas fa-file-invoice"></i></div>
+        </div>
+        <div class="stat-card" data-aos="fade-left" data-aos-delay="200">
+          <span>Bulan Ini</span>
+          <h2 id="monthlyReports">18</h2>
+          <div class="icon-bg"><i class="fas fa-calendar-check"></i></div>
+        </div>
+      </div>
+
+      <div class="chart-container" data-aos="zoom-in" data-aos-delay="300">
+        <div class="chart-header">
+          <h3>Statistik Kerja</h3>
+          <div class="chart-loader"></div>
+        </div>
+        <canvas id="workChart" height="190"></canvas>
+      </div>
+
+      <h2
+        style="
+          font-size: 1rem;
+          color: var(--primary);
+          margin: 40px 0 20px;
+          letter-spacing: 1px;
+        "
+        data-aos="fade-up"
+      >
+        <i class="fas fa-bolt" style="margin-right: 10px"></i> AKTIVITAS
+        TERAKHIR
+      </h2>
+
+      <div data-aos="fade-up" data-aos-delay="100">
+        <div class="activity-item">
+          <div class="activity-icon"><i class="fas fa-check-double"></i></div>
+          <div class="activity-info">
+            <h4>Laporan Harian Selesai</h4>
+            <p>2 jam yang lalu • Dokumen PDF Berhasil dibuat</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon"><i class="fas fa-portrait"></i></div>
+          <div class="activity-info">
+            <h4>Upload 4 Foto Portrait</h4>
+            <p>Kemarin • Kegiatan Rapat Koordinasi</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon"><i class="fas fa-user-gear"></i></div>
+          <div class="activity-info">
+            <h4>Update Profil NIP</h4>
+            <p>3 hari yang lalu • Perubahan Jabatan</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        GHOST-DATABASE COMMAND CENTER // BY GHOST-ROOT<br />
+        POWERED BY ASN PRODUCTIVITY ENGINE &copy; 2026
+      </div>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+      // Inisialisasi AOS (Animasi Scroll)
+      AOS.init({
+        duration: 800, // durasi animasi 800ms
+        easing: "cubic-bezier(0.4, 0, 0.2, 1)", // easing modern
+        once: true, // animasi hanya sekali saat di-scroll
+      });
+
+      // Update Tanggal & Sapaan Otomatis
+      function updateHeader() {
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        document.getElementById("currentDate").innerText =
+          new Date().toLocaleDateString("id-ID", options);
+
+        const jam = new Date().getHours();
+        let sapaan = "Halo";
+        if (jam < 11) sapaan = "Selamat Pagi, Semangat!";
+        else if (jam < 15) sapaan = "Selamat Siang, Produktif!";
+        else if (jam < 18) sapaan = "Selamat Sore, Selesaikan Laporan!";
+        else sapaan = "Selamat Malam, Cek Pencapaian Anda.";
+
+        document.getElementById("greetingTeks").innerHTML =
+          `${sapaan}<br><span style='color: var(--primary);'>User ASN</span>`;
+      }
+
+      // Fungsi untuk menghitung statistik laporan
+      function updateReportStats() {
+        try {
+          const reports = JSON.parse(
+            localStorage.getItem("ghost_saved_reports") || "[]",
+          );
+          const totalReports = reports.length;
+
+          // Hitung laporan bulan ini
+          const currentMonth = new Date().getMonth();
+          const currentYear = new Date().getFullYear();
+          const monthlyReports = reports.filter((report) => {
+            const reportDate = new Date(report.date);
+            return (
+              reportDate.getMonth() === currentMonth &&
+              reportDate.getFullYear() === currentYear
+            );
+          }).length;
+
+          // Update elemen HTML
+          const totalEl = document.getElementById("totalReports");
+          const monthlyEl = document.getElementById("monthlyReports");
+          if (totalEl) totalEl.innerText = totalReports;
+          if (monthlyEl) monthlyEl.innerText = monthlyReports;
+        } catch (error) {
+          console.error("Error updating report stats:", error);
+        }
+      }
+
+      // Fungsi untuk update chart dengan data real
+      function updateChartData() {
+        try {
+          const reports = JSON.parse(
+            localStorage.getItem("ghost_saved_reports") || "[]",
+          );
+
+          // Hitung laporan per minggu bulan ini
+          const currentMonth = new Date().getMonth();
+          const currentYear = new Date().getFullYear();
+          const weeksInMonth = [0, 0, 0, 0]; // Minggu 1-4
+
+          reports.forEach((report) => {
+            const reportDate = new Date(report.date);
+            if (
+              reportDate.getMonth() === currentMonth &&
+              reportDate.getFullYear() === currentYear
+            ) {
+              const day = reportDate.getDate();
+              const weekIndex = Math.floor((day - 1) / 7); // 0-3 untuk minggu 1-4
+              if (weekIndex >= 0 && weekIndex < 4) {
+                weeksInMonth[weekIndex]++;
+              }
+            }
+          });
+
+          // Update chart data
+          if (window.workChart) {
+            window.workChart.data.datasets[0].data = weeksInMonth;
+            window.workChart.update();
+          }
+        } catch (error) {
+          console.error("Error updating chart data:", error);
+        }
+      }
+
+      // Jalankan setelah DOM loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Validasi session login
+        const currentUser = localStorage.getItem("current_user");
+        if (!currentUser) {
+          window.location.href = "../login.html";
+          return;
+        }
+
+        // Update greeting dengan nama user
+        const user = JSON.parse(currentUser);
+        const greetingElement = document.getElementById("greetingTeks");
+        if (greetingElement && user.name) {
+          greetingElement.textContent = `Halo, ${user.name}`;
+        }
+
+        updateHeader();
+        updateReportStats();
+
+        // Inisialisasi Chart Modern (Chart.js)
+        const ctx = document.getElementById("workChart").getContext("2d");
+        // Gradien Warna untuk Chart
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, "rgba(59, 130, 246, 0.4)");
+        gradient.addColorStop(1, "rgba(59, 130, 246, 0.01)");
+
+        const chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
+            datasets: [
+              {
+                label: "Laporan",
+                data: [0, 0, 0, 0], // Akan diupdate dengan data real
+                borderColor: "#3b82f6", // var(--primary)
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.4, // Membuat kurva melengkung halus
+                borderWidth: 3,
+                pointRadius: 6,
+                pointBackgroundColor: "#fff",
+                pointBorderColor: "#3b82f6",
+                pointBorderWidth: 3,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { display: false },
+              x: {
+                grid: { display: false },
+                ticks: { color: "#94a3b8", font: { size: 10, weight: 600 } },
+              },
+            },
+          },
+        });
+
+        // Simpan referensi chart untuk update nanti
+        window.workChart = chart;
+
+        // Update chart data setelah chart diinisialisasi
+        updateChartData();
+      });
+
+      // Fungsi untuk menampilkan modal ubah password
+      function showChangePasswordModal() {
+        const modal = document.getElementById("changePasswordModal");
+        modal.style.display = "block";
+        document.getElementById("oldPassword").focus();
+      }
+
+      // Fungsi untuk menutup modal
+      function closeModal() {
+        const modal = document.getElementById("changePasswordModal");
+        modal.style.display = "none";
+        document.getElementById("changePasswordForm").reset();
+      }
+
+      // Fungsi logout
+      function logout() {
+        if (confirm("Apakah Anda yakin ingin logout?")) {
+          localStorage.removeItem("current_user");
+          localStorage.removeItem("login_time");
+          window.location.href = "../login.html";
+        }
+      }
+
+      // Fungsi ubah password
+      function changePassword() {
+        const oldPassword = document.getElementById("oldPassword").value;
+        const newPassword = document.getElementById("newPassword").value;
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+
+        if (!oldPassword || !newPassword || !confirmPassword) {
+          alert("Semua field harus diisi!");
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          alert("Password baru dan konfirmasi password tidak cocok!");
+          return;
+        }
+
+        if (newPassword.length < 6) {
+          alert("Password baru minimal 6 karakter!");
+          return;
+        }
+
+        const currentUser = JSON.parse(localStorage.getItem("current_user"));
+        if (!currentUser) {
+          alert("Sesi login tidak valid!");
+          logout();
+          return;
+        }
+
+        // Cek password lama
+        if (currentUser.password !== oldPassword) {
+          alert("Password lama salah!");
+          return;
+        }
+
+        // Update password di localStorage
+        const users = JSON.parse(
+          localStorage.getItem("registered_users") || "[]",
+        );
+        const userIndex = users.findIndex((u) => u.email === currentUser.email);
+
+        if (userIndex !== -1) {
+          users[userIndex].password = newPassword;
+          localStorage.setItem("registered_users", JSON.stringify(users));
+
+          // Update current user session
+          currentUser.password = newPassword;
+          localStorage.setItem("current_user", JSON.stringify(currentUser));
+
+          alert("Password berhasil diubah!");
+          closeModal();
+        } else {
+          alert("Terjadi kesalahan. Silakan coba lagi.");
+        }
+      }
+
+      // Event listener untuk form ubah password
+      document
+        .getElementById("changePasswordForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          changePassword();
+        });
+
+      // Tutup modal ketika klik di luar
+      window.onclick = function (event) {
+        const modal = document.getElementById("changePasswordModal");
+        if (event.target === modal) {
+          closeModal();
+        }
+      };
+    </script>
+
+    <!-- Modal Ubah Password -->
+    <div id="changePasswordModal" class="modal">
+      <div class="modal-content">
+        <h2><i class="fas fa-key"></i> Ubah Password</h2>
+        <form id="changePasswordForm">
+          <div class="form-group">
+            <label for="oldPassword">Password Lama</label>
+            <input
+              type="password"
+              id="oldPassword"
+              required
+              placeholder="Masukkan password lama"
+            />
+          </div>
+          <div class="form-group">
+            <label for="newPassword">Password Baru</label>
+            <input
+              type="password"
+              id="newPassword"
+              required
+              placeholder="Masukkan password baru (min 6 karakter)"
+            />
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Konfirmasi Password Baru</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              required
+              placeholder="Konfirmasi password baru"
+            />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" onclick="closeModal()">
+              Batal
+            </button>
+            <button type="submit" class="btn-primary">Ubah Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

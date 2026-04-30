@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Buat Akun | E-Kinerja</title>
+    <meta property="og:image"
+    content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/index.js"></script>
+  </head>
+  <body id="main-body">
+    <div id="license-screen">
+      <div class="license-card">
+        <div class="security-header">🔐 AKTIVASI LISENSI DIPERLUKAN</div>
+        <p class="license-status">SYSTEM STATUS: TERENSKRIPSI</p>
+        <p class="license-note">Hubungi admin untuk mendapatkan akses.</p>
+        <p class="license-note">Kontak WhatsApp: 0822-9296-4110</p>
+        <p class="license-note">
+          Salin dan kirim key lisensi atau ID ke admin.
+        </p>
+        <p class="license-note">Admin akan mengirim key lisensi.</p>
+
+        <div class="uuid-label">ID PERANGKAT ANDA:</div>
+        <div id="display-uuid" class="uuid-box">MENGAMBIL DATA...</div>
+        <div class="uuid-copy-row">
+          <button class="btn btn-copy" type="button" onclick="copyDeviceId()">
+            SALIN ID
+          </button>
+        </div>
+
+        <input
+          type="text"
+          id="input-license"
+          class="license-input"
+          placeholder="ENTER LICENSE KEY"
+        />
+
+        <button class="btn btn-preview" onclick="checkLicense()">
+          AKTIVASI
+        </button>
+        <p style="font-size: 0.55rem; color: #64748b; margin-top: 15px">
+          Penyebaran tanpa izin dilarang keras.<br />Hak Cipta Dilindungi © 2026
+          oleh Snejderlino.
+        </p>
+      </div>
+    </div>
+
+    <div id="app-shell" style="visibility: hidden">
+      <nav class="navbar animate__animated animate__fadeInDown">
+        <div class="nav-container">
+          <a href="index.html" class="nav-link"
+            ><i class="fas fa-tower-broadcast"></i> Dash</a
+          >
+          <a href="inputan.html" class="nav-link"
+            ><i class="fas fa-edit"></i> Input</a
+          >
+          <a href="rekapan.html" class="nav-link"
+            ><i class="fas fa-database"></i> Rekapan</a
+          >
+          <a href="#" class="nav-link active"
+            ><i class="fas fa-user-plus"></i> Akun</a
+          >
+          <a href="panduan-penggunaan.html" class="nav-link"
+            ><i class="fas fa-book-open"></i> Info</a
+          >
+        </div>
+      </nav>
+
+      <div class="container">
+        <div class="form-container" data-aos="fade-up">
+          <h1
+            style="
+              text-align: center;
+              margin-bottom: 30px;
+              color: var(--primary);
+            "
+          >
+            <i class="fas fa-user-plus" style="margin-right: 10px"></i>
+            BUAT AKUN BARU
+          </h1>
+
+          <form id="accountForm" class="report-form">
+            <div class="form-group">
+              <label for="accountName">Nama Lengkap</label>
+              <input
+                type="text"
+                id="accountName"
+                name="accountName"
+                placeholder="Masukkan nama lengkap"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="accountEmail">Email</label>
+              <input
+                type="email"
+                id="accountEmail"
+                name="accountEmail"
+                placeholder="Masukkan alamat email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="accountNIP">NIP</label>
+              <input
+                type="text"
+                id="accountNIP"
+                name="accountNIP"
+                placeholder="Masukkan NIP"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="accountRole">Role/Jabatan</label>
+              <select id="accountRole" name="accountRole" required>
+                <option value="">Pilih Role</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+                <option value="supervisor">Supervisor</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="accountPassword">Password</label>
+              <input
+                type="password"
+                id="accountPassword"
+                name="accountPassword"
+                placeholder="Masukkan password"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="accountConfirmPassword">Konfirmasi Password</label>
+              <input
+                type="password"
+                id="accountConfirmPassword"
+                name="accountConfirmPassword"
+                placeholder="Konfirmasi password"
+                required
+              />
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="location.href = 'index.html'"
+              >
+                <i class="fas fa-arrow-left"></i> Kembali
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Buat Akun
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p>Memuat aplikasi...</p>
+    </div>
+
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        once: true,
+      });
+
+      // Load data on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check if license is activated
+        if (localStorage.getItem("ghost_pro_activated") === "true") {
+          unlockApp();
+        }
+
+        // Generate and display device UUID
+        const uuid = generateUUID();
+        document.getElementById("display-uuid").innerText = uuid;
+
+        // Form validation and submission
+        const form = document.getElementById("accountForm");
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const password = document.getElementById("accountPassword").value;
+          const confirmPassword = document.getElementById(
+            "accountConfirmPassword",
+          ).value;
+
+          if (password !== confirmPassword) {
+            alert("Password dan konfirmasi password tidak cocok!");
+            return;
+          }
+
+          // Here you would typically send the data to a server
+          // For now, we'll just show a success message
+          alert("Akun berhasil dibuat!");
+
+          // Reset form
+          form.reset();
+        });
+      });
+    </script>
+  </body>
+</html>

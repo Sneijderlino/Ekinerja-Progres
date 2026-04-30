@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Daftar Akun | E-Kinerja</title>
+    <meta property="og:image"
+    content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <style>
+      :root {
+        --bg: #060912;
+        --surface: #111827;
+        --primary: #3b82f6;
+        --secondary: #2dd4bf;
+        --accent: #f59e0b;
+        --text: #f8fafc;
+        --text-dim: #94a3b8;
+        --border: rgba(255, 255, 255, 0.06);
+        --glass: rgba(17, 24, 39, 0.7);
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            circle at 10% 20%,
+            rgba(59, 130, 246, 0.12) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 80%,
+            rgba(45, 212, 191, 0.08) 0%,
+            transparent 40%
+          );
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+      }
+
+      /* Navbar */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        z-index: 1000;
+        padding: 10px 0;
+        width: 100%;
+      }
+
+      .nav-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .nav-link {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.3s;
+        padding: 8px 12px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .nav-link i {
+        font-size: 16px;
+      }
+
+      .nav-link:hover {
+        color: var(--text);
+        background: rgba(59, 130, 246, 0.15);
+      }
+
+      /* Hamburger */
+      .nav-hamburger {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 1.3rem;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: 0.2s;
+      }
+      .nav-hamburger:hover {
+        background: rgba(59, 130, 246, 0.15);
+      }
+
+      .mobile-nav {
+        width: 100%;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition: max-height 0.35s ease, opacity 0.35s ease;
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        padding: 0 10px;
+      }
+      .mobile-nav.open {
+        max-height: 500px;
+        opacity: 1;
+        padding: 10px;
+      }
+
+      @media (max-width: 768px) {
+        .nav-hamburger {
+          display: block;
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .nav-container {
+          position: relative;
+          justify-content: flex-start;
+          padding-right: 50px;
+        }
+        .nav-container > .nav-link {
+          display: none;
+        }
+        .mobile-nav {
+          display: flex;
+        }
+      }
+
+      /* Main Content */
+      .main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 20px 40px;
+      }
+
+      .register-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 40px 30px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      }
+
+      .register-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .register-header h1 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 0 0 8px 0;
+        color: var(--primary);
+      }
+
+      .register-header p {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--text-dim);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1.5px solid var(--border);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.95rem;
+        transition: 0.2s;
+        outline: none;
+      }
+
+      .form-group input:focus {
+        border-color: var(--primary);
+        background: rgba(59, 130, 246, 0.05);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .form-group input::placeholder {
+        color: #64748b;
+      }
+
+      .btn-primary {
+        width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(135deg, var(--primary), #2563eb);
+        color: white;
+        font-family: inherit;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 8px;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .form-footer {
+        text-align: center;
+        margin-top: 24px;
+      }
+
+      .form-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: 0.2s;
+      }
+
+      .form-footer a:hover {
+        color: var(--secondary);
+      }
+
+      .form-footer p {
+        color: var(--text-dim);
+        font-size: 0.85rem;
+        margin: 0;
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        padding: 14px 28px;
+        border-radius: 50px;
+        z-index: 10001;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+        font-weight: 700;
+        font-size: 0.9rem;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        opacity: 0;
+        pointer-events: none;
+        text-align: center;
+        max-width: 90vw;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+      .toast.success {
+        background: linear-gradient(135deg, #22c55e, #15803d);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
+        <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+        <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+        <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+        <a href="login.html" class="nav-link"><i class="fas fa-sign-in-alt"></i> Masuk</a>
+        <a href="register.html" class="nav-link" style="color: var(--primary); background: rgba(59,130,246,0.15);"><i class="fas fa-user-plus"></i> Daftar</a>
+        <button class="nav-hamburger" aria-label="Menu" onclick="window.EkinToggleMobileNav()">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <div class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
+        <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+        <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+        <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+        <a href="login.html" class="nav-link"><i class="fas fa-sign-in-alt"></i> Masuk</a>
+        <a href="register.html" class="nav-link" style="color: var(--primary);"><i class="fas fa-user-plus"></i> Daftar</a>
+      </div>
+    </nav>
+
+    <div class="main">
+      <div class="register-card" data-aos="fade-up">
+        <div class="register-header">
+          <h1><i class="fas fa-user-plus"></i> Buat Akun</h1>
+          <p>Isi data di bawah untuk mendaftar</p>
+        </div>
+
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="regUsername">Username</label>
+            <input
+              type="text"
+              id="regUsername"
+              placeholder="Masukkan username"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="regEmail">Email</label>
+            <input
+              type="email"
+              id="regEmail"
+              placeholder="Masukkan alamat email"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <input
+              type="password"
+              id="regPassword"
+              placeholder="Password (min 6 karakter)"
+              minlength="6"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="regConfirmPassword">Konfirmasi Password</label>
+            <input
+              type="password"
+              id="regConfirmPassword"
+              placeholder="Ulangi password"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-user-plus"></i> Daftar Sekarang
+          </button>
+        </form>
+
+        <div class="form-footer">
+          <p>Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({ duration: 800, once: true });
+
+      // Mobile nav
+      window.EkinToggleMobileNav = function() {
+        document.getElementById('mobileNav').classList.toggle('open');
+      };
+
+      // Toast
+      function showToast(msg, type = 'error') {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.className = 'toast ' + (type === 'success' ? 'success' : '');
+        requestAnimationFrame(() => toast.classList.add('show'));
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      }
+
+      // LocalStorage helpers
+      function getUsers() {
+        try { return JSON.parse(localStorage.getItem('ekin_users')) || []; } catch { return []; }
+      }
+      function saveUsers(users) {
+        localStorage.setItem('ekin_users', JSON.stringify(users));
+      }
+
+      // Register handler
+      document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('regUsername').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+        if (!username || !email || !password || !confirmPassword) {
+          showToast('Semua field wajib diisi!');
+          return;
+        }
+        if (password.length < 6) {
+          showToast('Password minimal 6 karakter!');
+          return;
+        }
+        if (password !== confirmPassword) {
+          showToast('Password dan konfirmasi tidak cocok!');
+          return;
+        }
+
+        const users = getUsers();
+        const exists = users.find(u =>
+          u.email.toLowerCase() === email.toLowerCase() ||
+          u.username.toLowerCase() === username.toLowerCase()
+        );
+        if (exists) {
+          showToast('Email atau username sudah terdaftar!');
+          return;
+        }
+
+        const newUser = {
+          id: 'u_' + Date.now().toString(36),
+          username: username,
+          email: email.toLowerCase(),
+          password: password,
+          createdAt: new Date().toISOString(),
+        };
+        users.push(newUser);
+        saveUsers(users);
+
+        showToast('Pendaftaran berhasil! Mengalihkan ke login...', 'success');
+        setTimeout(() => window.location.href = 'login.html', 1500);
+      });
+
+      // Redirect if already logged in
+      if (localStorage.getItem('ekin_session')) {
+        window.location.href = 'index.html';
+      }
+    </script>
+  </body>
+</html>

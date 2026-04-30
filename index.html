@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>APLIKASI E-KINERJA HARIAN | Sneijderlino</title>
+  <meta property="og:image" content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #060912;
+      --surface: #111827;
+      --primary: #3b82f6;
+      --secondary: #2dd4bf;
+      --accent: #f59e0b;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --border: rgba(255, 255, 255, 0.06);
+      --glass: rgba(17, 24, 39, 0.7);
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(45, 212, 191, 0.08) 0%, transparent 40%);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      padding: 10px 0;
+      width: 100%;
+    }
+    .nav-container {
+      max-width: 100%;
+      margin: 0;
+      padding: 0 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .nav-link {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.3s;
+      padding: 8px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .nav-link i { font-size: 16px; }
+    .nav-link.active {
+      color: var(--primary);
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .nav-link:hover {
+      color: var(--text);
+      background: rgba(59, 130, 246, 0.15);
+    }
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
+    .nav-hamburger:hover { background: rgba(59, 130, 246, 0.15); }
+    .mobile-nav {
+      width: 100%;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.35s ease, opacity 0.35s ease;
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      padding: 0 10px;
+    }
+    .mobile-nav.open {
+      max-height: 500px;
+      opacity: 1;
+      padding: 10px;
+    }
+    .mobile-auth-section {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 10px;
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .desktop-auth {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+    }
+    .nav-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      min-width: 180px;
+      z-index: 1001;
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+    }
+    .dropdown-content a,
+    .dropdown-content div {
+      color: var(--text-dim);
+      padding: 12px 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+    .dropdown-content a:hover {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--primary);
+    }
+    .nav-dropdown:hover .dropdown-content { display: block; }
+
+    @media (max-width: 768px) {
+      .nav-hamburger {
+        display: block;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .nav-container {
+        position: relative;
+        justify-content: flex-start;
+        padding-right: 50px;
+      }
+      .nav-container > .nav-link,
+      .nav-container > .desktop-auth { display: none; }
+      .mobile-nav { display: flex; }
+      .nav-container > .nav-link.active { display: flex; }
+    }
+    @media (max-width: 359px) {
+      .navbar { padding: 8px 0; }
+      .nav-container { padding: 8px 5px; gap: 3px; }
+      .nav-link { font-size: 10px; padding: 5px 8px; gap: 4px; }
+      .nav-link i { font-size: 14px; }
+      body { padding-top: 90px; }
+      .container { padding: 100px 15px 120px; }
+    }
+    @media (min-width: 360px) and (max-width: 480px) {
+      .navbar { padding: 10px 0; }
+      .nav-container { padding: 8px 8px; gap: 4px; }
+      .nav-link { font-size: 11px; padding: 6px 10px; gap: 4px; }
+      .nav-link i { font-size: 15px; }
+      body { padding-top: 90px; }
+      .container { padding: 100px 15px 120px; }
+    }
+    @media (min-width: 481px) and (max-width: 768px) {
+      .navbar { padding: 10px 0; }
+      .nav-container { padding: 0 10px; gap: 6px; }
+      .nav-link { font-size: 12px; padding: 8px 12px; gap: 5px; }
+      .nav-link i { font-size: 16px; }
+      body { padding-top: 95px; }
+      .container { padding: 110px 15px 120px; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .navbar { padding: 12px 0; }
+      .nav-container { padding: 0 15px; gap: 8px; }
+      .nav-link { font-size: 13px; padding: 9px 14px; gap: 6px; }
+      .nav-link i { font-size: 17px; }
+      body { padding-top: 100px; }
+      .container { padding: 120px 20px 120px; }
+    }
+    @media (min-width: 1025px) {
+      .navbar { padding: 12px 0; }
+      .nav-container { max-width: 900px; margin: 0 auto; padding: 0 20px; gap: 10px; }
+      .nav-link { font-size: 13px; padding: 10px 16px; gap: 7px; }
+      .nav-link i { font-size: 18px; }
+      body { padding-top: 105px; }
+      .container { padding: 130px 20px 120px; }
+    }
+    @media (min-width: 1440px) {
+      .nav-container { max-width: 1200px; padding: 0 30px; gap: 12px; }
+      .nav-link { font-size: 14px; padding: 11px 18px; gap: 8px; }
+      .nav-link i { font-size: 19px; }
+      .container { padding: 140px 30px 120px; }
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 100px 20px 120px;
+    }
+    .welcome-back {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .welcome-back .date-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--primary);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    .welcome-back h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -1px;
+    }
+    .welcome-back p {
+      color: var(--text-dim);
+      font-size: 1rem;
+      margin: 8px 0 0;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+    }
+    .stat-card .icon-bg {
+      position: absolute;
+      right: -15px;
+      bottom: -15px;
+      font-size: 5rem;
+      opacity: 0.03;
+      color: var(--primary);
+      transform: rotate(-15deg);
+    }
+    .stat-card span {
+      display: block;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .stat-card h2 {
+      margin: 12px 0 0;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--secondary);
+      letter-spacing: -1px;
+    }
+    .chart-container {
+      background: rgba(17, 24, 39, 0.5);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .chart-header h3 {
+      font-size: 1.1rem;
+      margin: 0;
+      font-weight: 700;
+    }
+    .chart-header .chart-loader {
+      width: 15px;
+      height: 15px;
+      border: 2px solid var(--secondary);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .activity-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: 0.3s;
+    }
+    .activity-item:hover {
+      background: rgba(59, 130, 246, 0.05);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+    .activity-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      flex-shrink: 0;
+      font-size: 1.1rem;
+    }
+    .activity-info h4 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .activity-info p {
+      margin: 3px 0 0;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .fab-add {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 65px;
+      height: 65px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      border: none;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 999;
+      transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: pulse 2s infinite;
+    }
+    .fab-add:hover {
+      transform: scale(1.1) rotate(90deg);
+      background: var(--secondary);
+      box-shadow: 0 10px 25px rgba(45, 212, 191, 0.5);
+    }
+    .fab-add i { transition: 0.3s; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+    .footer {
+      text-align: center;
+      padding: 50px 0;
+      color: var(--text-dim);
+      font-family: "JetBrains Mono";
+      font-size: 0.7rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body data-auth-init>
+  <nav class="navbar animate__animated animate__fadeInDown">
+    <div class="nav-container">
+      <a href="#" class="nav-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
+      <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+      <a href="inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
+      <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+      <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+      <button class="nav-hamburger" aria-label="Menu" onclick="window.EkinToggleMobileNav()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#" class="nav-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
+      <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+      <a href="inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
+      <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+      <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+    </div>
+  </nav>
+
+  <a href="inputan.html" class="fab-add" title="Buat Laporan Baru">
+    <i class="fas fa-plus"></i>
+  </a>
+
+  <div class="container">
+    <div class="welcome-back" data-aos="fade-down">
+      <div class="date-badge" id="currentDate">Senin, 20 April 2026</div>
+      <h1 id="greetingTeks">Halo, User ASN</h1>
+      <p>Selamat datang di Aplikasi Laporan E-Kinerja.</p>
+    </div>
+
+    <!-- AUTH PANEL -->
+    <div id="ekin-auth-panel" style="margin-bottom:30px;"></div>
+
+    <div class="stats-grid">
+      <div class="stat-card" data-aos="fade-right" data-aos-delay="100">
+        <span>Total Laporan</span>
+        <h2 id="totalReports">124</h2>
+        <div class="icon-bg"><i class="fas fa-file-invoice"></i></div>
+      </div>
+      <div class="stat-card" data-aos="fade-left" data-aos-delay="200">
+        <span>Bulan Ini</span>
+        <h2 id="monthlyReports">18</h2>
+        <div class="icon-bg"><i class="fas fa-calendar-check"></i></div>
+      </div>
+    </div>
+
+    <div class="chart-container" data-aos="zoom-in" data-aos-delay="300">
+      <div class="chart-header">
+        <h3>Statistik Kerja</h3>
+        <div class="chart-loader"></div>
+      </div>
+      <canvas id="workChart" height="190"></canvas>
+    </div>
+
+    <h2 style="font-size: 1rem; color: var(--primary); margin: 40px 0 20px; letter-spacing: 1px;" data-aos="fade-up">
+      <i class="fas fa-bolt" style="margin-right: 10px"></i> AKTIVITAS TERAKHIR
+    </h2>
+
+    <div data-aos="fade-up" data-aos-delay="100">
+      <div class="activity-item">
+        <div class="activity-icon"><i class="fas fa-check-double"></i></div>
+        <div class="activity-info">
+          <h4>Laporan Harian Selesai</h4>
+          <p>2 jam yang lalu &bull; Dokumen PDF Berhasil dibuat</p>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon"><i class="fas fa-portrait"></i></div>
+        <div class="activity-info">
+          <h4>Upload 4 Foto Portrait</h4>
+          <p>Kemarin &bull; Kegiatan Rapat Koordinasi</p>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon"><i class="fas fa-user-gear"></i></div>
+        <div class="activity-info">
+          <h4>Update Profil NIP</h4>
+          <p>3 hari yang lalu &bull; Perubahan Jabatan</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Aplikasi Laporan E-kinerja // BY Sneijderlino<br/>
+      EXCLUSIVELY FOR INDONESIAN ASN &copy; 2026
+    </div>
+
+  <script src="assets/js/auth.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    window.EkinToggleMobileNav = function() {
+      var nav = document.getElementById('mobileNav');
+      if (!nav) return;
+      nav.classList.toggle('open');
+    };
+
+    AOS.init({
+      duration: 800,
+      easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+      once: true,
+    });
+
+    function updateHeader() {
+      var options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      var el = document.getElementById("currentDate");
+      if (el) el.innerText = new Date().toLocaleDateString("id-ID", options);
+
+      var jam = new Date().getHours();
+      var sapaan = "Halo";
+      if (jam < 11) sapaan = "Selamat Pagi, Semangat!";
+      else if (jam < 15) sapaan = "Selamat Siang, Produktif!";
+      else if (jam < 18) sapaan = "Selamat Sore, Selesaikan Laporan!";
+      else sapaan = "Selamat Malam, Cek Pencapaian Anda.";
+
+      var user = (window.EkinAuth) ? window.EkinAuth.getCurrentUser() : null;
+      var name = user ? user.username : "User ASN";
+      var greetingEl = document.getElementById("greetingTeks");
+      if (greetingEl) greetingEl.innerHTML = sapaan + "<br><span style='color: var(--primary);'>" + name + "</span>";
+    }
+
+    function updateReportStats() {
+      try {
+        const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
+        if (!currentUser) {
+          // Kosongkan dashboard jika belum login
+          document.getElementById("totalReports").innerText = "";
+          document.getElementById("monthlyReports").innerText = "";
+          return;
+        }
+
+        // Ambil total laporan dari semua user (seperti di rekapan.html)
+        var totalReports = 0;
+        var monthlyReports = 0;
+        var currentMonth = new Date().getMonth();
+        var currentYear = new Date().getFullYear();
+
+        // Loop melalui semua key localStorage yang dimulai dengan "laporan_"
+        for (var i = 0; i < localStorage.length; i++) {
+          var key = localStorage.key(i);
+          if (key && key.startsWith("laporan_")) {
+            var reports = JSON.parse(localStorage.getItem(key) || "[]");
+            totalReports += reports.length;
+            monthlyReports += reports.filter(function(report) {
+              var reportDate = new Date(report.date);
+              return (reportDate.getMonth() === currentMonth && reportDate.getFullYear() === currentYear);
+            }).length;
+          }
+        }
+
+        var totalEl = document.getElementById("totalReports");
+        var monthlyEl = document.getElementById("monthlyReports");
+        if (totalEl) totalEl.innerText = totalReports;
+        if (monthlyEl) monthlyEl.innerText = monthlyReports;
+      } catch (error) {
+        console.error("Error updating report stats:", error);
+      }
+    }
+
+    function updateChartData() {
+      try {
+        const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
+        if (!currentUser) {
+          // Kosongkan chart jika belum login
+          if (window.workChart) {
+            window.workChart.data.datasets[0].data = [0, 0, 0, 0];
+            window.workChart.update();
+          }
+          return;
+        }
+
+        var currentMonth = new Date().getMonth();
+        var currentYear = new Date().getFullYear();
+        var weeksInMonth = [0, 0, 0, 0];
+
+        // Loop melalui semua key localStorage yang dimulai dengan "laporan_"
+        for (var i = 0; i < localStorage.length; i++) {
+          var key = localStorage.key(i);
+          if (key && key.startsWith("laporan_")) {
+            var reports = JSON.parse(localStorage.getItem(key) || "[]");
+            reports.forEach(function(report) {
+              var reportDate = new Date(report.date);
+              if (reportDate.getMonth() === currentMonth && reportDate.getFullYear() === currentYear) {
+                var day = reportDate.getDate();
+                var weekIndex = Math.floor((day - 1) / 7);
+                if (weekIndex >= 0 && weekIndex < 4) {
+                  weeksInMonth[weekIndex]++;
+                }
+              }
+            });
+          }
+        }
+
+        if (window.workChart) {
+          window.workChart.data.datasets[0].data = weeksInMonth;
+          window.workChart.update();
+        }
+      } catch (error) {
+        console.error("Error updating chart data:", error);
+      }
+    }
+
+    function updateActivityItems() {
+      const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
+      const activityContainer = document.querySelector('.container > div:last-of-type');
+      if (!activityContainer) return;
+
+      if (!currentUser) {
+        // Sembunyikan activity items jika belum login
+        activityContainer.style.display = 'none';
+      } else {
+        // Tampilkan activity items jika sudah login
+        activityContainer.style.display = 'block';
+      }
+    }
+
+    function getDashboardProfilePhotoKey(user) {
+      if (!user) return null;
+      return 'dashboard_profile_photo_' + user.username;
+    }
+
+    function getDashboardProfilePhoto(user) {
+      var key = getDashboardProfilePhotoKey(user);
+      return key ? localStorage.getItem(key) : null;
+    }
+
+    function saveDashboardProfilePhoto(user, dataUrl) {
+      var key = getDashboardProfilePhotoKey(user);
+      if (!key) return;
+      localStorage.setItem(key, dataUrl);
+    }
+
+    function handleDashboardProfilePhoto(event) {
+      var file = event.target.files && event.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        return alert('Pilih file gambar yang valid.');
+      }
+      try {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var dataUrl = e.target.result;
+          var currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
+          if (!currentUser) return;
+          saveDashboardProfilePhoto(currentUser, dataUrl);
+          var img = document.getElementById('dashboardProfilePhotoImg');
+          if (img) img.src = dataUrl;
+          alert('Foto profil dashboard berhasil diperbarui!');
+        };
+        reader.onerror = function () {
+          alert('Error: File foto profil terlalu besar atau tidak valid. Coba file yang lebih kecil.');
+        };
+        reader.readAsDataURL(file);
+      } catch (error) {
+        alert('Error: Gagal memuat foto profil. Ukuran file mungkin terlalu besar.');
+      }
+    }
+
+    function updateFABVisibility() {
+      const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
+      const fab = document.querySelector('.fab-add');
+      if (fab) {
+        if (!currentUser) {
+          fab.style.display = 'none';
+        } else {
+          fab.style.display = 'flex';
+        }
+      }
+    }
+
+    function injectAuthPanel() {
+      var panel = document.getElementById('ekin-auth-panel');
+      if (!panel) return;
+
+      var user = (window.EkinAuth) ? window.EkinAuth.getCurrentUser() : null;
+      if (user) {
+        var profilePhoto = getDashboardProfilePhoto(user);
+        var defaultProfileAvatar = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"%3E%3Crect width="120" height="120" rx="60" fill="%23256cf0"/%3E%3Cpath d="M60 38c10.5 0 19 8.5 19 19s-8.5 19-19 19-19-8.5-19-19 8.5-19 19-19zm0 42c16.8 0 32 8.3 32 18.4V102H28v-3.6C28 88.3 43.2 80 60 80z" fill="%23fff"/%3E%3C/svg%3E';
+        var profilePhotoUrl = profilePhoto || defaultProfileAvatar;
+
+        panel.innerHTML = 
+          '<div style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(45,212,191,0.1));border:1px solid rgba(59,130,246,0.25);border-radius:20px;padding:20px;display:flex;align-items:center;gap:16px;backdrop-filter:blur(10px);">' +
+            '<div style="position:relative;width:58px;height:58px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#3b82f6,#2dd4bf);cursor:pointer;flex-shrink:0;" onclick="document.getElementById(\'dashboardProfilePhotoInput\').click()">' +
+              '<img id="dashboardProfilePhotoImg" src="' + profilePhotoUrl + '" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;display:block;" />' +
+            '</div>' +
+            '<div style="flex:1;min-width:0;">' +
+              '<div style="font-weight:800;font-size:1rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + user.username + '</div>' +
+              '<div style="font-size:0.8rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + user.email + '</div>' +
+              '<div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+                '<button onclick="document.getElementById(\'dashboardProfilePhotoInput\').click()" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.14);padding:6px 12px;border-radius:10px;font-weight:700;font-size:0.75rem;cursor:pointer;transition:0.2s;">' +
+                  '<i class="fas fa-camera"></i> Ubah Foto' +
+                '</button>' +
+                '<span style="font-size:0.75rem;color:#cbd5e1;">Klik foto untuk mengganti</span>' +
+              '</div>' +
+            '</div>' +
+            '<button onclick="if(confirm(\'Yakin ingin keluar?\'))window.EkinAuth.logout()" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);padding:8px 14px;border-radius:10px;font-weight:700;font-size:0.75rem;cursor:pointer;transition:0.2s;flex-shrink:0;">' +
+              '<i class="fas fa-sign-out-alt"></i> Keluar' +
+            '</button>' +
+            '<input type="file" id="dashboardProfilePhotoInput" accept="image/*" style="display:none" onchange="handleDashboardProfilePhoto(event)" />' +
+          '</div>';
+      } else {
+        panel.innerHTML = 
+          '<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">' +
+            '<a href="login.html" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(59,130,246,0.1));border:1px solid rgba(59,130,246,0.3);color:#3b82f6;padding:12px 24px;border-radius:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:0.2s;">' +
+              '<i class="fas fa-sign-in-alt"></i> Masuk' +
+            '</a>' +
+            '<a href="register.html" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;padding:12px 24px;border-radius:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:0.2s;box-shadow:0 8px 20px rgba(59,130,246,0.3);">' +
+              '<i class="fas fa-user-plus"></i> Buat Akun' +
+            '</a>' +
+          '</div>';
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      updateHeader();
+      updateReportStats();
+      updateChartData();
+      updateActivityItems();
+      updateFABVisibility();
+      injectAuthPanel();
+
+      // Listen for auth state changes
+      window.addEventListener('authStateChanged', function() {
+        updateHeader();
+        updateReportStats();
+        updateChartData();
+        updateActivityItems();
+        updateFABVisibility();
+        injectAuthPanel();
+      });
+
+      var ctx = document.getElementById("workChart").getContext("2d");
+      var gradient = ctx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, "rgba(59, 130, 246, 0.4)");
+      gradient.addColorStop(1, "rgba(59, 130, 246, 0.01)");
+
+      var chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
+          datasets: [
+            {
+              label: "Laporan",
+              data: [0, 0, 0, 0],
+              borderColor: "#3b82f6",
+              backgroundColor: gradient,
+              fill: true,
+              tension: 0.4,
+              borderWidth: 3,
+              pointRadius: 6,
+              pointBackgroundColor: "#fff",
+              pointBorderColor: "#3b82f6",
+              pointBorderWidth: 3,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { display: false },
+            x: {
+              grid: { display: false },
+              ticks: { color: "#94a3b8", font: { size: 10, weight: 600 } },
+            },
+          },
+        },
+      });
+
+      window.workChart = chart;
+      updateChartData();
+    });
+  </script>
+</body>
+</html>

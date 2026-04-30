@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>E-Kinerja | Aplikasi Laporan Produktivitas ASN</title>
+    <meta property="og:image"
+    content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <nav class="navbar animate__animated animate__fadeInDown">
+      <div class="nav-container">
+        <a href="#" class="nav-link active"
+          ><i class="fas fa-home"></i> Beranda</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Panduan</a
+        >
+        <div class="nav-auth">
+          <a href="masuk.html" class="nav-link"
+            ><i class="fas fa-sign-in-alt"></i> Masuk</a
+          >
+          <a href="daftar.html" class="nav-link"
+            ><i class="fas fa-user-plus"></i> Daftar</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <div class="welcome-hero">
+      <div class="hero-content" data-aos="fade-up">
+        <h1 class="hero-title">
+          <i class="fas fa-rocket" style="margin-right: 15px"></i>
+          E-Kinerja Pro
+        </h1>
+        <p class="hero-subtitle">
+          Aplikasi Modern untuk Pelaporan Kinerja ASN dengan Teknologi Canggih
+        </p>
+
+        <div class="hero-features">
+          <div class="feature-item" data-aos="fade-right" data-aos-delay="200">
+            <i class="fas fa-mobile-alt"></i>
+            <span>Aplikasi Mobile</span>
+          </div>
+          <div class="feature-item" data-aos="fade-up" data-aos-delay="300">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard Analitik</span>
+          </div>
+          <div class="feature-item" data-aos="fade-left" data-aos-delay="400">
+            <i class="fas fa-file-pdf"></i>
+            <span>Export PDF Otomatis</span>
+          </div>
+        </div>
+
+        <div class="hero-actions" data-aos="zoom-in" data-aos-delay="500">
+          <a href="daftar.html" class="btn btn-primary hero-btn">
+            <i class="fas fa-user-plus"></i> Mulai Sekarang - Gratis
+          </a>
+          <a href="panduan-penggunaan.html" class="btn btn-secondary hero-btn">
+            <i class="fas fa-info-circle"></i> Pelajari Lebih Lanjut
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual" data-aos="fade-left" data-aos-delay="300">
+        <div class="mockup-device">
+          <div class="mockup-screen">
+            <div class="mockup-content">
+              <div class="mockup-header">
+                <div class="mockup-nav">
+                  <span>📊</span>
+                  <span>📝</span>
+                  <span>📋</span>
+                  <span>👤</span>
+                </div>
+              </div>
+              <div class="mockup-dashboard">
+                <h3>E-Kinerja Dashboard</h3>
+                <div class="mockup-stats">
+                  <div class="stat">124 Laporan</div>
+                  <div class="stat">18 Bulan Ini</div>
+                </div>
+                <div class="mockup-chart">
+                  <div class="chart-bar" style="height: 40%"></div>
+                  <div class="chart-bar" style="height: 60%"></div>
+                  <div class="chart-bar" style="height: 80%"></div>
+                  <div class="chart-bar" style="height: 50%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features-section">
+      <div class="container">
+        <h2 data-aos="fade-up">Fitur Unggulan</h2>
+        <div class="features-grid">
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="feature-icon">
+              <i class="fas fa-edit"></i>
+            </div>
+            <h3>Input Laporan Mudah</h3>
+            <p>
+              Interface intuitif untuk mengisi laporan kinerja harian dengan
+              cepat dan efisien.
+            </p>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-icon">
+              <i class="fas fa-camera"></i>
+            </div>
+            <h3>Upload Foto</h3>
+            <p>
+              Dukungan upload multiple foto sebagai bukti kegiatan dan
+              dokumentasi.
+            </p>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="feature-icon">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <h3>Export PDF</h3>
+            <p>
+              Generate laporan dalam format PDF profesional dengan template yang
+              telah disiapkan.
+            </p>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+            <div class="feature-icon">
+              <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3>Analitik & Statistik</h3>
+            <p>
+              Dashboard interaktif dengan grafik untuk memantau produktivitas
+              dan tren kinerja.
+            </p>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+            <div class="feature-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <h3>Keamanan Data</h3>
+            <p>
+              Enkripsi data dan sistem autentikasi untuk menjaga kerahasiaan
+              informasi.
+            </p>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+            <div class="feature-icon">
+              <i class="fas fa-mobile"></i>
+            </div>
+            <h3>Offline Support</h3>
+            <p>
+              Bekerja tanpa koneksi internet dengan sinkronisasi otomatis saat
+              online.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+          <h2>Siap Tingkatkan Produktivitas Anda?</h2>
+          <p>
+            Bergabunglah dengan ribuan ASN yang telah menggunakan E-Kinerja
+            untuk melaporkan kinerja mereka.
+          </p>
+          <a href="daftar.html" class="btn btn-primary cta-btn">
+            <i class="fas fa-rocket"></i> Daftar Sekarang
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <h3>E-Kinerja Pro</h3>
+            <p>Aplikasi Modern untuk ASN Produktif</p>
+          </div>
+          <div class="footer-links">
+            <a href="panduan-penggunaan.html">Panduan</a>
+            <a href="masuk.html">Masuk</a>
+            <a href="daftar.html">Daftar</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 E-Kinerja Pro. Hak Cipta Dilindungi.</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        once: true,
+      });
+
+      // Redirect to dashboard if user is logged in
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentUser = localStorage.getItem("current_user");
+        if (currentUser) {
+          // User already logged in, redirect to dashboard
+          window.location.href = "index.html";
+        }
+      });
+    </script>
+  </body>
+</html>
