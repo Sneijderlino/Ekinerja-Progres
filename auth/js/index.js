@@ -477,6 +477,38 @@ function deleteTask(index) {
     showToast('Item kegiatan berhasil dihapus!');
 }
 
+// Fungsi untuk kompresi foto lebih agresif
+async function compressPhotoAggressively(src) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.min(img.width, 400);
+            canvas.height = (canvas.width / img.width) * img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            // Kompresi lebih kuat (quality 0.5 = 50%)
+            const compressed = canvas.toDataURL('image/jpeg', 0.5);
+            resolve(compressed);
+        };
+        img.onerror = () => resolve('');
+        img.src = src;
+    });
+}
+
+// Fungsi untuk hapus laporan lama otomatis (hanya simpan 15 laporan terbaru)
+async function enforceReportLimit() {
+    const MAX_REPORTS = 15; // Batas maksimal laporan
+    const savedReports = await getSavedReports();
+    
+    if (savedReports.length > MAX_REPORTS) {
+        const excess = savedReports.length - MAX_REPORTS;
+        savedReports.splice(MAX_REPORTS, excess);
+        await setSavedReports(savedReports);
+        showToast(`${excess} laporan lama otomatis dihapus untuk menghemat penyimpanan.`);
+    }
+}
+
 async function saveReport() {
     const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
     if (!currentUser) {
@@ -485,6 +517,15 @@ async function saveReport() {
         return;
     }
     const dateInput = document.getElementById('in-report-date');
+    
+    // Kompresi foto lebih agresif
+    const photoSources = getReportPhotoSources();
+    const compressedPhotos = [];
+    for (const photoSrc of photoSources) {
+        const compressed = await compressPhotoAggressively(photoSrc);
+        if (compressed) compressedPhotos.push(compressed);
+    }
+    
     const report = {
         id: Date.now(),
         title: document.getElementById('in-report-title').value.trim(),
@@ -498,8 +539,8 @@ async function saveReport() {
         kota: document.getElementById('in-kota').value.trim(),
         uraian: document.getElementById('in-uraian').value.trim(),
         tasks: JSON.parse(localStorage.getItem('ghost_tasks') || '[]'),
-        logo: localStorage.getItem('ghost_logo') || document.getElementById('out-logo').src,
-        photos: await compressReportPhotos(getReportPhotoSources()),
+        // Jangan simpan logo di setiap laporan, ambil dari localStorage saat render
+        photos: compressedPhotos,
         createdAt: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
     };
 
@@ -527,6 +568,7 @@ async function saveReport() {
 
     try {
         await setSavedReports(savedReports);
+        await enforceReportLimit(); // Enforce batas laporan setelah simpan
     } catch (err) {
         if (isQuotaExceeded(err)) {
             // Hapus beberapa laporan lama jika penyimpanan gagal karena quota
@@ -536,6 +578,7 @@ async function saveReport() {
                 deletedCount++;
                 try {
                     await setSavedReports(savedReports);
+                    await enforceReportLimit(); // Enforce batas laporan
                     showToast(`Laporan tersimpan. ${deletedCount} laporan lama dihapus untuk menghemat ruang penyimpanan.`);
                     return;
                 } catch (retryErr) {
@@ -635,7 +678,10 @@ function renderPreviewData(report) {
     document.getElementById('out-tanggal').innerText = tanggal.toLocaleDateString('id-ID', {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
-    document.getElementById('out-logo').src = report.logo || document.getElementById('out-logo').src;
+    // Ambil logo dari localStorage, bukan dari report (untuk menghemat ruang)
+    const logoSrc = localStorage.getItem('ghost_logo') || document.getElementById('out-logo').src;
+    document.getElementById('out-logo').src = logoSrc;
+    
     ['img1','img2','img3','img4'].forEach((id, i) => {
         const target = document.getElementById(id);
         if (report.photos && report.photos[i]) {
