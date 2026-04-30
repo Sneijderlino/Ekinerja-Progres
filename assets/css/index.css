@@ -22,6 +22,9 @@ body, html {
     background-attachment: fixed;
     color: #000000;
     overflow-x: hidden;
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: none;
 }
 
 /* ANTI-PIRACY UI */
