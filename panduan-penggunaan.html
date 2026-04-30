@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#3b82f6" />
+    <title>GHOST-DATABASE | Panduan Eksklusif</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta
+      property="og:image"
+      content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+    <style>
+      :root {
+        --bg: #060912;
+        --surface: #111827;
+        --primary: #3b82f6;
+        --secondary: #2dd4bf;
+        --accent: #f59e0b;
+        --text: #f8fafc;
+        --text-dim: #94a3b8;
+        --border: rgba(255, 255, 255, 0.06);
+        --glass: rgba(17, 24, 39, 0.7);
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            circle at 10% 20%,
+            rgba(59, 130, 246, 0.12) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 80%,
+            rgba(45, 212, 191, 0.08) 0%,
+            transparent 40%
+          );
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      /* Fixed Glass Navbar */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        z-index: 1000;
+        padding: 10px 0;
+        width: 100%;
+      }
+
+      .nav-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .nav-link {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.3s;
+        padding: 8px 12px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .nav-link i {
+        font-size: 16px;
+      }
+
+      .nav-link.active {
+        color: var(--primary);
+        background: rgba(59, 130, 246, 0.2);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+
+      .nav-link:hover {
+        color: var(--text);
+        background: rgba(59, 130, 246, 0.15);
+      }
+
+      .nav-hamburger {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.3rem;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: 0.2s;
+      }
+      .nav-hamburger:hover { background: rgba(255, 255, 255, 0.12); }
+      .mobile-nav {
+        width: 100%;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition: max-height 0.35s ease, opacity 0.35s ease;
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        padding: 0 10px;
+      }
+      .mobile-nav.open {
+        max-height: 500px;
+        opacity: 1;
+        padding: 10px;
+      }
+      .mobile-nav .nav-link {
+        color: white;
+      }
+      .mobile-nav .nav-link:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.08);
+      }
+      @media (max-width: 768px) {
+        .nav-hamburger {
+          display: block;
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .nav-container {
+          position: relative;
+          justify-content: flex-start;
+          padding-right: 50px;
+        }
+        .nav-container > .nav-link,
+        .nav-container > .desktop-auth {
+          display: none;
+        }
+        .mobile-nav {
+          display: flex;
+        }
+        .nav-container > .nav-link.active {
+          display: flex;
+        }
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 100px 20px 80px;
+      }
+
+      /* Responsive Design */
+      /* Extra small screens (< 360px) */
+      @media (max-width: 359px) {
+        .navbar {
+          padding: 8px 0;
+        }
+
+        .nav-container {
+          padding: 8px 5px;
+          gap: 3px;
+        }
+
+        .nav-link {
+          font-size: 10px;
+          padding: 5px 8px;
+          gap: 4px;
+        }
+
+        .nav-link i {
+          font-size: 14px;
+        }
+
+        body {
+          padding-top: 90px;
+        }
+
+        .container {
+          padding: 100px 15px 120px;
+        }
+      }
+
+      /* Small mobile (360px - 480px) */
+      @media (min-width: 360px) and (max-width: 480px) {
+        .navbar {
+          padding: 10px 0;
+        }
+
+        .nav-container {
+          padding: 8px 8px;
+          gap: 4px;
+        }
+
+        .nav-link {
+          font-size: 11px;
+          padding: 6px 10px;
+          gap: 4px;
+        }
+
+        .nav-link i {
+          font-size: 15px;
+        }
+
+        body {
+          padding-top: 90px;
+        }
+
+        .container {
+          padding: 100px 15px 120px;
+        }
+      }
+
+      /* Mobile (480px - 768px) */
+      @media (min-width: 481px) and (max-width: 768px) {
+        .navbar {
+          padding: 10px 0;
+        }
+
+        .nav-container {
+          padding: 0 10px;
+          gap: 6px;
+        }
+
+        .nav-link {
+          font-size: 12px;
+          padding: 8px 12px;
+          gap: 5px;
+        }
+
+        .nav-link i {
+          font-size: 16px;
+        }
+
+        body {
+          padding-top: 95px;
+        }
+
+        .container {
+          padding: 110px 15px 120px;
+        }
+      }
+
+      /* Tablet (768px - 1024px) */
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .navbar {
+          padding: 12px 0;
+        }
+
+        .nav-container {
+          padding: 0 15px;
+          gap: 8px;
+        }
+
+        .nav-link {
+          font-size: 13px;
+          padding: 9px 14px;
+          gap: 6px;
+        }
+
+        .nav-link i {
+          font-size: 17px;
+        }
+
+        body {
+          padding-top: 100px;
+        }
+
+        .container {
+          padding: 120px 20px 120px;
+        }
+      }
+
+      /* Desktop (1025px+) */
+      @media (min-width: 1025px) {
+        .navbar {
+          padding: 12px 0;
+        }
+
+        .nav-container {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 0 20px;
+          gap: 10px;
+        }
+
+        .nav-link {
+          font-size: 13px;
+          padding: 10px 16px;
+          gap: 7px;
+        }
+
+        .nav-link i {
+          font-size: 18px;
+        }
+
+        body {
+          padding-top: 105px;
+        }
+
+        .container {
+          padding: 130px 20px 120px;
+        }
+      }
+
+      /* Large desktop (1440px+) */
+      @media (min-width: 1440px) {
+        .nav-container {
+          max-width: 1200px;
+          padding: 0 30px;
+          gap: 12px;
+        }
+
+        .nav-link {
+          font-size: 14px;
+          padding: 11px 18px;
+          gap: 8px;
+        }
+
+        .nav-link i {
+          font-size: 19px;
+        }
+
+        .container {
+          padding: 140px 30px 120px;
+        }
+      }
+
+      /* Hero Content */
+      .hero {
+        text-align: center;
+        margin-bottom: 50px;
+      }
+
+      .hero h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 10px 0;
+        background: linear-gradient(to right, #60a5fa, #2dd4bf);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero p {
+        color: var(--text-dim);
+        font-size: 0.95rem;
+      }
+
+      /* Visual Guide Section */
+      .section-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 25px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      }
+
+      .step-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      .step-row:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        left: 17px;
+        top: 40px;
+        bottom: -20px;
+        width: 2px;
+        background: linear-gradient(to bottom, var(--primary), transparent);
+      }
+
+      .icon-circle {
+        width: 36px;
+        height: 36px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        z-index: 2;
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        font-weight: 800;
+      }
+
+      .step-text h3 {
+        margin: 0 0 5px 0;
+        font-size: 1.1rem;
+      }
+      .step-text p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-dim);
+        line-height: 1.5;
+      }
+
+      /* Portrait Recommendation Box */
+      .portrait-guide {
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 16px;
+        padding: 20px;
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border: 1px dashed var(--secondary);
+      }
+
+      .portrait-box {
+        width: 45px;
+        height: 60px;
+        border: 2px solid var(--secondary);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.6rem;
+        flex-shrink: 0;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.5;
+          transform: scale(0.98);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0.5;
+          transform: scale(0.98);
+        }
+      }
+
+      /* Specs Grid */
+      .feature-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .f-card {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 20px;
+        border-radius: 20px;
+        text-align: center;
+        border: 1px solid var(--border);
+        transition: 0.3s;
+      }
+
+      .f-card:hover {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: var(--primary);
+        transform: translateY(-5px);
+      }
+
+      .f-card i {
+        font-size: 1.5rem;
+        color: var(--primary);
+        margin-bottom: 10px;
+      }
+      .f-card h4 {
+        margin: 0;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+      }
+
+      /* Accordion FAQ */
+      .faq-box {
+        margin-top: 15px;
+      }
+      .faq-btn {
+        width: 100%;
+        background: none;
+        border: none;
+        color: var(--text);
+        text-align: left;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .faq-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 0.85rem;
+        color: var(--text-dim);
+      }
+
+      /* Glow Decor */
+      .glow {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background: var(--primary);
+        filter: blur(100px);
+        z-index: -1;
+        opacity: 0.2;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 40px 0;
+        color: var(--text-dim);
+        font-family: "JetBrains Mono";
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        border-top: 1px solid var(--border);
+      }
+    </style>
+  </head>
+
+    <nav class="navbar animate__animated animate__fadeInDown">
+      <div class="nav-container">
+        <a href="index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
+        <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+        <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+        <a href="panduan-penggunaan.html" class="nav-link active"><i class="fas fa-book-open"></i> Info</a>
+        <button class="nav-hamburger" aria-label="Menu" onclick="window.EkinToggleMobileNav()">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <div class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
+        <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+        <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+        <a href="panduan-penggunaan.html" class="nav-link active"><i class="fas fa-book-open"></i> Info</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="hero animate__animated animate__fadeInDown">
+        <span
+          style="
+            color: var(--secondary);
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+          "
+          >Aplikasi by Sneijderlino</span
+        >
+        <h1>PUSAT BANTUAN</h1>
+        <p>Panduan teknis Penginputan Laporan E-kinerja .</p>
+      </div>
+
+      <h2
+        style="
+          font-size: 1rem;
+          color: var(--primary);
+          margin-bottom: 20px;
+          letter-spacing: 1px;
+        "
+      >
+        <i class="fas fa-terminal" style="margin-right: 10px"></i> ALUR KERJA
+      </h2>
+
+      <div class="section-card animate__animated animate__fadeInUp">
+        <div class="glow" style="top: 0; right: 0"></div>
+
+        <div class="step-row">
+          <div class="icon-circle">1</div>
+          <div class="step-text">
+            <h3>Konfigurasi Profil</h3>
+            <p>
+              Lengkapi Nama, NIP, dan Instansi pada halaman Home. Data ini akan
+              otomatis menjadi Kop Surat pada laporan Anda.
+            </p>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="icon-circle">2</div>
+          <div class="step-text">
+            <h3>Dokumentasi Bukti</h3>
+            <p>
+              Klik area upload untuk melampirkan foto kegiatan. Pastikan
+              pencahayaan cukup agar hasil cetak jernih.
+            </p>
+
+            <div class="portrait-guide">
+              <div class="portrait-box">
+                <i class="fas fa-image" style="font-size: 1.2rem"></i>
+              </div>
+              <div style="font-size: 0.85rem">
+                <b style="color: var(--secondary)"
+                  >WAJIB: GUNAKAN MODE PORTRAIT</b
+                ><br />
+                Foto posisi berdiri memberikan tampilan yang jauh lebih rapi dan
+                simetris pada format laporan A4.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="icon-circle">3</div>
+          <div class="step-text">
+            <h3>Simpan & Rekap</h3>
+            <p>
+              Tulis uraian kegiatan dan klik <b>Simpan</b>. Data Anda akan
+              diamankan ke dalam database lokal perangkat.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <h2
+        style="
+          font-size: 1rem;
+          color: var(--primary);
+          margin-bottom: 20px;
+          letter-spacing: 1px;
+        "
+      >
+        <i class="fas fa-microchip" style="margin-right: 10px"></i> TEKNIS MEDIA
+      </h2>
+
+      <div
+        class="feature-grid animate__animated animate__fadeInUp"
+        style="animation-delay: 0.2s"
+      >
+        <div class="f-card">
+          <i class="fas fa-compress-arrows-alt"></i>
+          <h4>KOMPRESI OTOMATIS</h4>
+          <p style="font-size: 0.7rem; color: var(--text-dim); margin-top: 5px">
+            Gunakan foto di bawah 2MB untuk hasil PDF instan.
+          </p>
+        </div>
+        <div class="f-card">
+          <i class="fas fa-file-export"></i>
+          <h4>STANDAR DINAS</h4>
+          <p style="font-size: 0.7rem; color: var(--text-dim); margin-top: 5px">
+            Output otomatis menyesuaikan standar A4 Portrait.
+          </p>
+        </div>
+      </div>
+
+      <h2
+        style="
+          font-size: 1rem;
+          color: var(--primary);
+          margin: 40px 0 20px;
+          letter-spacing: 1px;
+        "
+      >
+        <i class="fas fa-circle-question" style="margin-right: 10px"></i> FAQ
+      </h2>
+
+      <div
+        class="section-card animate__animated animate__fadeInUp"
+        style="padding-top: 10px"
+      >
+        <div class="faq-box">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            Keamanan Data <i class="fas fa-plus"></i>
+          </button>
+          <div class="faq-content">
+            <p style="padding: 15px 0">
+              Data Anda 100% aman karena disimpan di memori internal browser
+              (Client-Side). Ghost-Database tidak mengirimkan data Anda ke
+              server mana pun.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-box">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            Kenapa PDF tidak terdownload? <i class="fas fa-plus"></i>
+          </button>
+          <div class="faq-content">
+            <p style="padding: 15px 0">
+              Pastikan browser Anda (Chrome/Edge) memiliki izin untuk "Download
+              Multiple Files" dan "Pop-ups".
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-box">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            Data Hilang Secara Tiba-tiba? <i class="fas fa-plus"></i>
+          </button>
+          <div class="faq-content">
+            <p style="padding: 15px 0">
+              Ini terjadi jika Anda menghapus "History/Cache" browser. Selalu
+              ekspor laporan Anda ke PDF setelah selesai bekerja.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        Aplikasi Laporan E-kinerja By Sneijderlino<br />
+        EXCLUSIVELY FOR INDONESIAN ASN &copy; 2026
+      </div>
+    </div>
+
+    <script>
+      function toggleFaq(btn) {
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector("i");
+
+        if (content.style.maxHeight) {
+          content.style.maxHeight = null;
+          icon.className = "fas fa-plus";
+          btn.style.color = "var(--text)";
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+          icon.className = "fas fa-minus";
+          btn.style.color = "var(--secondary)";
+        }
+      }
+
+      window.EkinToggleMobileNav = function() {
+        const mobileNav = document.getElementById('mobileNav');
+        if (!mobileNav) return;
+        mobileNav.classList.toggle('open');
+      };
+    </script>
+  </body>
+</html>

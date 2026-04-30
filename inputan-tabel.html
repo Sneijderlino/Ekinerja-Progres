@@ -1,0 +1,2949 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>E-Kinerja | Input Laporan Tabel - Pro Edition-by Snejderlino</title>
+    <meta
+      property="og:image"
+      content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="assets/css/index.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      :root {
+        --glass: rgba(17, 24, 39, 0.7);
+        --border: rgba(255, 255, 255, 0.06);
+        --text-dim: #94a3b8;
+        --primary: #3b82f6;
+        --secondary: #2dd4bf;
+        --accent: #f59e0b;
+        --text: #f8fafc;
+        --surface: #111827;
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        z-index: 1000;
+        padding: 10px 0;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+      }
+
+      .nav-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+      }
+
+      .nav-link {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.3s;
+        padding: 8px 12px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .nav-link i {
+        font-size: 16px;
+      }
+
+      .nav-link.active {
+        color: var(--primary);
+        background: rgba(59, 130, 246, 0.2);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+
+      .nav-link:hover {
+        color: var(--text);
+        background: rgba(59, 130, 246, 0.15);
+      }
+
+      .nav-hamburger {
+        display: none;
+        background: rgba(59, 130, 246, 0.2);
+        border: 2px solid rgba(59, 130, 246, 0.5);
+        color: var(--primary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 10px 14px;
+        border-radius: 8px;
+        transition: 0.2s;
+      }
+      .nav-hamburger:hover {
+        background: rgba(59, 130, 246, 0.3);
+        border-color: var(--primary);
+      }
+
+      .mobile-nav {
+        width: 100%;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition:
+          max-height 0.35s ease,
+          opacity 0.35s ease;
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        padding: 0 10px;
+      }
+      .mobile-nav.open {
+        max-height: 500px;
+        opacity: 1;
+        padding: 10px;
+      }
+
+      @media (max-width: 768px) {
+        .nav-hamburger {
+          display: block;
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .nav-container {
+          position: relative;
+          justify-content: flex-start;
+          padding-right: 50px;
+          overflow-x: hidden;
+          max-width: 100%;
+        }
+        .nav-container > .nav-link,
+        .nav-container > .desktop-auth {
+          display: none;
+        }
+        .mobile-nav {
+          display: flex;
+          overflow-x: hidden;
+        }
+        .nav-container > .nav-link.active {
+          display: flex;
+        }
+      }
+
+      @media (max-width: 359px) {
+        .navbar {
+          padding: 8px 0;
+        }
+        .nav-container {
+          padding: 0 5px;
+          gap: 4px;
+        }
+        .nav-link {
+          font-size: 10px;
+          padding: 6px 8px;
+        }
+        .nav-link i {
+          font-size: 14px;
+        }
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      .app-shell {
+        display: flex;
+        min-height: 100vh;
+        padding-top: 80px;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .sidebar {
+        width: 400px;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 20px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex-shrink: 0;
+        overscroll-behavior: none;
+        touch-action: pan-y;
+      }
+
+      .preview-stage {
+        flex: 1;
+        background: var(--bg);
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: none;
+        touch-action: pan-y;
+      }
+
+      .canvas-a4 {
+        width: 287mm;
+        min-height: 197mm;
+        background: white;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        padding: 15mm;
+        box-sizing: border-box;
+        color: black;
+        font-family: "Times New Roman", serif;
+        font-size: 11pt;
+        line-height: 1.4;
+      }
+
+      .section-card {
+        background: rgba(17, 24, 39, 0.5);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .section-card h3 {
+        margin: 0 0 12px 0;
+        color: var(--primary);
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .btn {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        padding: 12px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: 0.3s;
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+      }
+
+      .btn-pdf {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+      }
+
+      .btn-pdf:hover {
+        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+      }
+
+      .btn-preview {
+        background: linear-gradient(135deg, var(--accent), #fbbf24);
+      }
+
+      .btn-preview:hover {
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+      }
+
+      .btn-print {
+        background: linear-gradient(135deg, #10b981, #34d399);
+      }
+
+      .btn-print:hover {
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        border-radius: 6px;
+        background: rgba(15, 23, 42, 0.95);
+        color: #f8fafc;
+        font-size: 14px;
+        margin-bottom: 8px;
+        box-sizing: border-box;
+      }
+
+      input::placeholder,
+      textarea::placeholder,
+      select::placeholder {
+        color: #cbd5e1;
+        opacity: 1;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        background: rgba(15, 23, 42, 0.95);
+        color: #ffffff;
+        caret-color: #ffffff;
+      }
+
+      input::selection,
+      textarea::selection,
+      select::selection {
+        background: rgba(59, 130, 246, 0.25);
+        color: #fff;
+      }
+
+      .action-area {
+        position: sticky;
+        bottom: 0;
+        background: var(--surface);
+        padding: 16px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 8px;
+        margin: -20px -20px 0;
+      }
+
+      .action-area .btn {
+        flex: 1;
+        margin: 0;
+      }
+
+      /* License Screen */
+      #license-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+      }
+
+      .license-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      .license-card h2 {
+        color: var(--primary);
+        margin-bottom: 16px;
+      }
+
+      .license-input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: rgba(17, 24, 39, 0.8);
+        color: var(--text);
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 16px;
+        font-family: monospace;
+      }
+
+      .logo-upload-btn {
+        background: rgba(59, 130, 246, 0.2);
+        border: 2px dashed rgba(59, 130, 246, 0.5);
+        color: var(--primary);
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        text-align: center;
+        transition: 0.2s;
+        margin-bottom: 8px;
+      }
+
+      .logo-upload-btn:hover {
+        background: rgba(59, 130, 246, 0.3);
+      }
+
+      .identity-locked {
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+      }
+
+      .saved-report-toolbar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+
+      .saved-report-toolbar input,
+      .saved-report-toolbar select {
+        flex: 1;
+      }
+
+      .saved-report-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .saved-report-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 10px;
+        padding: 12px;
+      }
+
+      .saved-report-card h4 {
+        margin: 0 0 4px;
+        font-size: 0.95rem;
+      }
+
+      .saved-report-card small {
+        color: #94a3b8;
+      }
+
+      .saved-report-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+
+      .saved-report-actions .btn {
+        flex: 1;
+        min-width: 30%;
+      }
+
+      /* Modal Konfirmasi */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-content {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+      }
+
+      .modal-overlay.show .modal-content {
+        transform: scale(1);
+      }
+
+      .modal-content h3 {
+        margin: 0 0 12px 0;
+        color: var(--text);
+      }
+
+      .modal-content p {
+        margin: 0 0 20px 0;
+        color: #94a3b8;
+        font-size: 0.95rem;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      .modal-actions .btn {
+        flex: 1;
+        max-width: 120px;
+      }
+
+      /* Loading Animation */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10001;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .loading-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(59, 130, 246, 0.3);
+        border-top: 4px solid var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-text {
+        color: var(--text);
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .identity-locked p {
+        margin: 0 0 8px 0;
+        font-weight: 600;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .btn-unlock {
+        background: rgba(34, 197, 94, 0.8);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+      }
+
+      .btn-unlock:hover {
+        background: rgba(34, 197, 94, 1);
+      }
+
+      /* PDF Styles */
+      .report-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        gap: 15px;
+      }
+
+      .header-separator {
+        border-bottom: 1px solid black;
+        margin: 8px 0;
+      }
+
+      .report-logo {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        flex-shrink: 0;
+      }
+
+      .header-text {
+        text-align: center;
+        flex: 1;
+      }
+
+      .header-text h2 {
+        margin: 0;
+        font-size: 13pt;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .header-text p {
+        margin: 3px 0 0 0;
+        font-size: 10pt;
+      }
+
+      .report-main-title {
+        font-size: 12pt;
+        font-weight: bold;
+        text-align: center;
+        margin: 15px 0 8px 0;
+        text-transform: uppercase;
+      }
+
+      .report-subtitle {
+        font-size: 10pt;
+        text-align: center;
+        margin: 0 0 15px 0;
+        font-style: italic;
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 10pt;
+      }
+
+      .data-table td {
+        padding: 6px 8px;
+        border: 1px solid black;
+        vertical-align: top;
+      }
+
+      .data-table td:nth-child(1) {
+        width: 100px;
+        font-weight: bold;
+        background: #f5f5f5;
+      }
+
+      .data-table td:nth-child(2) {
+        width: 15px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .profile-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 10pt;
+      }
+
+      .profile-table td {
+        padding: 6px 8px;
+        border: none;
+        vertical-align: top;
+      }
+
+      .profile-table td:nth-child(1) {
+        width: 100px;
+        font-weight: bold;
+        background: #f5f5f5;
+      }
+
+      .profile-table td:nth-child(2) {
+        width: 15px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .activities-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 10pt;
+      }
+
+      .activities-table th,
+      .activities-table td {
+        border: 1px solid black;
+        padding: 6px 6px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .activities-table th {
+        background: #e5e5e5;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .activities-table .no-col {
+        width: 25px;
+        text-align: center;
+      }
+
+      .activities-table .desc-col {
+        width: auto;
+      }
+
+      .activities-table .date-col {
+        width: 70px;
+        text-align: center;
+      }
+
+      .activities-table .location-col {
+        width: 80px;
+      }
+
+      .activities-table .note-col {
+        width: 100px;
+      }
+
+      .activities-table .photo-col {
+        width: 60px;
+        text-align: center;
+      }
+
+      .ttd-block {
+        margin-top: 10px;
+      }
+
+      .ttd-spasi {
+        height: 40px;
+      }
+
+      .ttd-col {
+        display: none;
+      }
+
+      .ttd-place-date {
+        text-align: left;
+        font-size: 10pt;
+        margin-bottom: 10px;
+      }
+
+      .ttd-jabatan {
+        font-size: 9pt;
+        font-weight: normal;
+        line-height: 1.3;
+        margin-bottom: 30px;
+      }
+
+      .ttd-image-box {
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5px;
+      }
+
+      .ttd-image-box img {
+        max-width: 80px;
+        max-height: 50px;
+        object-fit: contain;
+      }
+
+      .ttd-image-placeholder {
+        font-size: 9pt;
+        color: #999;
+      }
+
+      .ttd-nama {
+        font-size: 10pt;
+        font-weight: bold;
+        margin-top: 5px;
+      }
+
+      .ttd-pangkat {
+        font-size: 9pt;
+      }
+
+      .ttd-nip {
+        font-size: 9pt;
+      }
+
+      .activity-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+        align-items: flex-start;
+        background: rgba(59, 130, 246, 0.05);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+
+      .activity-row input,
+      .activity-row textarea {
+        flex: 1;
+        margin-bottom: 4px;
+      }
+
+      .activity-row .remove-btn {
+        background: #dc2626;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+        flex-shrink: 0;
+        margin-top: 0;
+        min-width: 60px;
+      }
+
+      .activity-row .remove-btn:hover {
+        background: #b91c1c;
+      }
+
+      .add-activity-btn {
+        background: rgba(34, 197, 94, 0.8);
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      .add-activity-btn:hover {
+        background: rgba(34, 197, 94, 1);
+      }
+
+      .date-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        margin-bottom: 8px;
+      }
+
+      .date-checkbox input {
+        width: auto;
+        margin: 0;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--primary);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: 0.3s;
+        z-index: 10000;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(59, 130, 246, 0.2);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 20px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .btn-back {
+        display: none;
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        z-index: 999;
+      }
+
+      @media (max-width: 900px) {
+        html,
+        body {
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+
+        .app-shell {
+          flex-direction: column;
+          padding-top: 90px;
+        }
+
+        .sidebar {
+          width: 100%;
+          max-width: 100%;
+          border-right: none;
+          border-radius: 0 0 20px 20px;
+          box-shadow: none;
+          padding: 16px;
+        }
+
+        .preview-stage {
+          width: 100%;
+          min-width: 0;
+          padding: 16px;
+          align-items: stretch;
+        }
+
+        .canvas-a4 {
+          width: 100%;
+          max-width: 100%;
+          min-height: auto;
+          padding: 14px;
+          box-shadow: none;
+          margin-bottom: 24px;
+        }
+
+        .action-area {
+          position: static;
+          bottom: auto;
+          margin: 0;
+          border-top: 1px solid var(--border);
+          border-radius: 0 0 16px 16px;
+          width: 100%;
+        }
+
+        .saved-report-toolbar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .saved-report-toolbar input,
+        .saved-report-toolbar select,
+        .task-entry input,
+        .task-entry button,
+        .saved-report-actions .btn {
+          width: 100%;
+        }
+
+        .photo-upload-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .activities-table th,
+        .activities-table td,
+        .data-table td,
+        .profile-table td {
+          white-space: normal;
+          word-break: break-word;
+        }
+
+        .btn-back {
+          display: block;
+          position: static;
+          margin: 16px 12px 0;
+          width: auto;
+          max-width: calc(100% - 24px);
+        }
+
+        .navbar {
+          padding: 10px 0;
+        }
+
+        .nav-container {
+          padding: 0 10px;
+          gap: 6px;
+        }
+      }
+
+      /* Additional mobile optimization for all screens under 1024px */
+      @media (max-width: 1024px) {
+        * {
+          box-sizing: border-box;
+        }
+        html,
+        body {
+          width: 100vw;
+          max-width: 100vw;
+          overflow-x: hidden;
+          overscroll-behavior: none;
+          touch-action: pan-y;
+        }
+        .app-shell,
+        .sidebar,
+        .preview-stage,
+        .navbar,
+        .nav-container {
+          max-width: 100vw !important;
+          width: 100% !important;
+          overflow-x: hidden !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .btn {
+          padding: 10px 12px;
+          font-size: 11px;
+        }
+
+        .sidebar {
+          padding: 14px;
+        }
+
+        .canvas-a4 {
+          padding: 12px;
+        }
+
+        .nav-link {
+          font-size: 11px;
+          padding: 6px 8px;
+        }
+      }
+
+      @media print {
+        .sidebar,
+        .action-area,
+        .btn-back,
+        .navbar {
+          display: none !important;
+        }
+        .app-shell {
+          padding-top: 0;
+        }
+        .preview-stage {
+          padding: 0;
+          background: white;
+        }
+        .canvas-a4 {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body id="main-body">
+    <div id="license-screen">
+      <div class="license-card">
+        <h2>🔐 AKTIVASI LISENSI DIPERLUKAN</h2>
+        <p style="color: var(--text-dim)">SYSTEM STATUS: TERENSKRIPSI</p>
+        <p style="color: var(--text-dim); font-size: 12px">
+          Hubungi admin untuk mendapatkan akses.
+        </p>
+        <p style="color: var(--text-dim); font-size: 12px">
+          Kontak WhatsApp: 0822-9296-4110
+        </p>
+
+        <div
+          style="
+            background: rgba(59, 130, 246, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px 0;
+          "
+        >
+          <p style="margin: 0 0 8px 0; color: var(--text-dim); font-size: 11px">
+            ID PERANGKAT ANDA:
+          </p>
+          <div
+            id="display-uuid"
+            style="
+              font-family: monospace;
+              color: var(--primary);
+              font-weight: bold;
+              margin-bottom: 8px;
+            "
+          >
+            MENGAMBIL DATA...
+          </div>
+          <button
+            class="btn btn-preview"
+            type="button"
+            onclick="copyDeviceId()"
+            style="margin: 0"
+          >
+            SALIN ID
+          </button>
+        </div>
+
+        <input
+          type="text"
+          id="input-license"
+          class="license-input"
+          placeholder="ENTER LICENSE KEY"
+        />
+        <button
+          class="btn btn-preview"
+          onclick="checkLicense()"
+          style="margin: 0"
+        >
+          AKTIVASI
+        </button>
+      </div>
+    </div>
+
+    <div id="loading-overlay" style="display: none">
+      <div class="spinner"></div>
+      <div style="letter-spacing: 3px; font-weight: bold">
+        SELAMAT DATANG...
+      </div>
+    </div>
+
+    <div id="toast" class="toast">Data Berhasil Dikunci!</div>
+
+    <nav class="navbar animate__animated animate__fadeInDown">
+      <div class="nav-container">
+        <a href="index.html" class="nav-link"
+          ><i class="fas fa-tower-broadcast"></i> Dash</a
+        >
+        <a href="inputan.html" class="nav-link"
+          ><i class="fas fa-edit"></i> Input</a
+        >
+        <a href="inputan-tabel.html" class="nav-link active"
+          ><i class="fas fa-table"></i> Input Tabel</a
+        >
+        <a href="rekapan.html" class="nav-link"
+          ><i class="fas fa-database"></i> Rekapan</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Info</a
+        >
+        <button
+          class="nav-hamburger"
+          aria-label="Menu"
+          onclick="window.EkinToggleMobileNav()"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <div class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"
+          ><i class="fas fa-tower-broadcast"></i> Dash</a
+        >
+        <a href="inputan.html" class="nav-link"
+          ><i class="fas fa-edit"></i> Input</a
+        >
+        <a href="inputan-tabel.html" class="nav-link active"
+          ><i class="fas fa-table"></i> Input Tabel</a
+        >
+        <a href="rekapan.html" class="nav-link"
+          ><i class="fas fa-database"></i> Rekapan</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Info</a
+        >
+      </div>
+    </nav>
+
+    <button class="btn-back" onclick="togglePreview()">← KEMBALI EDIT</button>
+
+    <div class="app-shell" id="app-shell" style="visibility: hidden">
+      <aside class="sidebar">
+        <div class="section-card">
+          <h3>KOP & INSTANSI</h3>
+          <label class="date-checkbox">
+            <input type="checkbox" id="use-kop-laporan" />
+            <span>Gunakan KOP laporan</span>
+          </label>
+          <div id="kop-settings" style="display: none">
+            <div id="kop-display" class="identity-locked" style="display: none">
+              <p
+                id="txt-instansi"
+                style="
+                  font-weight: 700;
+                  color: var(--primary);
+                  margin-bottom: 5px;
+                "
+              >
+                -
+              </p>
+              <p id="txt-kab" style="margin-top: 0; font-size: 0.8rem">-</p>
+              <button class="btn-unlock" onclick="unlockKop()">Ubah Kop</button>
+            </div>
+            <div id="kop-inputs" style="display: none">
+              <div
+                id="logo-upload-btn"
+                class="logo-upload-btn"
+                onclick="document.getElementById('in-logo').click()"
+              >
+                📷 UPLOAD LOGO INSTANSI
+              </div>
+              <input
+                type="file"
+                id="in-logo"
+                style="display: none"
+                accept="image/*"
+                onchange="previewLogo(this)"
+              />
+              <input
+                type="text"
+                id="in-instansi"
+                value="Dinas Satuan Polisi Pamong Praja Dan Pemadam Kebakaran"
+              />
+              <input
+                type="text"
+                id="in-kab"
+                value="Kabupaten Maluku Barat Daya"
+              />
+              <input type="text" id="in-kota" value="Kota Tiakur" />
+              <button
+                class="btn btn-preview"
+                style="font-size: 0.75rem; padding: 10px"
+                onclick="lockKop()"
+              >
+                KUNCI KOP LAPORAN
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3>PROFIL PEGAWAI</h3>
+          <div
+            id="identitas-display"
+            class="identity-locked"
+            style="display: none"
+          >
+            <p
+              id="txt-nama"
+              style="
+                font-weight: 700;
+                color: var(--primary);
+                margin-bottom: 5px;
+              "
+            >
+              -
+            </p>
+            <p id="txt-nip" style="margin-top: 0">NIP: -</p>
+            <button class="btn-unlock" onclick="unlockIdentity()">
+              Ubah Profil
+            </button>
+          </div>
+          <div id="identitas-inputs">
+            <input type="text" id="in-nama" placeholder="Nama Lengkap" />
+            <input
+              type="text"
+              id="in-nip"
+              placeholder="Nomor Induk Pegawai (NIP)"
+            />
+            <input type="text" id="in-jabatan" placeholder="Jabatan" />
+            <button
+              class="btn btn-preview"
+              style="font-size: 0.75rem; padding: 10px"
+              onclick="lockIdentity()"
+            >
+              KUNCI PROFIL
+            </button>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3>JUDUL LAPORAN</h3>
+          <input
+            type="text"
+            id="in-report-title"
+            placeholder="Judul utama laporan"
+            value="LAPORAN KEGIATAN HARIAN"
+          />
+          <textarea
+            id="in-report-subtitle"
+            placeholder="Subjudul atau ringkasan kegiatan"
+            rows="2"
+          >
+Laporan Kegiatan Harian Pegawai</textarea
+          >
+          <div class="date-settings">
+            <label class="date-checkbox">
+              <input type="checkbox" id="use-custom-date" />
+              <span>Gunakan tanggal khusus</span>
+            </label>
+            <input type="date" id="in-report-date" disabled />
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3>KOP TABEL</h3>
+          <div
+            id="table-header-display"
+            class="identity-locked"
+            style="display: none"
+          >
+            <p id="txt-col-no">No</p>
+            <p id="txt-col-desc">Uraian Kegiatan</p>
+            <p id="txt-col-date">Tanggal</p>
+            <p id="txt-col-location">Lokasi</p>
+            <p id="txt-col-notes">Keterangan</p>
+            <p id="txt-col-photo">Foto</p>
+            <button class="btn-unlock" onclick="unlockTableHeader()">
+              Ubah Kop Tabel
+            </button>
+          </div>
+          <div id="table-header-inputs">
+            <input type="text" id="in-col-no" value="No" />
+            <input type="text" id="in-col-desc" value="Uraian Kegiatan" />
+            <input type="text" id="in-col-date" value="Tanggal" />
+            <input type="text" id="in-col-location" value="Lokasi" />
+            <input type="text" id="in-col-notes" value="Keterangan" />
+            <input type="text" id="in-col-photo" value="Foto" />
+            <button
+              class="btn btn-preview"
+              style="font-size: 0.75rem; padding: 10px"
+              onclick="lockTableHeader()"
+            >
+              KUNCI KOP TABEL
+            </button>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3>DAFTAR KEGIATAN</h3>
+          <div id="activities-container"></div>
+          <button
+            type="button"
+            class="add-activity-btn"
+            onclick="addActivity()"
+          >
+            + TAMBAH KEGIATAN
+          </button>
+        </div>
+
+        <div class="section-card">
+          <h3>TANDA TANGAN</h3>
+          <label class="date-checkbox">
+            <input type="checkbox" id="use-ttd-feature" />
+            <span>Gunakan tanda tangan</span>
+          </label>
+          <div id="ttd-settings" style="display: none">
+            <div id="ttd-display" class="identity-locked" style="display: none">
+              <p
+                id="txt-ttd-nama"
+                style="
+                  font-weight: 700;
+                  color: var(--primary);
+                  margin-bottom: 5px;
+                "
+              >
+                -
+              </p>
+              <p id="txt-ttd-jabatan" style="margin-top: 0; font-size: 0.8rem">
+                -
+              </p>
+              <button class="btn-unlock" onclick="unlockTtd()">
+                Ubah Tanda Tangan
+              </button>
+            </div>
+            <div id="ttd-inputs" style="display: none">
+              <input
+                type="text"
+                id="in-ttd-tempat"
+                placeholder="Tempat"
+                value="Tiakur"
+              />
+              <input type="date" id="in-ttd-tanggal" />
+              <textarea
+                id="in-ttd-jabatan"
+                placeholder="Jabatan Penandatangan"
+                rows="3"
+              >
+Kepala Satuan Polisi Pamong Praja
+Dan Pemadam Kebakaran
+Kabupaten Maluku Barat Daya</textarea
+              >
+              <input
+                type="text"
+                id="in-ttd-nama"
+                placeholder="Nama Penandatangan"
+              />
+              <input
+                type="text"
+                id="in-ttd-pangkat"
+                placeholder="Pangkat/Golongan"
+              />
+              <input
+                type="text"
+                id="in-ttd-nip"
+                placeholder="NIP Penandatangan"
+              />
+              <div
+                id="ttd-upload-btn"
+                class="logo-upload-btn"
+                style="margin-top: 8px"
+                onclick="document.getElementById('in-ttd-image').click()"
+              >
+                🖊️ UPLOAD FOTO TANDA TANGAN
+              </div>
+              <input
+                type="file"
+                id="in-ttd-image"
+                style="display: none"
+                accept="image/*"
+                onchange="previewTtdImage(this)"
+              />
+              <button
+                class="btn btn-preview"
+                style="font-size: 0.75rem; padding: 10px"
+                onclick="lockTtd()"
+              >
+                KUNCI TANDA TANGAN
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card" id="saved-reports-section">
+          <h3>DAFTAR LAPORAN TERSIMPAN</h3>
+          <div class="saved-report-toolbar">
+            <input
+              type="text"
+              id="report-search"
+              placeholder="Cari laporan..."
+            />
+            <select id="report-filter">
+              <option value="all">Semua</option>
+              <option value="nama">Nama</option>
+              <option value="nip">NIP</option>
+              <option value="jabatan">Jabatan</option>
+              <option value="instansi">Instansi</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            class="btn btn-preview"
+            style="width: 100%; margin-bottom: 12px"
+            onclick="startNewReport()"
+          >
+            TAMBAH LAPORAN BARU
+          </button>
+          <button
+            type="button"
+            class="btn btn-pdf"
+            style="width: 100%; margin-bottom: 12px"
+            onclick="saveReport()"
+          >
+            SIMPAN LAPORAN
+          </button>
+          <div id="saved-reports" class="saved-report-list">
+            <p style="color: #64748b; margin: 0">
+              Belum ada laporan tersimpan.
+            </p>
+          </div>
+        </div>
+
+        <div class="action-area">
+          <button class="btn btn-preview" onclick="togglePreview()">
+            PREVIEW HASIL
+          </button>
+          <button class="btn btn-print" onclick="window.print()">CETAK</button>
+          <button class="btn btn-pdf" onclick="exportToPDF()">
+            SIMPAN PDF
+          </button>
+        </div>
+      </aside>
+
+      <main class="preview-stage">
+        <div class="canvas-a4" id="printable-area">
+          <header class="report-header">
+            <img
+              id="out-logo"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Lambang_Kabupaten_Maluku_Barat_Daya.png/150px-Lambang_Kabupaten_Maluku_Barat_Daya.png"
+              class="report-logo"
+            />
+            <div class="header-text">
+              <h2 id="out-instansi"></h2>
+              <h2 id="out-kab">KABUPATEN MALUKU BARAT DAYA</h2>
+              <p id="out-kota" style="font-weight: normal">Kota Tiakur</p>
+            </div>
+          </header>
+          <div class="header-separator"></div>
+
+          <div style="text-align: center; margin: 10px 0">
+            <h3 id="out-report-title" class="report-main-title">
+              LAPORAN KEGIATAN HARIAN
+            </h3>
+            <p id="out-report-subtitle" class="report-subtitle">
+              Laporan Kegiatan Harian Pegawai
+            </p>
+          </div>
+
+          <table class="profile-table">
+            <tr>
+              <td>Nama</td>
+              <td>:</td>
+              <td id="out-nama" style="font-weight: bold">-</td>
+            </tr>
+            <tr>
+              <td>NIP</td>
+              <td>:</td>
+              <td id="out-nip">-</td>
+            </tr>
+            <tr>
+              <td>Jabatan</td>
+              <td>:</td>
+              <td id="out-jabatan">-</td>
+            </tr>
+            <tr>
+              <td>Tanggal</td>
+              <td>:</td>
+              <td id="out-tanggal" style="font-weight: bold">-</td>
+            </tr>
+          </table>
+
+          <table class="activities-table">
+            <thead>
+              <tr>
+                <th class="no-col" id="out-col-no">No</th>
+                <th class="desc-col" id="out-col-desc">Uraian Kegiatan</th>
+                <th class="date-col" id="out-col-date">Tanggal</th>
+                <th class="location-col" id="out-col-location">Lokasi</th>
+                <th class="note-col" id="out-col-notes">Keterangan</th>
+                <th class="photo-col" id="out-col-photo">Foto</th>
+              </tr>
+            </thead>
+            <tbody id="out-activities-body">
+              <tr>
+                <td
+                  colspan="6"
+                  style="text-align: center; padding: 20px; color: #999"
+                >
+                  Belum ada data kegiatan
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="ttd-block" id="out-ttd-block">
+            <div class="ttd-place-date">
+              <span id="out-ttd-tempat">Tiakur</span>,
+              <span id="out-ttd-tanggal">-</span>
+            </div>
+            <div class="ttd-jabatan" id="out-ttd-jabatan">
+              Kepala Satuan Polisi Pamong Praja<br />
+              Dan Pemadam Kebakaran<br />
+              Kabupaten Maluku Barat Daya
+            </div>
+            <div class="ttd-spasi"></div>
+            <div class="ttd-image-box" id="out-ttd-image">
+              <span class="ttd-image-placeholder">(Tanda tangan)</span>
+            </div>
+            <div class="ttd-spasi"></div>
+            <div class="ttd-nama" id="out-ttd-nama">-</div>
+            <div class="ttd-pangkat" id="out-ttd-pangkat">-</div>
+            <div class="ttd-nip">NIP. <span id="out-ttd-nip">-</span></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="assets/js/auth.js"></script>
+    <script>
+      // --- LICENSE & SECURITY ---
+      const SALT = "SNEJDER_PRO_2026";
+
+      function generateUUID() {
+        const storedId = localStorage.getItem("ghost_device_id");
+        if (storedId) return storedId;
+
+        const nav = window.navigator;
+        const screen = window.screen;
+        const parts = [
+          nav.userAgent || "",
+          nav.platform || "",
+          nav.language || "",
+          screen.width || "",
+          screen.height || "",
+          Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+        ];
+
+        const raw = parts.join("|") + Math.random();
+        const encoded = btoa(raw).substring(0, 18).toUpperCase();
+        const deviceId = "GHOST-" + encoded;
+        localStorage.setItem("ghost_device_id", deviceId);
+        return deviceId;
+      }
+
+      function checkLicense() {
+        const uuid = document.getElementById("display-uuid").innerText;
+        const input = document.getElementById("input-license").value.trim();
+        const validKey = btoa(uuid + SALT)
+          .substring(0, 8)
+          .toUpperCase();
+
+        if (input === validKey) {
+          localStorage.setItem("ghost_pro_activated", "true");
+          showToast("SYSTEM ACTIVATED!");
+          unlockApp();
+        } else {
+          alert("ACCESS DENIED: KODE LISENSI SALAH!");
+        }
+      }
+
+      function copyDeviceId() {
+        const deviceId = document
+          .getElementById("display-uuid")
+          .innerText.trim();
+        if (!deviceId || deviceId === "MENGAMBIL DATA...") {
+          showToast("ID perangkat belum tersedia.");
+          return;
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(deviceId)
+            .then(() => {
+              alert("ID tersalin, kirimkan ke admin 082292964110");
+            })
+            .catch(() => {
+              fallbackCopy(deviceId);
+            });
+        } else {
+          fallbackCopy(deviceId);
+        }
+      }
+
+      function fallbackCopy(text) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand("copy");
+          alert("ID tersalin, kirimkan ke admin 082292964110");
+        } catch (err) {
+          alert("Gagal menyalin. Silakan salin secara manual.");
+        }
+        document.body.removeChild(textarea);
+      }
+
+      function unlockApp() {
+        document.getElementById("license-screen").style.display = "none";
+        document.getElementById("app-shell").style.visibility = "visible";
+        document.getElementById("loading-overlay").style.display = "flex";
+
+        setTimeout(() => {
+          document.getElementById("loading-overlay").style.display = "none";
+          checkLoginAccess();
+        }, 1500);
+      }
+
+      function getCurrentLoginUser() {
+        try {
+          let user = null;
+          if (
+            window.EkinAuth &&
+            typeof window.EkinAuth.getCurrentUser === "function"
+          ) {
+            user = window.EkinAuth.getCurrentUser();
+          }
+          if (!user) {
+            const session = localStorage.getItem("ekin_session");
+            if (session) user = JSON.parse(session);
+          }
+          return user;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function checkLoginAccess() {
+        const user = getCurrentLoginUser();
+        if (!user) {
+          alert("Harap login terlebih dahulu!");
+          window.location.href = "login.html";
+        }
+      }
+
+      // --- DATA & UTILITIES ---
+      let activities = [];
+      let reportSearchQuery = "";
+      let reportSearchType = "all";
+
+      function getSavedReports() {
+        const user = getCurrentLoginUser();
+        if (!user) return [];
+        const key = `laporan_${user.username}`;
+        return JSON.parse(localStorage.getItem(key) || "[]");
+      }
+
+      function setSavedReports(reports) {
+        const user = getCurrentLoginUser();
+        if (!user) return;
+        const key = `laporan_${user.username}`;
+        localStorage.setItem(key, JSON.stringify(reports));
+      }
+
+      function isQuotaExceeded(error) {
+        return (
+          error &&
+          (error.name === "QuotaExceededError" ||
+            error.name === "NS_ERROR_DOM_QUOTA_REACHED" ||
+            error.code === 22 ||
+            error.code === 1014 ||
+            (error.message && error.message.toLowerCase().includes("quota")))
+        );
+      }
+
+      function compressImageDataUrl(
+        dataUrl,
+        maxWidth = 1200,
+        maxHeight = 1200,
+        quality = 0.75,
+      ) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            const ratio = Math.min(
+              1,
+              maxWidth / img.width,
+              maxHeight / img.height,
+            );
+            const width = Math.round(img.width * ratio);
+            const height = Math.round(img.height * ratio);
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            try {
+              const compressed = canvas.toDataURL("image/jpeg", quality);
+              resolve(compressed);
+            } catch (err) {
+              resolve(dataUrl);
+            }
+          };
+          img.onerror = () => reject(new Error("Gagal memproses foto."));
+          img.src = dataUrl;
+        });
+      }
+
+      async function compressActivityPhotos(activities) {
+        const compressed = [];
+        for (const activity of activities) {
+          if (!activity.photo) {
+            compressed.push(activity);
+            continue;
+          }
+          try {
+            compressed.push({
+              ...activity,
+              photo: await compressImageDataUrl(activity.photo, 600, 600, 0.6),
+            });
+          } catch (err) {
+            compressed.push(activity);
+          }
+        }
+        return compressed;
+      }
+
+      function filterSavedReports(reports) {
+        const query = reportSearchQuery.trim().toLowerCase();
+        if (!query || reportSearchType === "all") {
+          return reports.filter((report) => {
+            if (!query) return true;
+            return [
+              report.nama,
+              report.nip,
+              report.jabatan,
+              report.instansi,
+              report.kab,
+            ].some((value) => (value || "").toLowerCase().includes(query));
+          });
+        }
+
+        return reports.filter((report) =>
+          (report[reportSearchType] || "").toLowerCase().includes(query),
+        );
+      }
+
+      function renderSavedReports() {
+        const container = document.getElementById("saved-reports");
+        const reports = filterSavedReports(getSavedReports());
+        if (!container) return;
+
+        if (reports.length === 0) {
+          container.innerHTML =
+            '<p style="color: #64748b; margin: 0">Belum ada laporan tersimpan.</p>';
+          return;
+        }
+
+        container.innerHTML = reports
+          .map(
+            (report, idx) => `
+              <div class="saved-report-card">
+                <h4>${report.title || "Laporan tanpa judul"}</h4>
+                <small>${report.createdAt || report.date || "-"}</small>
+                <p style="margin: 6px 0 0; color: #d1d5db; font-size: 0.92rem;">
+                  ${report.uraian ? report.uraian.substring(0, 120) + (report.uraian.length > 120 ? "..." : "") : "-"}
+                </p>
+                <div class="saved-report-actions">
+                  <button class="btn btn-preview" onclick="openSavedReport(${idx})">Buka</button>
+                  <button class="btn btn-pdf" onclick="exportSavedReportPDF(${idx})">PDF</button>
+                  <button class="btn btn-preview" onclick="editSavedReport(${idx})">Edit</button>
+                  <button class="btn btn-del" onclick="confirmDeleteReport(${idx})">Hapus</button>
+                </div>
+              </div>
+            `,
+          )
+          .join("");
+      }
+
+      async function saveReport() {
+        const currentUser = getCurrentLoginUser();
+        if (!currentUser) {
+          alert("Harap login terlebih dahulu untuk menyimpan laporan!");
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Compress activities before storing
+        const compressedActivities = await compressActivityPhotos(
+          activities.map((item) => ({
+            description: item.description,
+            date: item.date,
+            location: item.location,
+            notes: item.notes,
+            photo: item.photo,
+          })),
+        );
+
+        const report = {
+          id:
+            window.editingReportIndex !== undefined
+              ? getSavedReports()[window.editingReportIndex]?.id || Date.now()
+              : Date.now(),
+          title: document.getElementById("in-report-title").value.trim(),
+          subtitle: document.getElementById("in-report-subtitle").value.trim(),
+          date:
+            document.getElementById("in-report-date").value || getTodayDate(),
+          nama: document.getElementById("in-nama").value.trim(),
+          nip: document.getElementById("in-nip").value.trim(),
+          jabatan: document.getElementById("in-jabatan").value.trim(),
+          instansi: document.getElementById("in-instansi").value.trim(),
+          kab: document.getElementById("in-kab").value.trim(),
+          kota: document.getElementById("in-kota").value.trim(),
+          uraian: "",
+          activities: compressedActivities,
+          logo: document.getElementById("out-logo").src,
+          ttd: {
+            tempat: document.getElementById("in-ttd-tempat").value.trim(),
+            tanggal: document.getElementById("in-ttd-tanggal").value,
+            jabatan: document.getElementById("in-ttd-jabatan").value.trim(),
+            nama: document.getElementById("in-ttd-nama").value.trim(),
+            pangkat: document.getElementById("in-ttd-pangkat").value.trim(),
+            nip: document.getElementById("in-ttd-nip").value.trim(),
+            image:
+              document.getElementById("out-ttd-image")?.querySelector("img")
+                ?.src || "",
+          },
+          ttdEnabled:
+            document.getElementById("use-ttd-feature")?.checked || false,
+          createdAt:
+            window.editingReportIndex !== undefined
+              ? getSavedReports()[window.editingReportIndex]?.createdAt ||
+                new Date().toLocaleString("id-ID", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })
+              : new Date().toLocaleString("id-ID", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                }),
+        };
+
+        if (!report.title) {
+          alert("Isi judul laporan sebelum menyimpan.");
+          return;
+        }
+
+        const savedReports = getSavedReports();
+
+        if (window.editingReportIndex !== undefined) {
+          // Update existing report
+          savedReports[window.editingReportIndex] = report;
+          delete window.editingReportIndex;
+          showToast("Laporan berhasil diperbarui.");
+        } else {
+          // Add new report
+          savedReports.unshift(report);
+          showToast("Laporan berhasil disimpan.");
+        }
+
+        try {
+          setSavedReports(savedReports);
+        } catch (err) {
+          if (isQuotaExceeded(err)) {
+            // Hapus beberapa laporan lama jika penyimpanan gagal karena quota
+            let deletedCount = 0;
+            while (savedReports.length > 1 && deletedCount < 3) {
+              savedReports.splice(1, 1); // Hapus laporan terlama (index 1)
+              deletedCount++;
+              try {
+                setSavedReports(savedReports);
+                showToast(
+                  `Laporan tersimpan. ${deletedCount} laporan lama dihapus untuk menghemat ruang penyimpanan.`,
+                );
+                renderSavedReports();
+                return;
+              } catch (retryErr) {
+                if (!isQuotaExceeded(retryErr)) throw retryErr;
+                // Lanjut ke loop untuk hapus lebih banyak
+              }
+            }
+            return alert(
+              "Penyimpanan gagal: ruang penyimpanan penuh. Silakan hapus beberapa laporan secara manual.",
+            );
+          } else {
+            throw err;
+          }
+        }
+        renderSavedReports();
+      }
+
+      function startNewReport() {
+        // Reset editing mode
+        delete window.editingReportIndex;
+
+        activities = [];
+        renderActivities();
+        document.getElementById("in-report-title").value = "";
+        document.getElementById("in-report-subtitle").value = "";
+        document.getElementById("in-nama").value = "";
+        document.getElementById("in-nip").value = "";
+        document.getElementById("in-jabatan").value = "";
+        document.getElementById("in-instansi").value = "";
+        document.getElementById("in-kab").value = "";
+        document.getElementById("in-kota").value = "";
+        document.getElementById("in-report-date").value = getTodayDate();
+        document.getElementById("use-custom-date").checked = false;
+        document.getElementById("in-ttd-tempat").value = "Tiakur";
+        document.getElementById("in-ttd-tanggal").value = getTodayDate();
+        document.getElementById("in-ttd-jabatan").value =
+          "Kepala Satuan Polisi Pamong Praja\nDan Pemadam Kebakaran\nKabupaten Maluku Barat Daya";
+        document.getElementById("in-ttd-nama").value = "";
+        document.getElementById("in-ttd-pangkat").value = "";
+        document.getElementById("in-ttd-nip").value = "";
+        document.getElementById("out-logo").src =
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Lambang_Kabupaten_Maluku_Barat_Daya.png/150px-Lambang_Kabupaten_Maluku_Barat_Daya.png";
+        updateTanggal();
+        updateTtdPreview();
+        showToast("Form laporan baru siap diisi.");
+      }
+
+      function openSavedReport(index) {
+        const reports = filterSavedReports(getSavedReports());
+        const report = reports[index];
+        if (!report) return;
+
+        document.getElementById("in-report-title").value = report.title || "";
+        document.getElementById("in-report-subtitle").value =
+          report.subtitle || "";
+        document.getElementById("in-nama").value = report.nama || "";
+        document.getElementById("in-nip").value = report.nip || "";
+        document.getElementById("in-jabatan").value = report.jabatan || "";
+        document.getElementById("in-instansi").value = report.instansi || "";
+        document.getElementById("in-kab").value = report.kab || "";
+        document.getElementById("in-kota").value = report.kota || "";
+        document.getElementById("in-report-date").value =
+          report.date || getTodayDate();
+        document.getElementById("use-custom-date").checked = true;
+        document.getElementById("in-ttd-tempat").value =
+          report.ttd?.tempat || "Tiakur";
+        document.getElementById("in-ttd-tanggal").value =
+          report.ttd?.tanggal || getTodayDate();
+        document.getElementById("in-ttd-jabatan").value =
+          report.ttd?.jabatan || "";
+        document.getElementById("in-ttd-nama").value = report.ttd?.nama || "";
+        document.getElementById("in-ttd-pangkat").value =
+          report.ttd?.pangkat || "";
+        document.getElementById("in-ttd-nip").value = report.ttd?.nip || "";
+        if (report.ttd?.image) {
+          document.getElementById("out-ttd-image").innerHTML =
+            `<img src="${report.ttd.image}" style="max-width: 80px; max-height: 50px; object-fit: contain;" />`;
+        }
+        document.getElementById("out-logo").src =
+          report.logo || document.getElementById("out-logo").src;
+        activities = report.activities || [];
+        renderActivities();
+        updateTanggal();
+        updateTtdPreview();
+        showToast("Laporan tersimpan berhasil dimuat.");
+      }
+
+      function deleteSavedReport(index) {
+        const reports = getSavedReports();
+        reports.splice(index, 1);
+        setSavedReports(reports);
+        renderSavedReports();
+        showToast("Laporan tersimpan berhasil dihapus.");
+      }
+
+      function editSavedReport(index) {
+        const reports = filterSavedReports(getSavedReports());
+        const report = reports[index];
+        if (!report) return;
+
+        // Load report data into form
+        document.getElementById("in-report-title").value = report.title || "";
+        document.getElementById("in-report-subtitle").value =
+          report.subtitle || "";
+        document.getElementById("in-nama").value = report.nama || "";
+        document.getElementById("in-nip").value = report.nip || "";
+        document.getElementById("in-jabatan").value = report.jabatan || "";
+        document.getElementById("in-instansi").value = report.instansi || "";
+        document.getElementById("in-kab").value = report.kab || "";
+        document.getElementById("in-kota").value = report.kota || "";
+        document.getElementById("in-report-date").value =
+          report.date || getTodayDate();
+        document.getElementById("use-custom-date").checked = true;
+
+        // Load TTD data
+        document.getElementById("in-ttd-tempat").value =
+          report.ttd?.tempat || "Tiakur";
+        document.getElementById("in-ttd-tanggal").value =
+          report.ttd?.tanggal || getTodayDate();
+        document.getElementById("in-ttd-jabatan").value =
+          report.ttd?.jabatan || "";
+        document.getElementById("in-ttd-nama").value = report.ttd?.nama || "";
+        document.getElementById("in-ttd-pangkat").value =
+          report.ttd?.pangkat || "";
+        document.getElementById("in-ttd-nip").value = report.ttd?.nip || "";
+
+        if (report.ttd?.image) {
+          document.getElementById("out-ttd-image").innerHTML =
+            `<img src="${report.ttd.image}" style="max-width: 80px; max-height: 50px; object-fit: contain;" />`;
+        }
+
+        // Load logo and activities
+        document.getElementById("out-logo").src =
+          report.logo || document.getElementById("out-logo").src;
+        activities = report.activities || [];
+        renderActivities();
+
+        // Update preview
+        updateTanggal();
+        updateTtdPreview();
+
+        // Set edit mode flag
+        window.editingReportIndex = index;
+
+        showToast(
+          'Laporan siap diedit. Lakukan perubahan dan klik "SIMPAN LAPORAN" untuk menyimpan.',
+        );
+      }
+
+      function exportSavedReportPDF(index) {
+        const reports = filterSavedReports(getSavedReports());
+        const report = reports[index];
+        if (!report) return;
+
+        // Show loading
+        showLoading("Mengekspor PDF laporan tersimpan...");
+
+        // Load report data temporarily
+        const originalData = {
+          title: document.getElementById("in-report-title").value,
+          subtitle: document.getElementById("in-report-subtitle").value,
+          nama: document.getElementById("in-nama").value,
+          nip: document.getElementById("in-nip").value,
+          jabatan: document.getElementById("in-jabatan").value,
+          instansi: document.getElementById("in-instansi").value,
+          kab: document.getElementById("in-kab").value,
+          kota: document.getElementById("in-kota").value,
+          date: document.getElementById("in-report-date").value,
+          ttd: {
+            tempat: document.getElementById("in-ttd-tempat").value,
+            tanggal: document.getElementById("in-ttd-tanggal").value,
+            jabatan: document.getElementById("in-ttd-jabatan").value,
+            nama: document.getElementById("in-ttd-nama").value,
+            pangkat: document.getElementById("in-ttd-pangkat").value,
+            nip: document.getElementById("in-ttd-nip").value,
+          },
+          logo: document.getElementById("out-logo").src,
+          activities: [...activities],
+        };
+
+        // Load saved report data
+        document.getElementById("in-report-title").value = report.title || "";
+        document.getElementById("in-report-subtitle").value =
+          report.subtitle || "";
+        document.getElementById("in-nama").value = report.nama || "";
+        document.getElementById("in-nip").value = report.nip || "";
+        document.getElementById("in-jabatan").value = report.jabatan || "";
+        document.getElementById("in-instansi").value = report.instansi || "";
+        document.getElementById("in-kab").value = report.kab || "";
+        document.getElementById("in-kota").value = report.kota || "";
+        document.getElementById("in-report-date").value =
+          report.date || getTodayDate();
+
+        document.getElementById("in-ttd-tempat").value =
+          report.ttd?.tempat || "Tiakur";
+        document.getElementById("in-ttd-tanggal").value =
+          report.ttd?.tanggal || getTodayDate();
+        document.getElementById("in-ttd-jabatan").value =
+          report.ttd?.jabatan || "";
+        document.getElementById("in-ttd-nama").value = report.ttd?.nama || "";
+        document.getElementById("in-ttd-pangkat").value =
+          report.ttd?.pangkat || "";
+        document.getElementById("in-ttd-nip").value = report.ttd?.nip || "";
+
+        if (report.ttd?.image) {
+          document.getElementById("out-ttd-image").innerHTML =
+            `<img src="${report.ttd.image}" style="max-width: 80px; max-height: 50px; object-fit: contain;" />`;
+        }
+
+        document.getElementById("out-logo").src =
+          report.logo || document.getElementById("out-logo").src;
+        activities = report.activities || [];
+        renderActivities();
+        updateTanggal();
+        updateTtdPreview();
+
+        // Wait a bit for rendering, then export
+        setTimeout(() => {
+          exportToPDF().finally(() => {
+            // Restore original data
+            document.getElementById("in-report-title").value =
+              originalData.title;
+            document.getElementById("in-report-subtitle").value =
+              originalData.subtitle;
+            document.getElementById("in-nama").value = originalData.nama;
+            document.getElementById("in-nip").value = originalData.nip;
+            document.getElementById("in-jabatan").value = originalData.jabatan;
+            document.getElementById("in-instansi").value =
+              originalData.instansi;
+            document.getElementById("in-kab").value = originalData.kab;
+            document.getElementById("in-kota").value = originalData.kota;
+            document.getElementById("in-report-date").value = originalData.date;
+
+            document.getElementById("in-ttd-tempat").value =
+              originalData.ttd.tempat;
+            document.getElementById("in-ttd-tanggal").value =
+              originalData.ttd.tanggal;
+            document.getElementById("in-ttd-jabatan").value =
+              originalData.ttd.jabatan;
+            document.getElementById("in-ttd-nama").value =
+              originalData.ttd.nama;
+            document.getElementById("in-ttd-pangkat").value =
+              originalData.ttd.pangkat;
+            document.getElementById("in-ttd-nip").value = originalData.ttd.nip;
+
+            document.getElementById("out-logo").src = originalData.logo;
+            activities = [...originalData.activities];
+            renderActivities();
+            updateTanggal();
+            updateTtdPreview();
+
+            hideLoading();
+            showToast("PDF laporan tersimpan berhasil diekspor.");
+          });
+        }, 500);
+      }
+
+      function confirmDeleteReport(index) {
+        const reports = filterSavedReports(getSavedReports());
+        const report = reports[index];
+        if (!report) return;
+
+        showModal(
+          "Hapus Laporan",
+          `Apakah Anda yakin ingin menghapus laporan "${report.title || "Laporan tanpa judul"}"?`,
+          () => deleteSavedReport(index),
+        );
+      }
+
+      function showModal(title, message, confirmCallback) {
+        const modal = document.getElementById("confirmation-modal");
+        const titleEl = document.getElementById("modal-title");
+        const messageEl = document.getElementById("modal-message");
+        const confirmBtn = document.getElementById("modal-confirm-btn");
+
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+        confirmBtn.onclick = () => {
+          confirmCallback();
+          closeModal();
+        };
+
+        modal.classList.add("show");
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("confirmation-modal");
+        modal.classList.remove("show");
+      }
+
+      function showLoading(text = "Memproses...") {
+        const overlay = document.getElementById("loading-overlay");
+        const textEl = document.getElementById("loading-text");
+        textEl.textContent = text;
+        overlay.classList.add("show");
+      }
+
+      function hideLoading() {
+        const overlay = document.getElementById("loading-overlay");
+        overlay.classList.remove("show");
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        toast.innerText = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2500);
+      }
+
+      function markUploadSuccess(buttonId, text) {
+        const button = document.getElementById(buttonId);
+        if (!button) return;
+        button.innerText = text;
+        button.style.background = "rgba(34, 197, 94, 0.2)";
+        button.style.borderColor = "rgba(34, 197, 94, 0.5)";
+        button.style.color = "#84cc16";
+      }
+
+      function getTodayDate() {
+        return new Date().toISOString().slice(0, 10);
+      }
+
+      function formatDate(dateStr) {
+        if (!dateStr) return "-";
+        const date = new Date(dateStr);
+        return date.toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+      }
+
+      // --- KOP & IDENTITAS ---
+      function previewLogo(input) {
+        if (input.files && input.files[0]) {
+          try {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              document.getElementById("out-logo").src = e.target.result;
+              markUploadSuccess("logo-upload-btn", "LOGO TERUPLOAD");
+              showToast("Logo instansi berhasil diunggah");
+            };
+            reader.onerror = () => {
+              showToast(
+                "Error: File logo terlalu besar atau tidak valid. Coba file yang lebih kecil.",
+              );
+            };
+            reader.readAsDataURL(input.files[0]);
+          } catch (error) {
+            showToast(
+              "Error: Gagal memuat logo. Ukuran file mungkin terlalu besar.",
+            );
+          }
+        }
+      }
+
+      function lockKop() {
+        const instansi = document.getElementById("in-instansi").value.trim();
+        const kab = document.getElementById("in-kab").value.trim();
+        const kota = document.getElementById("in-kota").value.trim();
+        if (!instansi || !kab) {
+          alert("Harap isi instansi dan kabupaten!");
+          return;
+        }
+        document.getElementById("kop-inputs").style.display = "none";
+        document.getElementById("kop-display").style.display = "block";
+        document.getElementById("txt-instansi").innerText =
+          instansi.toUpperCase();
+        document.getElementById("txt-kab").innerText = kab.toUpperCase();
+
+        // Save to localStorage
+        const user = getCurrentLoginUser();
+        if (user) {
+          const kopData = { instansi, kab, kota };
+          localStorage.setItem(
+            `lock_${user.username}_kop`,
+            JSON.stringify(kopData),
+          );
+        }
+
+        showToast("Kop berhasil dikunci");
+      }
+
+      function updateKopSettingsVisibility() {
+        const useKop = document.getElementById("use-kop-laporan").checked;
+        const settings = document.getElementById("kop-settings");
+        settings.style.display = useKop ? "block" : "none";
+        const kopDisplay = document.getElementById("kop-display");
+        const kopInputs = document.getElementById("kop-inputs");
+        if (useKop) {
+          const locked =
+            document.getElementById("txt-instansi").innerText.trim() !== "-";
+          if (locked) {
+            kopDisplay.style.display = "block";
+            kopInputs.style.display = "none";
+          } else {
+            kopDisplay.style.display = "none";
+            kopInputs.style.display = "block";
+          }
+        } else {
+          kopDisplay.style.display = "none";
+          kopInputs.style.display = "none";
+        }
+      }
+
+      function unlockKop() {
+        document.getElementById("kop-display").style.display = "none";
+        document.getElementById("kop-inputs").style.display = "block";
+      }
+
+      function lockTableHeader() {
+        const columns = [
+          ["in-col-no", "out-col-no", "txt-col-no"],
+          ["in-col-desc", "out-col-desc", "txt-col-desc"],
+          ["in-col-date", "out-col-date", "txt-col-date"],
+          ["in-col-location", "out-col-location", "txt-col-location"],
+          ["in-col-notes", "out-col-notes", "txt-col-notes"],
+          ["in-col-photo", "out-col-photo", "txt-col-photo"],
+        ];
+
+        const columnData = {};
+        columns.forEach(([inputId, outId, txtId]) => {
+          const value = document.getElementById(inputId).value.trim() || "-";
+          document.getElementById(outId).innerText = value;
+          document.getElementById(txtId).innerText = value;
+          columnData[inputId] = value;
+        });
+
+        document.getElementById("table-header-inputs").style.display = "none";
+        document.getElementById("table-header-display").style.display = "block";
+
+        // Save to localStorage
+        const user = getCurrentLoginUser();
+        if (user) {
+          localStorage.setItem(
+            `lock_${user.username}_tableHeader`,
+            JSON.stringify(columnData),
+          );
+        }
+
+        showToast("Kop tabel berhasil dikunci");
+      }
+
+      function unlockTableHeader() {
+        document.getElementById("table-header-display").style.display = "none";
+        document.getElementById("table-header-inputs").style.display = "block";
+      }
+
+      function updateTableHeaderPreview() {
+        const pairs = [
+          ["in-col-no", "out-col-no", "txt-col-no"],
+          ["in-col-desc", "out-col-desc", "txt-col-desc"],
+          ["in-col-date", "out-col-date", "txt-col-date"],
+          ["in-col-location", "out-col-location", "txt-col-location"],
+          ["in-col-notes", "out-col-notes", "txt-col-notes"],
+          ["in-col-photo", "out-col-photo", "txt-col-photo"],
+        ];
+
+        pairs.forEach(([inputId, outId, txtId]) => {
+          const value = document.getElementById(inputId).value.trim() || "-";
+          document.getElementById(outId).innerText = value;
+          if (document.getElementById(txtId)) {
+            document.getElementById(txtId).innerText = value;
+          }
+        });
+      }
+
+      function updateTtdFeatureVisibility() {
+        const useTtd = document.getElementById("use-ttd-feature").checked;
+        const section = document.getElementById("ttd-settings");
+        section.style.display = useTtd ? "block" : "none";
+        const display = document.getElementById("ttd-display");
+        const inputs = document.getElementById("ttd-inputs");
+        if (useTtd) {
+          const locked =
+            document.getElementById("txt-ttd-nama").innerText.trim() !== "-";
+          if (locked) {
+            display.style.display = "block";
+            inputs.style.display = "none";
+          } else {
+            display.style.display = "none";
+            inputs.style.display = "block";
+          }
+        } else {
+          display.style.display = "none";
+          inputs.style.display = "none";
+        }
+      }
+
+      function lockTtd() {
+        const nama = document.getElementById("in-ttd-nama").value.trim();
+        const jabatan = document.getElementById("in-ttd-jabatan").value.trim();
+        if (!nama || !jabatan) {
+          alert("Harap isi nama dan jabatan tanda tangan!");
+          return;
+        }
+        document.getElementById("ttd-inputs").style.display = "none";
+        document.getElementById("ttd-display").style.display = "block";
+        updateTtdPreview();
+
+        // Save to localStorage
+        const user = getCurrentLoginUser();
+        if (user) {
+          const ttdData = {
+            tempat: document.getElementById("in-ttd-tempat").value.trim(),
+            tanggal: document.getElementById("in-ttd-tanggal").value,
+            jabatan: jabatan,
+            nama: nama,
+            pangkat: document.getElementById("in-ttd-pangkat").value.trim(),
+            nip: document.getElementById("in-ttd-nip").value.trim(),
+            image:
+              document.getElementById("out-ttd-image")?.querySelector("img")
+                ?.src || "",
+            enabled: document.getElementById("use-ttd-feature").checked,
+          };
+          localStorage.setItem(
+            `lock_${user.username}_ttd`,
+            JSON.stringify(ttdData),
+          );
+        }
+
+        showToast("Tanda tangan berhasil dikunci");
+      }
+
+      function unlockTtd() {
+        document.getElementById("ttd-display").style.display = "none";
+        document.getElementById("ttd-inputs").style.display = "block";
+      }
+
+      function lockIdentity() {
+        const nama = document.getElementById("in-nama").value.trim();
+        const nip = document.getElementById("in-nip").value.trim();
+        const jabatan = document.getElementById("in-jabatan").value.trim();
+        if (!nama || !nip) {
+          alert("Harap isi nama dan NIP!");
+          return;
+        }
+        document.getElementById("identitas-inputs").style.display = "none";
+        document.getElementById("identitas-display").style.display = "block";
+        document.getElementById("txt-nama").innerText = nama.toUpperCase();
+        document.getElementById("txt-nip").innerText = "NIP: " + nip;
+
+        // Save to localStorage
+        const user = getCurrentLoginUser();
+        if (user) {
+          const profileData = {
+            nama: nama,
+            nip: nip,
+            jabatan: jabatan,
+            instansi: document.getElementById("in-instansi").value.trim(),
+            kab: document.getElementById("in-kab").value.trim(),
+            kota: document.getElementById("in-kota").value.trim(),
+          };
+          localStorage.setItem(
+            `lock_${user.username}_profile`,
+            JSON.stringify(profileData),
+          );
+        }
+
+        showToast("Profil berhasil dikunci");
+      }
+
+      function unlockIdentity() {
+        document.getElementById("identitas-display").style.display = "none";
+        document.getElementById("identitas-inputs").style.display = "block";
+      }
+
+      // --- ACTIVITIES ---
+      function addActivity() {
+        const activity = {
+          id: Date.now(),
+          description: "",
+          date: getTodayDate(),
+          location: "",
+          notes: "",
+          photo: null,
+        };
+        activities.push(activity);
+        renderActivities();
+      }
+
+      function removeActivity(id) {
+        activities = activities.filter((a) => a.id !== id);
+        renderActivities();
+        updateActivitiesTable();
+      }
+
+      function updateActivity(id, field, value) {
+        const activity = activities.find((a) => a.id === id);
+        if (activity) {
+          activity[field] = value;
+          updateActivitiesTable();
+        }
+      }
+
+      function previewActivityPhoto(id, input) {
+        if (input.files && input.files[0]) {
+          try {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              updateActivity(id, "photo", e.target.result);
+              markUploadSuccess(`upload-btn-${id}`, "FOTO TERUPLOAD");
+              showToast("Foto kegiatan berhasil diunggah");
+            };
+            reader.onerror = () => {
+              showToast(
+                "Error: File foto kegiatan terlalu besar atau tidak valid. Coba file yang lebih kecil.",
+              );
+            };
+            reader.readAsDataURL(input.files[0]);
+          } catch (error) {
+            showToast(
+              "Error: Gagal memuat foto kegiatan. Ukuran file mungkin terlalu besar.",
+            );
+          }
+        }
+      }
+
+      function renderActivities() {
+        const container = document.getElementById("activities-container");
+        container.innerHTML = "";
+        activities.forEach((activity, idx) => {
+          const div = document.createElement("div");
+          div.className = "activity-row";
+          div.innerHTML = `
+            <div style="flex: 1;">
+              <input type="text" placeholder="Uraian kegiatan" value="${activity.description}"
+                     onchange="updateActivity(${activity.id}, 'description', this.value)" />
+              <input type="date" value="${activity.date}"
+                     onchange="updateActivity(${activity.id}, 'date', this.value)" />
+              <input type="text" placeholder="Lokasi" value="${activity.location}"
+                     onchange="updateActivity(${activity.id}, 'location', this.value)" />
+              <textarea placeholder="Keterangan" rows="2" style="margin-top: 4px"
+                        onchange="updateActivity(${activity.id}, 'notes', this.value)">${activity.notes}</textarea>
+              <div id="upload-btn-${activity.id}" class="logo-upload-btn" style="margin-top: 4px; padding: 6px; font-size: 11px"
+                   onclick="document.getElementById('photo-${activity.id}').click()">
+                📷 UPLOAD FOTO
+              </div>
+              <input type="file" id="photo-${activity.id}" style="display: none" accept="image/*"
+                     onchange="previewActivityPhoto(${activity.id}, this)" />
+            </div>
+            <button class="remove-btn" onclick="removeActivity(${activity.id})">Hapus</button>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      function updateActivitiesTable() {
+        const tbody = document.getElementById("out-activities-body");
+        if (activities.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #999">Belum ada data kegiatan</td></tr>';
+          return;
+        }
+        tbody.innerHTML = activities
+          .map(
+            (a, idx) => `
+          <tr>
+            <td class="no-col">${idx + 1}</td>
+            <td class="desc-col">${a.description || "-"}</td>
+            <td class="date-col">${formatDate(a.date)}</td>
+            <td class="location-col">${a.location || "-"}</td>
+            <td class="note-col">${a.notes || "-"}</td>
+            <td class="photo-col">${a.photo ? '<img src="' + a.photo + '" style="max-width: 40px; max-height: 40px; object-fit: cover;" />' : "—"}</td>
+          </tr>
+        `,
+          )
+          .join("");
+      }
+
+      // --- TTD ---
+      function previewTtdImage(input) {
+        if (input.files && input.files[0]) {
+          try {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const box = document.getElementById("out-ttd-image");
+              box.innerHTML = `<img src="${e.target.result}" style="max-width: 80px; max-height: 50px; object-fit: contain;" />`;
+              markUploadSuccess("ttd-upload-btn", "TTD TERUPLOAD");
+              showToast("Foto tanda tangan berhasil diunggah");
+            };
+            reader.onerror = () => {
+              showToast(
+                "Error: File tanda tangan terlalu besar atau tidak valid. Coba file yang lebih kecil.",
+              );
+            };
+            reader.readAsDataURL(input.files[0]);
+          } catch (error) {
+            showToast(
+              "Error: Gagal memuat tanda tangan. Ukuran file mungkin terlalu besar.",
+            );
+          }
+        }
+      }
+
+      function updateTtdPreview() {
+        const tempat =
+          document.getElementById("in-ttd-tempat").value || "Tiakur";
+        const tanggal = formatDate(
+          document.getElementById("in-ttd-tanggal").value,
+        );
+        const jabatan = document.getElementById("in-ttd-jabatan").value || "-";
+        const nama = document.getElementById("in-ttd-nama").value || "-";
+        const pangkat = document.getElementById("in-ttd-pangkat").value || "-";
+        const nip = document.getElementById("in-ttd-nip").value || "-";
+
+        document.getElementById("out-ttd-tempat").innerText = tempat;
+        document.getElementById("out-ttd-tanggal").innerText = tanggal;
+        document.getElementById("out-ttd-jabatan").innerText = jabatan;
+        document.getElementById("out-ttd-nama").innerText = nama;
+        document.getElementById("out-ttd-pangkat").innerText = pangkat;
+        document.getElementById("out-ttd-nip").innerText = nip;
+
+        const outTtdBlock = document.getElementById("out-ttd-block");
+        const useTtdFeature =
+          document.getElementById("use-ttd-feature").checked;
+        outTtdBlock.style.display = useTtdFeature ? "block" : "none";
+      }
+
+      function updateTanggal() {
+        const useCustom = document.getElementById("use-custom-date").checked;
+        const customDate = document.getElementById("in-report-date").value;
+        const date = useCustom && customDate ? customDate : getTodayDate();
+        document.getElementById("out-tanggal").innerText = formatDate(date);
+      }
+
+      // --- OUTPUT SYNC ---
+      function syncOutputs() {
+        const pairs = [
+          ["in-instansi", "out-instansi"],
+          ["in-kab", "out-kab"],
+          ["in-kota", "out-kota"],
+          ["in-nama", "out-nama"],
+          ["in-nip", "out-nip"],
+          ["in-jabatan", "out-jabatan"],
+          ["in-report-title", "out-report-title"],
+          ["in-report-subtitle", "out-report-subtitle"],
+        ];
+
+        pairs.forEach(([inId, outId]) => {
+          const inEl = document.getElementById(inId);
+          const outEl = document.getElementById(outId);
+          if (inEl && outEl) {
+            inEl.addEventListener("input", () => {
+              outEl.innerText = inEl.value || "-";
+            });
+          }
+        });
+      }
+
+      // --- PDF EXPORT ---
+      async function exportToPDF() {
+        showLoading("Mengekspor PDF...");
+
+        let retries = 0;
+        while (typeof html2pdf === "undefined" && retries < 10) {
+          await new Promise((r) => setTimeout(r, 100));
+          retries++;
+        }
+
+        if (typeof html2pdf === "undefined") {
+          hideLoading();
+          alert("Gagal memuat library PDF. Periksa koneksi internet.");
+          return;
+        }
+
+        const element = document.getElementById("printable-area");
+        const nama =
+          document.getElementById("in-nama").value || "Laporan-Tabel";
+        const filename = `E-Kinerja-Tabel_${nama}_${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}.pdf`;
+
+        const opt = {
+          margin: 10,
+          filename: filename,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, logging: false },
+          jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
+        };
+
+        try {
+          await html2pdf().set(opt).from(element).save();
+          showToast("PDF Berhasil Dibuat!");
+        } catch (err) {
+          alert("Gagal membuat PDF: " + err.message);
+        } finally {
+          hideLoading();
+        }
+      }
+
+      // --- PREVIEW TOGGLE ---
+      function togglePreview() {
+        const preview = document.querySelector(".preview-stage");
+        const sidebar = document.querySelector(".sidebar");
+        const btnBack = document.querySelector(".btn-back");
+
+        const hidden = preview.style.display === "none";
+        preview.style.display = hidden ? "flex" : "none";
+        sidebar.style.display = hidden ? "none" : "block";
+        btnBack.style.display = hidden ? "none" : "block";
+
+        showToast(hidden ? "Preview ditampilkan" : "Mode edit");
+      }
+
+      // --- MOBILE NAV ---
+      window.EkinToggleMobileNav = function () {
+        const nav = document.getElementById("mobileNav");
+        nav.classList.toggle("open");
+      };
+
+      // --- INITIALIZATION ---
+      function loadLockedSections() {
+        const user = getCurrentLoginUser();
+        if (!user) return;
+
+        // Load Profile data
+        const profileDataStr = localStorage.getItem(
+          `lock_${user.username}_profile`,
+        );
+        if (profileDataStr) {
+          const profileData = JSON.parse(profileDataStr);
+          document.getElementById("in-nama").value = profileData.nama || "";
+          document.getElementById("in-nip").value = profileData.nip || "";
+          document.getElementById("in-jabatan").value =
+            profileData.jabatan || "";
+          document.getElementById("in-instansi").value =
+            profileData.instansi || "";
+          document.getElementById("in-kab").value = profileData.kab || "";
+          document.getElementById("in-kota").value = profileData.kota || "";
+          document.getElementById("identitas-inputs").style.display = "none";
+          document.getElementById("identitas-display").style.display = "block";
+          document.getElementById("txt-nama").innerText =
+            profileData.nama.toUpperCase();
+          document.getElementById("txt-nip").innerText =
+            "NIP: " + profileData.nip;
+        }
+
+        // Load KOP data
+        const kopDataStr = localStorage.getItem(`lock_${user.username}_kop`);
+        if (kopDataStr) {
+          const kopData = JSON.parse(kopDataStr);
+          document.getElementById("in-instansi").value = kopData.instansi || "";
+          document.getElementById("in-kab").value = kopData.kab || "";
+          document.getElementById("in-kota").value = kopData.kota || "";
+          if (document.getElementById("use-kop-laporan").checked) {
+            document.getElementById("kop-inputs").style.display = "none";
+            document.getElementById("kop-display").style.display = "block";
+            document.getElementById("txt-instansi").innerText =
+              kopData.instansi.toUpperCase();
+            document.getElementById("txt-kab").innerText =
+              kopData.kab.toUpperCase();
+          }
+        }
+
+        // Load Table Header data
+        const tableHeaderDataStr = localStorage.getItem(
+          `lock_${user.username}_tableHeader`,
+        );
+        if (tableHeaderDataStr) {
+          const tableHeaderData = JSON.parse(tableHeaderDataStr);
+          Object.keys(tableHeaderData).forEach((inputId) => {
+            const value = tableHeaderData[inputId];
+            document.getElementById(inputId).value = value;
+            const outId = inputId.replace("in-", "out-");
+            const txtId = inputId.replace("in-", "txt-");
+            if (document.getElementById(outId)) {
+              document.getElementById(outId).innerText = value;
+            }
+            if (document.getElementById(txtId)) {
+              document.getElementById(txtId).innerText = value;
+            }
+          });
+          document.getElementById("table-header-inputs").style.display = "none";
+          document.getElementById("table-header-display").style.display =
+            "block";
+        }
+
+        // Load TTD data
+        const ttdDataStr = localStorage.getItem(`lock_${user.username}_ttd`);
+        if (ttdDataStr) {
+          const ttdData = JSON.parse(ttdDataStr);
+          document.getElementById("use-ttd-feature").checked = ttdData.enabled;
+          document.getElementById("in-ttd-tempat").value =
+            ttdData.tempat || "Tiakur";
+          document.getElementById("in-ttd-tanggal").value =
+            ttdData.tanggal || getTodayDate();
+          document.getElementById("in-ttd-jabatan").value =
+            ttdData.jabatan || "";
+          document.getElementById("in-ttd-nama").value = ttdData.nama || "";
+          document.getElementById("in-ttd-pangkat").value =
+            ttdData.pangkat || "";
+          document.getElementById("in-ttd-nip").value = ttdData.nip || "";
+          if (ttdData.image) {
+            document.getElementById("out-ttd-image").innerHTML =
+              `<img src="${ttdData.image}" style="max-width: 80px; max-height: 50px; object-fit: contain;" />`;
+          }
+          document.getElementById("ttd-display").style.display = "block";
+          document.getElementById("ttd-inputs").style.display = "none";
+        }
+
+        // Update previews after loading data
+        updateTtdPreview();
+        updateTtdFeatureVisibility();
+      }
+
+      window.onload = () => {
+        const uuid = generateUUID();
+        document.getElementById("display-uuid").innerText = uuid;
+
+        if (localStorage.getItem("ghost_pro_activated") === "true") {
+          unlockApp();
+        }
+
+        // Hide TTD block by default
+        document.getElementById("out-ttd-block").style.display = "none";
+
+        const dateInput = document.getElementById("in-report-date");
+        const customCheckbox = document.getElementById("use-custom-date");
+
+        dateInput.value = getTodayDate();
+        document.getElementById("in-ttd-tanggal").value = getTodayDate();
+
+        loadLockedSections();
+
+        updateTanggal();
+        updateTtdPreview();
+        updateTableHeaderPreview();
+        updateKopSettingsVisibility();
+        updateTtdFeatureVisibility();
+        syncOutputs();
+        addActivity();
+
+        customCheckbox.addEventListener("change", () => {
+          dateInput.disabled = !customCheckbox.checked;
+          if (!customCheckbox.checked) {
+            dateInput.value = getTodayDate();
+          }
+          updateTanggal();
+        });
+
+        dateInput.addEventListener("change", updateTanggal);
+        document
+          .getElementById("use-kop-laporan")
+          .addEventListener("change", updateKopSettingsVisibility);
+        document
+          .getElementById("use-ttd-feature")
+          .addEventListener("change", updateTtdFeatureVisibility);
+
+        const tableHeaderInputs = [
+          "in-col-no",
+          "in-col-desc",
+          "in-col-date",
+          "in-col-location",
+          "in-col-notes",
+          "in-col-photo",
+        ];
+        tableHeaderInputs.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.addEventListener("input", updateTableHeaderPreview);
+          }
+        });
+
+        const ttdInputs = [
+          "in-ttd-tempat",
+          "in-ttd-tanggal",
+          "in-ttd-jabatan",
+          "in-ttd-nama",
+          "in-ttd-pangkat",
+          "in-ttd-nip",
+        ];
+        ttdInputs.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.addEventListener("change", updateTtdPreview);
+          }
+        });
+
+        const reportSearch = document.getElementById("report-search");
+        const reportFilter = document.getElementById("report-filter");
+        if (reportSearch) {
+          reportSearch.addEventListener("input", (event) => {
+            reportSearchQuery = event.target.value || "";
+            renderSavedReports();
+          });
+        }
+        if (reportFilter) {
+          reportFilter.addEventListener("change", (event) => {
+            reportSearchType = event.target.value || "all";
+            renderSavedReports();
+          });
+        }
+
+        renderSavedReports();
+      };
+    </script>
+
+    <!-- Modal Konfirmasi -->
+    <div id="confirmation-modal" class="modal-overlay">
+      <div class="modal-content">
+        <h3 id="modal-title">Konfirmasi</h3>
+        <p id="modal-message">Apakah Anda yakin?</p>
+        <div class="modal-actions">
+          <button class="btn btn-del" onclick="closeModal()">Batal</button>
+          <button
+            class="btn btn-preview"
+            id="modal-confirm-btn"
+            onclick="confirmAction()"
+          >
+            Ya
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loading-text">Mengekspor PDF...</div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+  </body>
+</html>

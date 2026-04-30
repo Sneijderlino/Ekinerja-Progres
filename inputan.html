@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>E-Kinerja | Pro Edition-by Snejderlino</title>
+    <meta
+      property="og:image"
+      content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="assets/css/index.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      :root {
+        --glass: rgba(17, 24, 39, 0.7);
+        --border: rgba(255, 255, 255, 0.06);
+        --text-dim: #94a3b8;
+        --primary: #3b82f6;
+        --secondary: #2dd4bf;
+        --accent: #f59e0b;
+        --text: #f8fafc;
+        --surface: #111827;
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        z-index: 1000;
+        padding: 10px 0;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+      }
+
+      .nav-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+      }
+
+      .nav-link {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.3s;
+        padding: 8px 12px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .nav-link i {
+        font-size: 16px;
+      }
+
+      .nav-link.active {
+        color: var(--primary);
+        background: rgba(59, 130, 246, 0.2);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+
+      .nav-link:hover {
+        color: var(--text);
+        background: rgba(59, 130, 246, 0.15);
+      }
+
+      .nav-hamburger {
+        display: none;
+        background: rgba(59, 130, 246, 0.2);
+        border: 2px solid rgba(59, 130, 246, 0.5);
+        color: var(--primary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 10px 14px;
+        border-radius: 8px;
+        transition: 0.2s;
+      }
+      .nav-hamburger:hover {
+        background: rgba(59, 130, 246, 0.3);
+        border-color: var(--primary);
+      }
+
+      .mobile-nav {
+        width: 100%;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition:
+          max-height 0.35s ease,
+          opacity 0.35s ease;
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        padding: 0 10px;
+      }
+      .mobile-nav.open {
+        max-height: 500px;
+        opacity: 1;
+        padding: 10px;
+      }
+
+      @media (max-width: 768px) {
+        .nav-hamburger {
+          display: block;
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .nav-container {
+          position: relative;
+          justify-content: flex-start;
+          padding-right: 50px;
+          overflow-x: hidden;
+          max-width: 100%;
+        }
+        .nav-container > .nav-link,
+        .nav-container > .desktop-auth {
+          display: none;
+        }
+        .mobile-nav {
+          display: flex;
+          overflow-x: hidden;
+        }
+        .nav-container > .nav-link.active {
+          display: flex;
+        }
+      }
+
+      @media (max-width: 359px) {
+        .navbar {
+          padding: 8px 0;
+        }
+        .nav-container {
+          padding: 8px 5px;
+          gap: 3px;
+        }
+        .nav-link {
+          font-size: 10px;
+          padding: 5px 8px;
+          gap: 4px;
+        }
+        .nav-link i {
+          font-size: 14px;
+        }
+      }
+
+      @media (min-width: 360px) and (max-width: 480px) {
+        .navbar {
+          padding: 10px 0;
+        }
+        .nav-container {
+          padding: 8px 8px;
+          gap: 4px;
+        }
+        .nav-link {
+          font-size: 11px;
+          padding: 6px 10px;
+          gap: 4px;
+        }
+        .nav-link i {
+          font-size: 15px;
+        }
+      }
+
+      @media (min-width: 481px) and (max-width: 768px) {
+        .navbar {
+          padding: 10px 0;
+        }
+        .nav-container {
+          padding: 0 10px;
+          gap: 6px;
+        }
+        .nav-link {
+          font-size: 12px;
+          padding: 8px 12px;
+          gap: 5px;
+        }
+        .nav-link i {
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        html,
+        body {
+          max-width: 100%;
+          overflow-x: hidden;
+          overscroll-behavior: none;
+          touch-action: pan-y;
+          width: 100vw;
+          margin: 0;
+          padding: 0;
+        }
+        .app-shell {
+          flex-direction: column;
+          min-height: 100vh;
+          width: 100%;
+          max-width: 100%;
+        }
+        .sidebar {
+          width: 100%;
+          max-width: 100%;
+          border-right: none;
+          border-radius: 0 0 24px 24px;
+          box-shadow: none;
+          overflow-x: hidden;
+          overscroll-behavior: none;
+          touch-action: pan-y;
+        }
+        .preview-stage {
+          width: 100%;
+          min-width: 0;
+          margin-top: 0;
+          overflow-x: hidden;
+          overscroll-behavior: none;
+          touch-action: pan-y;
+        }
+        .canvas-a4 {
+          width: 100%;
+          max-width: 100%;
+          margin: 0 auto;
+          padding: 10px;
+          box-shadow: none;
+          overflow-x: hidden;
+        }
+        .data-table,
+        .photo-grid,
+        .photo-upload-grid,
+        .saved-report-toolbar,
+        .task-entry {
+          width: 100%;
+          max-width: 100%;
+        }
+        .saved-report-toolbar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+        }
+        .photo-upload-grid {
+          grid-template-columns: 1fr;
+        }
+        .task-entry {
+          flex-direction: column;
+        }
+        .task-entry input,
+        .task-entry button,
+        .saved-report-toolbar input,
+        .saved-report-toolbar select {
+          width: 100%;
+        }
+        .action-area {
+          flex-direction: column;
+          gap: 12px;
+          width: 100%;
+        }
+        .action-area button {
+          width: 100%;
+        }
+        .data-table td {
+          min-width: 0;
+          word-break: break-word;
+        }
+      }
+
+      /* Additional mobile optimization for all screens under 1024px */
+      @media (max-width: 1024px) {
+        * {
+          box-sizing: border-box;
+        }
+        html,
+        body {
+          width: 100vw;
+          max-width: 100vw;
+          overflow-x: hidden;
+          overscroll-behavior: none;
+          touch-action: pan-y;
+        }
+        .app-shell,
+        .sidebar,
+        .preview-stage,
+        .navbar,
+        .nav-container {
+          max-width: 100vw !important;
+          width: 100% !important;
+          overflow-x: hidden !important;
+        }
+      }
+    </style>
+  </head>
+  <body id="main-body">
+    <div id="license-screen">
+      <div class="license-card">
+        <div class="security-header">🔐 AKTIVASI LISENSI DIPERLUKAN</div>
+        <p class="license-status">SYSTEM STATUS: TERENSKRIPSI</p>
+        <p class="license-note">Hubungi admin untuk mendapatkan akses.</p>
+        <p class="license-note">Kontak WhatsApp: 0822-9296-4110</p>
+        <p class="license-note">
+          Salin dan kirim key lisensi atau ID ke admin.
+        </p>
+        <p class="license-note">Admin akan mengirim key lisensi.</p>
+
+        <div class="uuid-label">ID PERANGKAT ANDA:</div>
+        <div id="display-uuid" class="uuid-box">MENGAMBIL DATA...</div>
+        <div class="uuid-copy-row">
+          <button class="btn btn-copy" type="button" onclick="copyDeviceId()">
+            SALIN ID
+          </button>
+        </div>
+
+        <input
+          type="text"
+          id="input-license"
+          class="license-input"
+          placeholder="ENTER LICENSE KEY"
+        />
+
+        <button class="btn btn-preview" onclick="checkLicense()">
+          AKTIVASI
+        </button>
+        <p style="font-size: 0.55rem; color: #64748b; margin-top: 15px">
+          Penyebaran tanpa izin dilarang keras.<br />Hak Cipta Dilindungi © 2026
+          oleh Snejderlino.
+        </p>
+      </div>
+    </div>
+
+    <div id="loading-overlay" style="display: none">
+      <div class="spinner"></div>
+      <div style="letter-spacing: 3px; font-weight: bold; font-size: 0.8rem">
+        SELAMAT DATANG...
+      </div>
+    </div>
+
+    <div id="toast" class="toast">Data Berhasil Dikunci!</div>
+
+    <div id="pdf-loading-overlay" style="display: none">
+      <div class="spinner"></div>
+      <div style="letter-spacing: 3px; font-weight: bold; font-size: 0.8rem">
+        MEMBUAT PDF...
+      </div>
+    </div>
+
+    <nav class="navbar animate__animated animate__fadeInDown">
+      <div class="nav-container">
+        <a href="index.html" class="nav-link"
+          ><i class="fas fa-tower-broadcast"></i> Dash</a
+        >
+        <a href="inputan.html" class="nav-link active"
+          ><i class="fas fa-edit"></i> Input</a
+        >
+        <a href="inputan-tabel.html" class="nav-link"
+          ><i class="fas fa-table"></i> Inputan Tabel</a
+        >
+        <a href="rekapan.html" class="nav-link"
+          ><i class="fas fa-database"></i> Rekapan</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Info</a
+        >
+        <button
+          class="nav-hamburger"
+          aria-label="Menu"
+          onclick="window.EkinToggleMobileNav()"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <div class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"
+          ><i class="fas fa-tower-broadcast"></i> Dash</a
+        >
+        <a href="inputan.html" class="nav-link active"
+          ><i class="fas fa-edit"></i> Input</a
+        >
+        <a href="inputan-tabel.html" class="nav-link"
+          ><i class="fas fa-table"></i> Inputan Tabel</a
+        >
+        <a href="rekapan.html" class="nav-link"
+          ><i class="fas fa-database"></i> Rekapan</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Info</a
+        >
+      </div>
+    </nav>
+
+    <button class="btn-back" onclick="togglePreview()">← KEMBALI EDIT</button>
+
+    <div class="app-shell" id="app-shell" style="visibility: hidden">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>E-KINERJA <span>HARIAN</span></h1>
+        </div>
+        <div class="scroll-area">
+          <div class="section-card">
+            <h3>KOP & INSTANSI</h3>
+            <div id="kop-display" class="identity-locked" style="display: none">
+              <p
+                id="txt-instansi"
+                style="
+                  font-weight: 700;
+                  color: var(--primary);
+                  margin-bottom: 5px;
+                "
+              >
+                -
+              </p>
+              <p id="txt-kab" style="margin-top: 0; font-size: 0.8rem">-</p>
+              <button class="btn-unlock" onclick="unlockKop()">Ubah Kop</button>
+            </div>
+            <div id="kop-inputs">
+              <div
+                class="logo-upload-btn"
+                onclick="document.getElementById('in-logo').click()"
+              >
+                📷 UPLOAD LOGO INSTANSI
+              </div>
+              <input
+                type="file"
+                id="in-logo"
+                style="display: none"
+                accept="image/*"
+                onchange="previewLogo(this)"
+              />
+              <input
+                type="text"
+                id="in-instansi"
+                value="Dinas Satuan Polisi Pamong Praja Dan Pemadam Kebakaran"
+              />
+              <input
+                type="text"
+                id="in-kab"
+                value="Kabupaten Maluku Barat Daya"
+              />
+              <input type="text" id="in-kota" value="Kota Tiakur" />
+              <button
+                class="btn btn-preview"
+                style="font-size: 0.75rem; padding: 10px"
+                onclick="lockKop()"
+              >
+                KUNCI KOP LAPORAN
+              </button>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h3>PROFIL PEGAWAI</h3>
+            <div
+              id="identitas-display"
+              class="identity-locked"
+              style="display: none"
+            >
+              <p
+                id="txt-nama"
+                style="
+                  font-weight: 700;
+                  color: var(--primary);
+                  margin-bottom: 5px;
+                "
+              >
+                -
+              </p>
+              <p id="txt-nip" style="margin-top: 0">NIP: -</p>
+              <button class="btn-unlock" onclick="unlockIdentity()">
+                Ubah Profil
+              </button>
+            </div>
+            <div id="identitas-inputs">
+              <input type="text" id="in-nama" placeholder="Nama Lengkap" />
+              <input
+                type="text"
+                id="in-nip"
+                placeholder="Nomor Induk Pegawai (NIP)"
+              />
+              <input type="text" id="in-jabatan" placeholder="Jabatan" />
+              <button
+                class="btn btn-preview"
+                style="font-size: 0.75rem; padding: 10px"
+                onclick="lockIdentity()"
+              >
+                KUNCI PROFIL
+              </button>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h3>JUDUL LAPORAN</h3>
+            <input
+              type="text"
+              id="in-report-title"
+              placeholder="Judul utama laporan"
+              value="LAPORAN E-KINERJA HARIAN"
+            />
+            <textarea
+              id="in-report-subtitle"
+              placeholder="Subjudul atau ringkasan kegiatan"
+              rows="3"
+            >
+Koordinasi Dengan Kepala Regu Terkait Informasi Kejadian Kebakaran</textarea
+            >
+            <div class="date-settings">
+              <label class="date-checkbox">
+                <input type="checkbox" id="use-custom-date" />
+                <span>Gunakan tanggal khusus</span>
+              </label>
+              <input type="date" id="in-report-date" disabled />
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h3>ISI LAPORAN</h3>
+            <textarea
+              id="in-uraian"
+              placeholder="Uraian kegiatan..."
+              rows="5"
+            ></textarea>
+            <div class="task-entry">
+              <input
+                type="text"
+                id="task-input"
+                placeholder="Tambah item kegiatan..."
+              />
+              <button
+                type="button"
+                class="btn btn-preview"
+                onclick="addTask()"
+                style="margin-top: 0; width: 100%"
+              >
+                TAMBAH ITEM
+              </button>
+            </div>
+            <ul id="task-list" class="task-list"></ul>
+          </div>
+
+          <div class="section-card">
+            <h3>DOKUMENTASI FOTO</h3>
+            <div class="photo-upload-grid">
+              <div
+                class="upload-box"
+                data-target="img1"
+                onclick="document.getElementById('f1').click()"
+              >
+                PILIH FOTO 1
+              </div>
+              <input
+                type="file"
+                id="f1"
+                style="display: none"
+                accept="image/*"
+                multiple
+                onchange="previewImg(this, 'img1')"
+              />
+              <div
+                class="upload-box"
+                data-target="img2"
+                onclick="document.getElementById('f2').click()"
+              >
+                PILIH FOTO 2
+              </div>
+              <input
+                type="file"
+                id="f2"
+                style="display: none"
+                accept="image/*"
+                multiple
+                onchange="previewImg(this, 'img2')"
+              />
+              <div
+                class="upload-box"
+                data-target="img3"
+                onclick="document.getElementById('f3').click()"
+              >
+                PILIH FOTO 3
+              </div>
+              <input
+                type="file"
+                id="f3"
+                style="display: none"
+                accept="image/*"
+                multiple
+                onchange="previewImg(this, 'img3')"
+              />
+              <div
+                class="upload-box"
+                data-target="img4"
+                onclick="document.getElementById('f4').click()"
+              >
+                PILIH FOTO 4
+              </div>
+              <input
+                type="file"
+                id="f4"
+                style="display: none"
+                accept="image/*"
+                multiple
+                onchange="previewImg(this, 'img4')"
+              />
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h3>PENGESAHAN / TANDA TANGAN</h3>
+            <label
+              class="date-checkbox"
+              style="
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <input
+                type="checkbox"
+                id="use-ttd-feature"
+                onchange="toggleTtdFeature()"
+              />
+              <span>Gunakan tanda tangan</span>
+            </label>
+            <div id="ttd-section-wrapper">
+              <div
+                id="ttd-display"
+                class="identity-locked"
+                style="display: none"
+              >
+                <p
+                  id="txt-ttd-nama"
+                  style="
+                    font-weight: 700;
+                    color: var(--primary);
+                    margin-bottom: 5px;
+                  "
+                >
+                  -
+                </p>
+                <p
+                  id="txt-ttd-jabatan"
+                  style="margin-top: 0; font-size: 0.8rem"
+                >
+                  -
+                </p>
+                <button class="btn-unlock" onclick="unlockTtd()">
+                  Ubah Tanda Tangan
+                </button>
+              </div>
+              <div id="ttd-inputs">
+                <input
+                  type="text"
+                  id="in-ttd-tempat"
+                  placeholder="Tempat (contoh: Tiakur)"
+                  value="Tiakur"
+                />
+                <input type="date" id="in-ttd-tanggal" />
+                <textarea
+                  id="in-ttd-jabatan"
+                  placeholder="Jabatan Penandatangan (baris per baris)"
+                  rows="4"
+                >
+Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku Barat Daya</textarea
+                >
+                <input
+                  type="text"
+                  id="in-ttd-nama"
+                  placeholder="Nama Pejabat"
+                />
+                <input
+                  type="text"
+                  id="in-ttd-pangkat"
+                  placeholder="Pangkat / Golongan"
+                />
+                <input type="text" id="in-ttd-nip" placeholder="NIP Pejabat" />
+                <div
+                  class="logo-upload-btn"
+                  onclick="document.getElementById('in-ttd-image').click()"
+                >
+                  🖊️ UPLOAD FOTO TANDA TANGAN
+                </div>
+                <input
+                  type="file"
+                  id="in-ttd-image"
+                  style="display: none"
+                  accept="image/*"
+                  onchange="previewTtdImage(this)"
+                />
+                <div
+                  id="ttd-image-preview-name"
+                  style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px"
+                ></div>
+                <button
+                  class="btn btn-preview"
+                  style="font-size: 0.75rem; padding: 10px"
+                  onclick="lockTtd()"
+                >
+                  KUNCI TANDA TANGAN
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card" id="saved-reports-section">
+            <h3>DAFTAR LAPORAN TERSIMPAN</h3>
+            <div class="saved-report-toolbar">
+              <input
+                type="text"
+                id="report-search"
+                placeholder="Cari laporan..."
+              />
+              <select id="report-filter">
+                <option value="all">Semua</option>
+                <option value="nama">Nama</option>
+                <option value="nip">NIP</option>
+                <option value="jabatan">Jabatan</option>
+                <option value="instansi">Instansi</option>
+              </select>
+            </div>
+            <button
+              type="button"
+              class="btn btn-preview"
+              style="width: 100%; margin-bottom: 12px"
+              onclick="startNewReport()"
+            >
+              TAMBAH LAPORAN BARU
+            </button>
+            <button
+              type="button"
+              class="btn btn-pdf"
+              style="width: 100%; margin-bottom: 12px"
+              onclick="saveReport()"
+            >
+              SIMPAN LAPORAN
+            </button>
+            <div id="saved-reports" class="saved-report-list">
+              <p style="color: #64748b; margin: 0">
+                Belum ada laporan tersimpan.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-area">
+          <button class="btn btn-preview" onclick="togglePreview()">
+            PREVIEW HASIL
+          </button>
+          <button class="btn btn-print" onclick="window.print()">CETAK</button>
+          <button class="btn btn-pdf" onclick="exportToPDF()">
+            SIMPAN PDF
+          </button>
+        </div>
+      </aside>
+
+      <main class="preview-stage">
+        <div class="canvas-a4" id="printable-area">
+          <header class="report-header">
+            <img
+              id="out-logo"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Lambang_Kabupaten_Maluku_Barat_Daya.png/150px-Lambang_Kabupaten_Maluku_Barat_Daya.png"
+              class="report-logo"
+            />
+            <div class="header-text">
+              <h2 id="out-instansi"></h2>
+              <h2 id="out-kab">KABUPATEN MALUKU BARAT DAYA</h2>
+              <p id="out-kota" style="font-weight: normal">Kota Tiakur</p>
+            </div>
+          </header>
+          <div class="line-double"></div>
+
+          <div style="text-align: center; margin: 20px 0">
+            <h3 id="out-report-title" class="report-main-title">
+              LAPORAN E-KINERJA HARIAN
+            </h3>
+            <p id="out-report-subtitle" class="report-subtitle">
+              Koordinasi Dengan Kepala Regu Terkait Informasi Kejadian Kebakaran
+            </p>
+          </div>
+
+          <table class="data-table">
+            <tr>
+              <td width="100">Nama</td>
+              <td width="15">:</td>
+              <td id="out-nama" style="font-weight: bold">-</td>
+            </tr>
+            <tr>
+              <td>NIP</td>
+              <td>:</td>
+              <td id="out-nip">-</td>
+            </tr>
+            <tr>
+              <td>Jabatan</td>
+              <td>:</td>
+              <td id="out-jabatan">-</td>
+            </tr>
+            <tr>
+              <td>Tanggal</td>
+              <td>:</td>
+              <td id="out-tanggal" style="font-weight: bold; color: #000000">
+                -
+              </td>
+            </tr>
+          </table>
+
+          <div class="report-body">
+            <p style="font-weight: bold">Uraian Kegiatan:</p>
+            <p
+              id="out-uraian"
+              style="
+                text-align: justify;
+                min-height: 80px;
+                white-space: pre-line;
+              "
+            >
+              -
+            </p>
+            <div
+              id="out-task-list-container"
+              style="margin-top: 16px; display: none"
+            >
+              <p style="font-weight: bold; margin-bottom: 8px">
+                Daftar Kegiatan:
+              </p>
+              <ol
+                id="out-task-list"
+                style="margin: 0 0 0 20px; padding: 0"
+              ></ol>
+            </div>
+            <p style="font-weight: bold; margin-top: 20px">Foto Bukti:</p>
+            <div class="photo-grid">
+              <div class="box-photo" id="img1">Foto 1</div>
+              <div class="box-photo" id="img2">Foto 2</div>
+              <div class="box-photo" id="img3">Foto 3</div>
+              <div class="box-photo" id="img4">Foto 4</div>
+            </div>
+          </div>
+
+          <div class="ttd-block hidden" id="out-ttd-block">
+            <div class="ttd-place-date">
+              <span id="out-ttd-tempat">Tiakur</span>,
+              <span id="out-ttd-tanggal">-</span>
+            </div>
+            <div class="ttd-jabatan" id="out-ttd-jabatan">
+              Kepala Satuan Polisi Pamong Praja<br />
+              Dan Pemadam Kebakaran<br />
+              Kabupaten Maluku Barat Daya
+            </div>
+            <div class="ttd-image-box" id="out-ttd-image">
+              <span class="ttd-image-placeholder">(Tanda tangan)</span>
+            </div>
+            <div class="ttd-spasi"></div>
+            <div class="ttd-nama" id="out-ttd-nama">-</div>
+            <div class="ttd-pangkat" id="out-ttd-pangkat">-</div>
+            <div class="ttd-nip">NIP. <span id="out-ttd-nip">-</span></div>
+          </div>
+          <div style="clear: both"></div>
+        </div>
+      </main>
+    </div>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/index.js"></script>
+  </body>
+</html>

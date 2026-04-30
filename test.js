@@ -1,0 +1,1 @@
+console.log("Testing lupa password..."); const users = JSON.parse(localStorage.getItem("ekin_users") || "[]"); console.log("Current users:", users); if(users.length === 0) { users.push({email: "test@example.com", password: "123456", name: "Test User"}); localStorage.setItem("ekin_users", JSON.stringify(users)); console.log("Added test user"); }

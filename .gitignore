@@ -1,0 +1,47 @@
+# Gradle build files
+/build/
+/app/build/
+/.gradle/
+
+# Android Studio / IntelliJ
+/.idea/
+*.iml
+*.hprof
+
+# Local configuration files
+/local.properties
+
+# Generated files
+**/build/
+**/captures/
+
+# Android generated assets
+/app/**/*.apk
+/app/**/*.ap_
+/app/**/*.dex
+/app/**/*.class
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Node modules (if any web tooling is added later)
+/node_modules/
+
+# Secrets and keys
+*.jks
+*.keystore
+
+# Ignore generated Gradle wrapper files if re-generated locally
+/gradle/wrapper/gradle-wrapper.jar
+
+/platforms/
+/plugins/
+/node_modules/
