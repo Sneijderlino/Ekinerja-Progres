@@ -2,34 +2,25 @@
 const SALT = "SNEJDER_PRO_2026";
 
 function generateUUID() {
-    const storedId = localStorage.getItem('ghost_device_id');
+    const storageKey = 'ghost_device_id';
+    const storedId = localStorage.getItem(storageKey);
     if (storedId) {
         return storedId;
     }
 
-    const nav = window.navigator;
-    const screen = window.screen;
-    const fingerprintParts = [
-        nav.userAgent || '',
-        nav.platform || '',
-        nav.language || '',
-        nav.languages ? nav.languages.join(',') : '',
-        nav.hardwareConcurrency || '',
-        nav.deviceMemory || '',
-        screen.width || '',
-        screen.height || '',
-        screen.colorDepth || '',
-        Intl.DateTimeFormat().resolvedOptions().timeZone || ''
-    ];
+    let randomPart = '';
+    if (window.crypto && typeof crypto.randomUUID === 'function') {
+        randomPart = crypto.randomUUID();
+    } else if (window.crypto && typeof crypto.getRandomValues === 'function') {
+        const array = new Uint8Array(16);
+        crypto.getRandomValues(array);
+        randomPart = Array.from(array, (b) => ('0' + b.toString(16)).slice(-2)).join('');
+    } else {
+        randomPart = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    }
 
-    const randomPart = window.crypto && crypto.randomUUID
-        ? crypto.randomUUID()
-        : Math.random().toString(36).slice(2) + Date.now().toString(36);
-
-    const rawId = fingerprintParts.join('|') + '|' + randomPart;
-    const encoded = btoa(rawId).replace(/=+$/, '');
-    const deviceId = "GHOST-" + encoded.substring(0, 18).toUpperCase();
-    localStorage.setItem('ghost_device_id', deviceId);
+    const deviceId = 'GHOST-' + randomPart.replace(/[^A-Za-z0-9]/g, '').substring(0, 24).toUpperCase();
+    localStorage.setItem(storageKey, deviceId);
     return deviceId;
 }
 
