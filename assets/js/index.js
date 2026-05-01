@@ -144,18 +144,142 @@ const inputs = ['in-instansi', 'in-kab', 'in-kota', 'in-nama', 'in-nip', 'in-jab
 const ttdInputs = ['in-ttd-tempat', 'in-ttd-tanggal', 'in-ttd-jabatan', 'in-ttd-nama', 'in-ttd-pangkat', 'in-ttd-nip'];
 let savedReportFilter = { query: '', type: 'all' };
 
+const REPORT_DB_NAME = 'EkinLaporanDB';
+const REPORT_DB_VERSION = 1;
+const REPORT_STORE_NAME = 'laporan_store';
+let reportDB = null;
+let reportDBReady = false;
+let savedReportsCache = {};
+let pendingReportWrites = [];
+
+function openReportDB() {
+    return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+            console.warn('IndexedDB tidak tersedia. fallback ke localStorage.');
+            return reject(new Error('IndexedDB tidak tersedia'));
+        }
+
+        const request = indexedDB.open(REPORT_DB_NAME, REPORT_DB_VERSION);
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(REPORT_STORE_NAME)) {
+                db.createObjectStore(REPORT_STORE_NAME, { keyPath: 'key' });
+            }
+        };
+
+        request.onsuccess = (event) => {
+            reportDB = event.target.result;
+            reportDBReady = true;
+            reportDB.onversionchange = () => reportDB.close();
+            resolve(reportDB);
+        };
+
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function persistReportData(key, reports) {
+    if (!window.indexedDB) {
+        return;
+    }
+
+    if (!reportDBReady || !reportDB) {
+        pendingReportWrites.push({ key, reports });
+        return;
+    }
+
+    try {
+        const tx = reportDB.transaction(REPORT_STORE_NAME, 'readwrite');
+        const store = tx.objectStore(REPORT_STORE_NAME);
+        store.put({ key, reports });
+
+        tx.onerror = () => {
+            console.warn('Gagal menyimpan laporan ke IndexedDB.', tx.error);
+            localStorage.setItem(key, JSON.stringify(reports));
+        };
+    } catch (err) {
+        console.warn('IndexedDB write error:', err);
+        localStorage.setItem(key, JSON.stringify(reports));
+    }
+}
+
+function loadReportCacheForUser(user) {
+    return new Promise((resolve) => {
+        if (!user || !reportDBReady || !reportDB) {
+            const localReports = JSON.parse(localStorage.getItem(`laporan_${user ? user.username : ''}`) || '[]');
+            if (user) {
+                savedReportsCache[`laporan_${user.username}`] = localReports;
+            }
+            return resolve();
+        }
+
+        const key = `laporan_${user.username}`;
+        try {
+            const tx = reportDB.transaction(REPORT_STORE_NAME, 'readonly');
+            const store = tx.objectStore(REPORT_STORE_NAME);
+            const request = store.get(key);
+
+            request.onsuccess = () => {
+                const result = request.result;
+                if (result && Array.isArray(result.reports)) {
+                    savedReportsCache[key] = result.reports;
+                } else {
+                    const localData = JSON.parse(localStorage.getItem(key) || '[]');
+                    savedReportsCache[key] = localData;
+                    if (localData.length) persistReportData(key, localData);
+                }
+                resolve();
+            };
+
+            request.onerror = () => {
+                savedReportsCache[key] = JSON.parse(localStorage.getItem(key) || '[]');
+                resolve();
+            };
+        } catch (err) {
+            savedReportsCache[key] = JSON.parse(localStorage.getItem(key) || '[]');
+            resolve();
+        }
+    });
+}
+
+function initReportStorage() {
+    const user = getCurrentLoginUser();
+    if (!window.indexedDB) {
+        console.warn('IndexedDB tidak didukung di browser ini.');
+        return Promise.resolve();
+    }
+
+    return openReportDB()
+        .then(() => loadReportCacheForUser(user))
+        .then(() => {
+            pendingReportWrites.forEach(({ key, reports }) => persistReportData(key, reports));
+            pendingReportWrites = [];
+        })
+        .catch((error) => {
+            console.warn('Inisialisasi IndexedDB gagal:', error);
+        });
+}
+
 function getSavedReports() {
     const currentUser = getCurrentLoginUser();
     if (!currentUser) return [];
     const key = `laporan_${currentUser.username}`;
-    return JSON.parse(localStorage.getItem(key) || '[]');
+    if (Object.prototype.hasOwnProperty.call(savedReportsCache, key)) {
+        return savedReportsCache[key];
+    }
+    const reports = JSON.parse(localStorage.getItem(key) || '[]');
+    savedReportsCache[key] = reports;
+    return reports;
 }
 
 function setSavedReports(reports) {
     const currentUser = getCurrentLoginUser();
     if (!currentUser) return;
     const key = `laporan_${currentUser.username}`;
+    savedReportsCache[key] = reports;
     localStorage.setItem(key, JSON.stringify(reports));
+    persistReportData(key, reports);
 }
 
 function normalizeValue(value) {
@@ -1259,7 +1383,9 @@ window.onload = () => {
     renderTtdImagePreview();
     renderTtdFeatureState();
     renderTaskList();
-    renderSavedReports();
+    initReportStorage().finally(() => {
+        renderSavedReports();
+    });
 
     const ttdTanggalInput = document.getElementById('in-ttd-tanggal');
     if (ttdTanggalInput && !ttdTanggalInput.value) {

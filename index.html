@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>APLIKASI E-KINERJA HARIAN | Sneijderlino</title>
   <meta property="og:image" content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png"/>
+  <meta name="theme-color" content="#060912"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="E-Kinerja"/>
+  <link rel="apple-touch-icon" href="logo-link.png"/>
+  <link rel="shortcut icon" href="logo-link.png" type="image/png"/>
+  <link rel="manifest" href="manifest.json"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
@@ -24,7 +32,21 @@
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
       scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    @keyframes appFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    button,
+    .btn,
+    .nav-link,
+    .menu-item,
+    .banner-logo {
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
     }
     body {
       font-family: "Plus Jakarta Sans", sans-serif;
@@ -32,10 +54,12 @@
       background-image:
         radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(45, 212, 191, 0.08) 0%, transparent 40%);
+      min-height: 100vh;
       color: var(--text);
       margin: 0;
       padding: 0;
       overflow-x: hidden;
+      animation: appFadeIn 0.85s ease-out;
     }
 /*============== BANNER LOGO STYLES ==============*/
 .banner-container {

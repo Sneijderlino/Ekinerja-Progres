@@ -3,7 +3,10 @@
   "short_name": "E-Kinerja",
   "description": "Aplikasi web untuk membuat, menyimpan, dan mengekspor laporan kerja harian dalam format PDF",
   "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "fullscreen"],
+  "orientation": "portrait",
   "background_color": "#060912",
   "theme_color": "#3b82f6",
   "icons": [
