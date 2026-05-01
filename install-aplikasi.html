@@ -334,6 +334,165 @@
         transform: scale(1.05);
         box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
       }
+      /* Modal Popup Styles */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .modal-overlay.show {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal-content {
+        background: linear-gradient(145deg, #1a1f2e, #111827);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 28px;
+        padding: 35px;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        box-shadow:
+          0 25px 60px rgba(0, 0, 0, 0.5),
+          0 0 40px rgba(59, 130, 246, 0.15);
+        animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .modal-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 2rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+        50% {
+          box-shadow:
+            0 10px 40px rgba(59, 130, 246, 0.6),
+            0 0 20px rgba(45, 212, 191, 0.3);
+        }
+      }
+      .modal-content h2 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 0 0 12px;
+        color: var(--text);
+      }
+      .modal-content p {
+        color: var(--text-dim);
+        font-size: 0.95rem;
+        margin: 0 0 25px;
+        line-height: 1.5;
+      }
+      .modal-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      }
+      .modal-btn {
+        padding: 14px 28px;
+        border-radius: 14px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        border: none;
+        flex: 1;
+      }
+      .modal-btn-cancel {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-dim);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .modal-btn-cancel:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: var(--text);
+      }
+      .modal-btn-install {
+        background: linear-gradient(135deg, var(--primary), #2563eb);
+        color: white;
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+      }
+      .modal-btn-install:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(59, 130, 246, 0.5);
+      }
+      .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.08);
+        border: none;
+        color: var(--text-dim);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-close:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: var(--text);
+      }
+      @media (max-width: 480px) {
+        .modal-content {
+          padding: 25px;
+        }
+        .modal-icon {
+          width: 65px;
+          height: 65px;
+          font-size: 1.5rem;
+        }
+        .modal-content h2 {
+          font-size: 1.25rem;
+        }
+        .modal-buttons {
+          flex-direction: column;
+        }
+      }
     </style>
   </head>
   <body>
@@ -552,10 +711,40 @@
       id="installBtn"
       class="install-btn-float"
       style="display: none"
-      onclick="promptInstall()"
+      onclick="showInstallModal()"
     >
       <i class="fas fa-download"></i> Install Aplikasi
     </button>
+
+    <!-- Modal Popup for Install (Centered) -->
+    <div id="installModal" class="modal-overlay">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeInstallModal()">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="modal-icon">
+          <i class="fas fa-mobile-screen-button"></i>
+        </div>
+        <h2>Install Aplikasi?</h2>
+        <p>
+          Pasang E-Kinerja di layar utama untuk akses cepat tanpa buka browser?
+        </p>
+        <div class="modal-buttons">
+          <button
+            class="modal-btn modal-btn-cancel"
+            onclick="closeInstallModal()"
+          >
+            Nanti Saja
+          </button>
+          <button
+            class="modal-btn modal-btn-install"
+            onclick="confirmInstall()"
+          >
+            <i class="fas fa-download"></i> Install
+          </button>
+        </div>
+      </div>
+    </div>
 
     <style>
       .install-btn-float {
@@ -592,6 +781,34 @@
       const installBtn = document.getElementById("installBtn");
       const installBtnPage = document.getElementById("installBtnPage");
       const statusText = document.querySelector(".header-section p:last-child");
+      const installModal = document.getElementById("installModal");
+
+      // Modal Functions
+      function showInstallModal() {
+        if (installModal) {
+          installModal.classList.add("show");
+        }
+      }
+
+      function closeInstallModal() {
+        if (installModal) {
+          installModal.classList.remove("show");
+        }
+      }
+
+      function confirmInstall() {
+        closeInstallModal();
+        promptInstall();
+      }
+
+      // Tutup modal kalau klik di luar
+      if (installModal) {
+        installModal.addEventListener("click", function (e) {
+          if (e.target === installModal) {
+            closeInstallModal();
+          }
+        });
+      }
 
       // Cek apakah browser mendukung PWA installation
       function checkPWASupport() {
