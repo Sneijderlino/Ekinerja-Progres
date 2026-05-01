@@ -743,10 +743,6 @@
         margin-top: 10px;
       }
 
-      .ttd-spasi {
-        height: 15px;
-      }
-
       .ttd-col {
         display: none;
       }
@@ -761,7 +757,7 @@
         font-size: 9pt;
         font-weight: normal;
         line-height: 1.3;
-        margin-bottom: 8px;
+        margin-bottom: 15px;
       }
 
       .ttd-image-box {
@@ -770,6 +766,8 @@
         align-items: center;
         justify-content: center;
         margin-bottom: 5px;
+        text-align: center;
+        width: 100%;
       }
 
       .ttd-image-box img {
@@ -1041,10 +1039,7 @@
       }
     </style>
   </head>
-  <body
-    id="main-body"
-    style="overflow: hidden; width: 100%; max-width: 100vw; touch-action: pan-y"
-  >
+  <body id="main-body">
     <div id="license-screen">
       <div class="license-card">
         <h2>🔐 AKTIVASI LISENSI DIPERLUKAN</h2>
@@ -2674,7 +2669,7 @@ Kabupaten Maluku Barat Daya</textarea
         const element = document.getElementById("printable-area");
         const nama =
           document.getElementById("in-nama").value || "Laporan-Tabel";
-        const filename = `E-Kinerja-Tabel_${nama}_${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}.pdf`;
+        const filename = `${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}_E-Kinerja_${nama}.pdf`;
 
         const opt = {
           margin: 10,

@@ -594,7 +594,7 @@ function exportSavedReportPDF(index) {
 
     renderPreviewData(report);
 
-    const filename = `E-Kinerja_${report.nama || 'Laporan'}_${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}.pdf`;
+const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_E-Kinerja_${report.nama || 'Laporan'}.pdf`;
     const element = document.getElementById('printable-area');
     const opt = {
         margin: 10,
@@ -909,7 +909,7 @@ function togglePreview() {
 async function exportToPDF() {
     const element = document.getElementById('printable-area');
     const nama = document.getElementById('in-nama').value || 'Laporan-E-Kinerja';
-    const filename = `E-Kinerja_${nama}_${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}.pdf`;
+const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_E-Kinerja_${nama}.pdf`;
     
     const opt = {
         margin: 10,
