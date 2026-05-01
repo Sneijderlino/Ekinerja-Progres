@@ -469,11 +469,167 @@
       box-shadow: 0 10px 25px rgba(45, 212, 191, 0.5);
     }
     .fab-add i { transition: 0.3s; }
-    @keyframes pulse {
+@keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
       70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
       100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
     }
+
+    /* ========== SIDE DRAWER ========== */
+    .side-drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s ease;
+    }
+    .side-drawer-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 85%;
+      max-width: 320px;
+      height: 100%;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+      padding: 20px 0;
+    }
+    .side-drawer.open {
+      transform: translateX(0);
+    }
+    .side-drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 15px;
+    }
+    .side-drawer-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .side-drawer-close {
+      width: 36px;
+      height: 36px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 10px;
+      color: #f87171;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+    .side-drawer-close:hover {
+      background: rgba(239, 68, 68, 0.25);
+      transform: scale(1.05);
+    }
+    .side-drawer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 15px;
+    }
+    .side-drawer-link {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      transition: 0.25s;
+      background: transparent;
+      border: 1px solid transparent;
+    }
+    .side-drawer-link i {
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
+    }
+    .side-drawer-link:hover {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--primary);
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+    .side-drawer-link.active {
+      background: rgba(59, 130, 246, 0.2);
+      color: var(--primary);
+      border-color: rgba(59, 130, 246, 0.35);
+    }
+    .side-drawer-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 15px 20px;
+    }
+    .side-drawer-auth {
+      padding: 0 15px;
+      margin-top: 10px;
+    }
+    .side-drawer-auth-btn {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+    .side-drawer-auth-btn.masuk {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--primary);
+    }
+    .side-drawer-auth-btn.masuk:hover {
+      background: linear-gradient(135deg, var(--primary), #2563eb);
+      color: #fff;
+    }
+    .side-drawer-auth-btn.daftar {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border: none;
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+    }
+    .side-drawer-auth-btn.daftar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.45);
+    }
+    .side-drawer-auth-btn.keluar {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+    .side-drawer-auth-btn.keluar:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
     .footer {
       text-align: center;
       padding: 50px 0;
@@ -507,9 +663,32 @@
     </div>
   </nav>
 
-<a href="inputan.html" class="fab-add" title="Buat Laporan Baru">
+<button class="fab-add" title="Buka Menu" onclick="toggleSideDrawer()">
     <i class="fas fa-plus"></i>
-  </a>
+  </button>
+
+  <!-- Side Drawer -->
+  <div class="side-drawer-overlay" id="sideDrawerOverlay" onclick="closeSideDrawer()"></div>
+  <div class="side-drawer" id="sideDrawer">
+    <div class="side-drawer-header">
+      <h3><i class="fas fa-bars" style="margin-right:10px;"></i>Menu</h3>
+      <button class="side-drawer-close" onclick="closeSideDrawer()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="side-drawer-links">
+      <a href="#" class="side-drawer-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
+      <a href="inputan.html" class="side-drawer-link"><i class="fas fa-edit"></i> Input</a>
+      <a href="inputan-tabel.html" class="side-drawer-link"><i class="fas fa-table"></i> Inputan Tabel</a>
+      <a href="rekapan.html" class="side-drawer-link"><i class="fas fa-database"></i> Rekapan</a>
+      <a href="panduan-penggunaan.html" class="side-drawer-link"><i class="fas fa-book-open"></i> Info</a>
+      <a href="install-aplikasi.html" class="side-drawer-link"><i class="fas fa-download"></i> Install App</a>
+    </div>
+    <div class="side-drawer-divider"></div>
+    <div class="side-drawer-auth" id="sideDrawerAuth">
+      <!-- Auth buttons injected by JavaScript -->
+    </div>
+  </div>
 
   <!-- Install Button - Floating -->
   <button id="installBtn" class="install-btn-float" style="display:none;" onclick="promptInstall()">
@@ -765,11 +944,56 @@ window.addEventListener('appinstalled', () => {
   </script>
 
 <script>
-    window.EkinToggleMobileNav = function() {
+window.EkinToggleMobileNav = function() {
       var nav = document.getElementById('mobileNav');
       if (!nav) return;
       nav.classList.toggle('open');
     };
+
+    /* ========== SIDE DRAWER FUNCTIONS ========== */
+    function toggleSideDrawer() {
+      var overlay = document.getElementById('sideDrawerOverlay');
+      var drawer = document.getElementById('sideDrawer');
+      if (!overlay || !drawer) return;
+      
+      var isOpen = overlay.classList.contains('open');
+      if (isOpen) {
+        closeSideDrawer();
+      } else {
+        overlay.classList.add('open');
+        drawer.classList.add('open');
+        injectSideDrawerAuth();
+      }
+    }
+
+    function closeSideDrawer() {
+      var overlay = document.getElementById('sideDrawerOverlay');
+      var drawer = document.getElementById('sideDrawer');
+      if (!overlay || !drawer) return;
+      overlay.classList.remove('open');
+      drawer.classList.remove('open');
+    }
+
+    function injectSideDrawerAuth() {
+      var container = document.getElementById('sideDrawerAuth');
+      if (!container) return;
+
+      var user = (window.EkinAuth) ? window.EkinAuth.getCurrentUser() : null;
+      if (user) {
+        container.innerHTML = 
+          '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
+            '<i class="fas fa-sign-out-alt"></i> Keluar' +
+          '</a>';
+      } else {
+        container.innerHTML = 
+          '<a href="login.html" class="side-drawer-auth-btn masuk" onclick="closeSideDrawer()">' +
+            '<i class="fas fa-sign-in-alt"></i> Masuk' +
+          '</a>' +
+          '<a href="register.html" class="side-drawer-auth-btn daftar" onclick="closeSideDrawer()">' +
+            '<i class="fas fa-user-plus"></i> Buat Akun' +
+          '</a>';
+      }
+    }
 
     AOS.init({
       duration: 800,
@@ -937,15 +1161,11 @@ window.addEventListener('appinstalled', () => {
       }
     }
 
-    function updateFABVisibility() {
-      const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
+function updateFABVisibility() {
       const fab = document.querySelector('.fab-add');
       if (fab) {
-        if (!currentUser) {
-          fab.style.display = 'none';
-        } else {
-          fab.style.display = 'flex';
-        }
+        // FAB selalu visible - untuk membuka side drawer menu
+        fab.style.display = 'flex';
       }
     }
 
@@ -992,13 +1212,14 @@ window.addEventListener('appinstalled', () => {
       }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
       updateHeader();
       updateReportStats();
       updateChartData();
       updateActivityItems();
       updateFABVisibility();
       injectAuthPanel();
+      injectSideDrawerAuth();
 
       // Listen for auth state changes
       window.addEventListener('authStateChanged', function() {
@@ -1008,6 +1229,7 @@ window.addEventListener('appinstalled', () => {
         updateActivityItems();
         updateFABVisibility();
         injectAuthPanel();
+        injectSideDrawerAuth();
       });
 
       var ctx = document.getElementById("workChart").getContext("2d");

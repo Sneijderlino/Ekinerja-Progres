@@ -1,27 +1,10 @@
-# TODO: Material Design UI Transformation
+# TODO - Side Drawer Implementation
 
-## Task: Ubah UI menjadi Native Android Apps Look & Feel
+## Steps:
 
-### Files yang perlu diedit:
-
-- [x] 1. Create TODO tracking file
-- [ ] 2. Update assets/css/index.css - Main styles
-- [ ] 3. Update auth/css/index.css - Auth styles
-- [ ] 4. Update inputan-tabel.html - Inline button styles
-- [ ] 5. Update inputan.html - Inline button styles
-- [ ] 6. Update rekapan.html - Inline button styles
-
-### Design Components:
-
-- Material Design buttons (rounded corners, shadow, ripple effect)
-- Card/Container layouts (grid/list Android-style)
-- Responsive for Android WebView
-
-### Progress:
-
-Status: Waiting for implementation
-
----
-
-Created: 2024
-Priority: HIGH
+- [x] 1. Read and analyze index.html
+- [x] 2. Transform FAB from anchor link to button
+- [x] 3. Add side drawer CSS styles
+- [x] 4. Add side drawer HTML markup
+- [x] 5. Add JavaScript toggle functions
+- [x] 6. Test functionality
