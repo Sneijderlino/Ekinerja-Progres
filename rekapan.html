@@ -7,8 +7,10 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>GHOST-DATABASE | Rekapan & Cloud</title>
-    <meta property="og:image"
-    content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png" />
+    <meta
+      property="og:image"
+      content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png"
+    />
 
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap"
@@ -722,13 +724,17 @@
         border-radius: 8px;
         transition: 0.2s;
       }
-      .nav-hamburger:hover { background: rgba(255, 255, 255, 0.12); }
+      .nav-hamburger:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
       .mobile-nav {
         width: 100%;
         overflow: hidden;
         max-height: 0;
         opacity: 0;
-        transition: max-height 0.35s ease, opacity 0.35s ease;
+        transition:
+          max-height 0.35s ease,
+          opacity 0.35s ease;
         display: none;
         flex-direction: column;
         gap: 6px;
@@ -905,7 +911,9 @@
         z-index: 1999;
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
       }
       .side-drawer-overlay.open {
         opacity: 1;
@@ -1049,24 +1057,48 @@
       }
     </style>
   </head>
-
+  <body data-auth-init>
     <nav class="navbar animate__animated animate__fadeInDown">
       <div class="nav-container">
-        <a href="index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
-        <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
-        <a href="inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
-        <a href="rekapan.html" class="nav-link active"><i class="fas fa-database"></i> Rekapan</a>
-        <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
-        <button class="nav-hamburger" aria-label="Menu" onclick="toggleSideDrawer()">
+        <a href="index.html" class="nav-link"
+          ><i class="fas fa-tower-broadcast"></i> Dash</a
+        >
+        <a href="inputan.html" class="nav-link"
+          ><i class="fas fa-edit"></i> Input</a
+        >
+        <a href="inputan-tabel.html" class="nav-link"
+          ><i class="fas fa-table"></i> Inputan Tabel</a
+        >
+        <a href="rekapan.html" class="nav-link active"
+          ><i class="fas fa-database"></i> Rekapan</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Info</a
+        >
+        <button
+          class="nav-hamburger"
+          aria-label="Menu"
+          onclick="toggleSideDrawer()"
+        >
           <i class="fas fa-bars"></i>
         </button>
       </div>
       <div class="mobile-nav" id="mobileNav">
-        <a href="index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
-        <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
-        <a href="inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
-        <a href="rekapan.html" class="nav-link active"><i class="fas fa-database"></i> Rekapan</a>
-        <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+        <a href="index.html" class="nav-link"
+          ><i class="fas fa-tower-broadcast"></i> Dash</a
+        >
+        <a href="inputan.html" class="nav-link"
+          ><i class="fas fa-edit"></i> Input</a
+        >
+        <a href="inputan-tabel.html" class="nav-link"
+          ><i class="fas fa-table"></i> Inputan Tabel</a
+        >
+        <a href="rekapan.html" class="nav-link active"
+          ><i class="fas fa-database"></i> Rekapan</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Info</a
+        >
       </div>
     </nav>
 
@@ -1289,45 +1321,49 @@
 
     <script>
       // Check login access immediately
-      (function() {
+      (function () {
         try {
           let user = null;
-          
+
           // Try local function first
-          if (typeof getCurrentUser === 'function') {
+          if (typeof getCurrentUser === "function") {
             user = getCurrentUser();
           }
-          
+
           // Fallback to localStorage if function not available
           if (!user) {
             try {
-              const session = localStorage.getItem('ekin_session');
+              const session = localStorage.getItem("ekin_session");
               if (session) {
                 user = JSON.parse(session);
               }
             } catch (e) {
-              console.warn('Could not parse session from localStorage:', e);
+              console.warn("Could not parse session from localStorage:", e);
             }
           }
-          
+
           if (!user) {
-            console.warn('No user session found on rekapan.html');
-            alert('Harap login terlebih dahulu untuk mengakses fitur rekapan!');
-            window.location.href = 'login.html';
+            console.warn("No user session found on rekapan.html");
+            alert("Harap login terlebih dahulu untuk mengakses fitur rekapan!");
+            window.location.href = "login.html";
             return;
           }
           // User sudah login - allow access
-          console.log('✓ User ' + user.username + ' berhasil mengakses fitur rekapan');
+          console.log(
+            "✓ User " + user.username + " berhasil mengakses fitur rekapan",
+          );
         } catch (error) {
-          console.error('Error checking login:', error);
-          alert('Terjadi kesalahan saat memverifikasi login. Silakan refresh halaman.');
-          window.location.href = 'login.html';
+          console.error("Error checking login:", error);
+          alert(
+            "Terjadi kesalahan saat memverifikasi login. Silakan refresh halaman.",
+          );
+          window.location.href = "login.html";
         }
       })();
 
       function getCurrentUser() {
         try {
-          return JSON.parse(localStorage.getItem('ekin_session')) || null;
+          return JSON.parse(localStorage.getItem("ekin_session")) || null;
         } catch {
           return null;
         }
@@ -1341,7 +1377,8 @@
       function loadReports() {
         const user = getCurrentUser();
         if (!user) {
-          document.getElementById("report-list").innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-dim);"><i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 20px;"></i><p>Harap login terlebih dahulu untuk melihat laporan</p></div>';
+          document.getElementById("report-list").innerHTML =
+            '<div style="text-align: center; padding: 40px; color: var(--text-dim);"><i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 20px;"></i><p>Harap login terlebih dahulu untuk melihat laporan</p></div>';
           document.getElementById("count-total").innerText = "0";
           document.getElementById("empty-msg").style.display = "block";
           return;
@@ -1697,8 +1734,9 @@
               month: "long",
               day: "numeric",
             });
-          document.getElementById("out-ttd-jabatan").innerHTML =
-            (ttd.jabatan || "-").replace(/\n/g, "<br>");
+          document.getElementById("out-ttd-jabatan").innerHTML = (
+            ttd.jabatan || "-"
+          ).replace(/\n/g, "<br>");
           document.getElementById("out-ttd-nama").innerText = ttd.nama || "-";
           document.getElementById("out-ttd-pangkat").innerText =
             ttd.pangkat || "-";
@@ -1738,39 +1776,42 @@
       }
 
       function toggleSideDrawer() {
-        var overlay = document.getElementById('sideDrawerOverlay');
-        var drawer = document.getElementById('sideDrawer');
+        var overlay = document.getElementById("sideDrawerOverlay");
+        var drawer = document.getElementById("sideDrawer");
         if (!overlay || !drawer) return;
 
-        var isOpen = overlay.classList.contains('open');
+        var isOpen = overlay.classList.contains("open");
         if (isOpen) {
           closeSideDrawer();
         } else {
-          overlay.classList.add('open');
-          drawer.classList.add('open');
+          overlay.classList.add("open");
+          drawer.classList.add("open");
           injectSideDrawerAuth();
         }
       }
 
       function closeSideDrawer() {
-        var overlay = document.getElementById('sideDrawerOverlay');
-        var drawer = document.getElementById('sideDrawer');
+        var overlay = document.getElementById("sideDrawerOverlay");
+        var drawer = document.getElementById("sideDrawer");
         if (!overlay || !drawer) return;
-        overlay.classList.remove('open');
-        drawer.classList.remove('open');
+        overlay.classList.remove("open");
+        drawer.classList.remove("open");
       }
 
       function injectSideDrawerAuth() {
-        var container = document.getElementById('sideDrawerAuth');
+        var container = document.getElementById("sideDrawerAuth");
         if (!container) return;
 
         var user = null;
         try {
-          if (window.EkinAuth && typeof window.EkinAuth.getCurrentUser === 'function') {
+          if (
+            window.EkinAuth &&
+            typeof window.EkinAuth.getCurrentUser === "function"
+          ) {
             user = window.EkinAuth.getCurrentUser();
           }
           if (!user) {
-            var session = localStorage.getItem('ekin_session');
+            var session = localStorage.getItem("ekin_session");
             if (session) user = JSON.parse(session);
           }
         } catch (e) {
@@ -1781,22 +1822,22 @@
           container.innerHTML =
             '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
             '<i class="fas fa-sign-out-alt"></i> Keluar' +
-            '</a>';
+            "</a>";
         } else {
           container.innerHTML =
             '<a href="login.html" class="side-drawer-auth-btn masuk" onclick="closeSideDrawer()">' +
             '<i class="fas fa-sign-in-alt"></i> Masuk' +
-            '</a>' +
+            "</a>" +
             '<a href="register.html" class="side-drawer-auth-btn daftar" onclick="closeSideDrawer()">' +
             '<i class="fas fa-user-plus"></i> Buat Akun' +
-            '</a>';
+            "</a>";
         }
       }
 
-      window.EkinToggleMobileNav = function() {
-        const mobileNav = document.getElementById('mobileNav');
+      window.EkinToggleMobileNav = function () {
+        const mobileNav = document.getElementById("mobileNav");
         if (!mobileNav) return;
-        mobileNav.classList.toggle('open');
+        mobileNav.classList.toggle("open");
       };
 
       window.onload = loadReports;

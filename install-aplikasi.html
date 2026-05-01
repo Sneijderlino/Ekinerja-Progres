@@ -650,8 +650,8 @@
       }
     </style>
   </head>
-  <body>
-    <nav class="navbar">
+  <body data-auth-init>
+    <nav class="navbar animate__animated animate__fadeInDown">
       <div class="nav-container">
         <a href="index.html" class="nav-link"
           ><i class="fas fa-tower-broadcast"></i> Dash</a
@@ -1001,7 +1001,22 @@
         var container = document.getElementById("sideDrawerAuth");
         if (!container) return;
 
-        var user = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
+        var user = null;
+        try {
+          if (
+            window.EkinAuth &&
+            typeof window.EkinAuth.getCurrentUser === "function"
+          ) {
+            user = window.EkinAuth.getCurrentUser();
+          }
+          if (!user) {
+            var session = localStorage.getItem("ekin_session");
+            if (session) user = JSON.parse(session);
+          }
+        } catch (e) {
+          user = null;
+        }
+
         if (user) {
           container.innerHTML =
             '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
