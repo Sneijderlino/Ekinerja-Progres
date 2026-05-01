@@ -37,6 +37,81 @@
       padding: 0;
       overflow-x: hidden;
     }
+/*============== BANNER LOGO STYLES ==============*/
+.banner-container {
+  width: 100%;
+  max-width: 100%;
+  padding: 5px 5px 5px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.08) 0%, transparent 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.banner-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  animation: bannerShine 4s ease-in-out infinite;
+}
+@keyframes bannerShine {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+.banner-logo {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  object-fit: contain;
+  animation: bannerFadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards, bannerFloat 6s ease-in-out 1.2s infinite;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+}
+@keyframes bannerFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes bannerFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.01); }
+}
+.banner-logo:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 50px rgba(59, 130, 246, 0.4), 0 0 30px rgba(45, 212, 191, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (min-width: 768px) {
+  .banner-container {
+    padding: 8px 15px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .banner-logo {
+    max-width: 100%;
+  }
+}
+@media (min-width: 1024px) {
+  .banner-container {
+    padding: 10px 20px;
+    max-width: 550px;
+    margin: 0 auto;
+  }
+  .banner-logo {
+    max-width: 100%;
+  }
+}
+
+
     .navbar {
       position: fixed;
       top: 0;
@@ -416,7 +491,8 @@
       <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
       <a href="inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
       <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
-      <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+<a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+      <a href="install-aplikasi.html" class="nav-link"><i class="fas fa-download"></i> Install App</a>
       <button class="nav-hamburger" aria-label="Menu" onclick="window.EkinToggleMobileNav()">
         <i class="fas fa-bars"></i>
       </button>
@@ -426,14 +502,174 @@
       <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
       <a href="inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
       <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
-      <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+<a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+      <a href="install-aplikasi.html" class="nav-link"><i class="fas fa-download"></i> Install App</a>
     </div>
   </nav>
 
-  <a href="inputan.html" class="fab-add" title="Buat Laporan Baru">
+<a href="inputan.html" class="fab-add" title="Buat Laporan Baru">
     <i class="fas fa-plus"></i>
   </a>
 
+  <!-- Install Button - Floating -->
+  <button id="installBtn" class="install-btn-float" style="display:none;" onclick="promptInstall()">
+    <i class="fas fa-download"></i> Install Aplikasi
+  </button>
+
+  <style>
+    .install-btn-float {
+      position: fixed;
+      bottom: 110px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--secondary), #14b8a6);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(45, 212, 191, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 998;
+      transition: 0.3s;
+    }
+    .install-btn-float:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(45, 212, 191, 0.6);
+    }
+  </style>
+<!-- Banner Logo -->
+  <div class="banner-container">
+    <img src="logo-link.png" alt="Logo Aplikasi E-Kinerja" class="banner-logo">
+  </div>
+
+<!-- Running Text Container -->
+<div class="running-text-container" style="width:100%;max-width:600px;margin:0 auto;padding:8px 15px;overflow:hidden;background:linear-gradient(90deg,rgba(59,130,246,0.08),rgba(45,212,191,0.05),rgba(59,130,246,0.08));border-radius:8px 8px 0 0;">
+  <marquee scrollamount="5" scrolldelay="80" style="display:block;">
+    <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.7rem;font-weight:600;color:var(--primary);letter-spacing:1px;padding-right:40px;">
+      📋 Selamat Menginput Laporan E-Kinerja Kalian • E-KINERJA ASN • LAPORAN HARIAN • 
+    </span>
+  </marquee>
+</div>
+
+<!-- Quick Links Container -->
+<div class="quick-links-container" style="width:100%;max-width:600px;margin:0 auto;padding:12px 15px;overflow:hidden;background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(45,212,191,0.04));border-radius:0 0 8px 8px;border-top:1px solid rgba(59,130,246,0.15);animation:slideInUp 0.5s ease-out forwards;">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+    <a href="https://myasn.bkn.go.id/" class="quick-btn" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(59,130,246,0.1));border:1px solid rgba(59,130,246,0.3);color:var(--primary);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.1s forwards;">login Myasn</a>
+    <a href="https://inagov.go.id/" class="quick-btn" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(59,130,246,0.1));border:1px solid rgba(59,130,246,0.3);color:var(--primary);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.2s forwards;">cek status kehadiran</a>
+    <a href="https://asndigital.bkn.go.id/" class="quick-btn" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(59,130,246,0.1));border:1px solid rgba(59,130,246,0.3);color:var(--primary);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.3s forwards;">login SKP</a>
+  </div>
+</div>
+<div class="sosmed-container" style="width:100%;max-width:600px;margin:10px auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;animation:fadeInUp 0.6s ease-out 0.3s forwards;opacity:0;">
+  <!-- WhatsApp -->
+  <a href="https://wa.me" target="_blank" class="btn-sosmed wa" style="position:relative;padding:12px 20px;background:linear-gradient(135deg,#25D366,#075E54);border-radius:12px;color:#fff;font-weight:700;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;">
+    <i class="fa-brands fa-whatsapp" style="font-size:1.1rem;"></i> WhatsApp
+  </a>
+
+  <!-- TikTok -->
+  <a href="https://tiktok.com" target="_blank" class="btn-sosmed tiktok" style="position:relative;padding:12px 20px;background:linear-gradient(135deg,#000000,#FE2C55);border-radius:12px;color:#fff;font-weight:700;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;">
+    <i class="fa-brands fa-tiktok" style="font-size:1.1rem;"></i> TikTok
+  </a>
+
+  <!-- Facebook -->
+  <a href="https://facebook.com" target="_blank" class="btn-sosmed fb" style="position:relative;padding:12px 20px;background:linear-gradient(135deg,#1877F2,#0d65d9);border-radius:12px;color:#fff;font-weight:700;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;">
+    <i class="fa-brands fa-facebook-f" style="font-size:1.1rem;"></i> Facebook
+  </a>
+
+  <!-- Instagram -->
+  <a href="https://instagram.com" target="_blank" class="btn-sosmed ig" style="position:relative;padding:12px 20px;background:linear-gradient(135deg,#833AB4,#FD1D1D,#F77737);border-radius:12px;color:#fff;font-weight:700;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;">
+    <i class="fa-brands fa-instagram" style="font-size:1.1rem;"></i> Instagram
+  </a>
+</div>
+<div class="line-gradient" style="width:100%;max-width:600px;margin:20px auto;position:relative;height:3px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.3),transparent);border-radius:2px;">
+  <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,var(--primary),var(--secondary),transparent);opacity:0.6;animation:lineGradientShift 3s ease-in-out infinite;border-radius:2px;"></div>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:var(--primary);border-radius:50%;box-shadow:0 0 15px var(--primary),0 0 30px var(--secondary);animation:lineDotPulse 2s ease-in-out infinite;"></div>
+</div>
+
+<style>
+  @keyframes lineGradientShift {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes lineDotPulse {
+    0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 15px var(--primary), 0 0 30px var(--secondary); }
+    50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 25px var(--primary), 0 0 50px var(--secondary); }
+  }
+</style>
+
+<style>
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes sosmedPulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+.quick-btn:hover {
+  background: linear-gradient(135deg, var(--primary), #2563eb) !important;
+  color: #fff !important;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+.quick-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+/* Social Media Buttons */
+.btn-sosmed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+.btn-sosmed:hover::before {
+  left: 100%;
+}
+.btn-sosmed:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+.btn-sosmed:active {
+  transform: scale(0.95);
+}
+
+/* WhatsApp Specific */
+.btn-sosmed.wa:hover {
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.5);
+}
+
+/* TikTok Specific */
+.btn-sosmed.tiktok:hover {
+  box-shadow: 0 12px 30px rgba(254, 44, 85, 0.5);
+}
+
+/* Facebook Specific */
+.btn-sosmed.fb:hover {
+  box-shadow: 0 12px 30px rgba(24, 119, 242, 0.5);
+}
+
+/* Instagram Specific */
+.btn-sosmed.ig:hover {
+  box-shadow: 0 12px 30px rgba(131, 58, 180, 0.5);
+}
+.sosmed-container {
+  opacity: 1 !important;
+}
+</style>
   <div class="container">
     <div class="welcome-back" data-aos="fade-down">
       <div class="date-badge" id="currentDate">Senin, 20 April 2026</div>
@@ -495,12 +731,40 @@
 
     <div class="footer">
       Aplikasi Laporan E-kinerja // BY Sneijderlino<br/>
-      EXCLUSIVELY FOR INDONESIAN ASN &copy; 2026
     </div>
 
-  <script src="assets/js/auth.js"></script>
+<script src="assets/js/auth.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
   <script>
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'flex';
+    });
+
+    function promptInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the A2HS prompt');
+          }
+          deferredPrompt = null;
+        });
+      }
+    }
+
+window.addEventListener('appinstalled', () => {
+      installBtn.style.display = 'none';
+      console.log('PWA was installed');
+    });
+  </script>
+
+<script>
     window.EkinToggleMobileNav = function() {
       var nav = document.getElementById('mobileNav');
       if (!nav) return;
@@ -787,6 +1051,6 @@
       window.workChart = chart;
       updateChartData();
     });
-  </script>
+</script>
 </body>
 </html>

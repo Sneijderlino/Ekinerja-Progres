@@ -472,20 +472,24 @@ input:hover, textarea:hover {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%);
     border-top: 1px solid rgba(15, 159, 255, 0.15);
 }
-.btn { 
-    width: 100%; 
+/* Material Design Buttons */
+.btn {
+    width: 100%;
     padding: 14px 16px;
-    border-radius: 10px; 
-    border: none; 
-    font-weight: 700; 
-    cursor: pointer; 
-    margin-bottom: 10px; 
-    text-transform: uppercase; 
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 10px;
+    text-transform: uppercase;
     font-size: 0.85rem;
     letter-spacing: 1px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    /* Material Design Shadow */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15), 
+                0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .btn:active { transform: translateY(1px); filter: brightness(0.92); }
 .btn::before {

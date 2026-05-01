@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Install Aplikasi | E-Kinerja</title>
+    <meta name="theme-color" content="#3b82f6" />
+    <link rel="manifest" href="manifest.json" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --bg: #060912;
+        --surface: #111827;
+        --primary: #3b82f6;
+        --secondary: #2dd4bf;
+        --accent: #f59e0b;
+        --text: #f8fafc;
+        --text-dim: #94a3b8;
+        --border: rgba(255, 255, 255, 0.06);
+        --glass: rgba(17, 24, 39, 0.7);
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            circle at 10% 20%,
+            rgba(59, 130, 246, 0.12) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 80%,
+            rgba(45, 212, 191, 0.08) 0%,
+            transparent 40%
+          );
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        z-index: 1000;
+        padding: 10px 0;
+        width: 100%;
+      }
+      .nav-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .nav-link {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.3s;
+        padding: 8px 12px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .nav-link i {
+        font-size: 16px;
+      }
+      .nav-link.active {
+        color: var(--primary);
+        background: rgba(59, 130, 246, 0.2);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+      .nav-link:hover {
+        color: var(--text);
+        background: rgba(59, 130, 246, 0.15);
+      }
+      .nav-hamburger {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 1.3rem;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: 0.2s;
+      }
+      .nav-hamburger:hover {
+        background: rgba(59, 130, 246, 0.15);
+      }
+      .mobile-nav {
+        width: 100%;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition:
+          max-height 0.35s ease,
+          opacity 0.35s ease;
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        padding: 0 10px;
+      }
+      .mobile-nav.open {
+        max-height: 500px;
+        opacity: 1;
+        padding: 10px;
+      }
+      @media (max-width: 768px) {
+        .nav-hamburger {
+          display: block;
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .nav-container {
+          position: relative;
+          justify-content: flex-start;
+          padding-right: 50px;
+        }
+        .nav-container > .nav-link {
+          display: none;
+        }
+        .mobile-nav {
+          display: flex;
+        }
+      }
+      @media (min-width: 769px) {
+        .nav-container {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 0 20px;
+          gap: 10px;
+        }
+        .nav-link {
+          font-size: 13px;
+          padding: 10px 16px;
+          gap: 7px;
+        }
+        body {
+          padding-top: 105px;
+        }
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 100px 20px 120px;
+      }
+      .header-section {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .header-section h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0 0 10px;
+        letter-spacing: -1px;
+      }
+      .header-section h1 i {
+        color: var(--primary);
+        margin-right: 10px;
+      }
+      .header-section p {
+        color: var(--text-dim);
+        font-size: 1rem;
+        margin: 0;
+      }
+      .install-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        padding: 30px;
+        margin-bottom: 20px;
+        transition: 0.3s;
+      }
+      .install-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-3px);
+      }
+      .install-card h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0 0 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .install-card h3 i {
+        color: var(--primary);
+      }
+      .install-card p {
+        color: var(--text-dim);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+      .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+      }
+      .steps-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .step-item {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+      }
+      .step-content {
+        flex: 1;
+      }
+      .step-content h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 8px;
+        color: var(--text);
+      }
+      .step-content p {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.5;
+      }
+      .browser-list {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+      }
+      .browser-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .browser-badge i {
+        color: var(--primary);
+      }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        background: rgba(59, 130, 246, 0.05);
+        border-radius: 12px;
+      }
+      .feature-item i {
+        color: var(--secondary);
+        font-size: 1.2rem;
+      }
+      .feature-item span {
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      .footer {
+        text-align: center;
+        padding: 50px 0;
+        color: var(--text-dim);
+        font-family: "JetBrains Mono";
+        font-size: 0.7rem;
+        border-top: 1px solid var(--border);
+      }
+      .install-btn-direct {
+        background: linear-gradient(135deg, var(--primary), #2563eb);
+        color: white;
+        border: none;
+        padding: 18px 40px;
+        border-radius: 50px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        transition: 0.3s;
+      }
+      .install-btn-direct:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="nav-link"
+          ><i class="fas fa-tower-broadcast"></i> Dash</a
+        >
+        <a href="inputan.html" class="nav-link"
+          ><i class="fas fa-edit"></i> Input</a
+        >
+        <a href="inputan-tabel.html" class="nav-link"
+          ><i class="fas fa-table"></i> Inputan Tabel</a
+        >
+        <a href="rekapan.html" class="nav-link"
+          ><i class="fas fa-database"></i> Rekapan</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Info</a
+        >
+        <a href="install-aplikasi.html" class="nav-link active"
+          ><i class="fas fa-download"></i> Install App</a
+        >
+        <button
+          class="nav-hamburger"
+          aria-label="Menu"
+          onclick="
+            document.getElementById('mobileNav').classList.toggle('open')
+          "
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <div class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"
+          ><i class="fas fa-tower-broadcast"></i> Dash</a
+        >
+        <a href="inputan.html" class="nav-link"
+          ><i class="fas fa-edit"></i> Input</a
+        >
+        <a href="inputan-tabel.html" class="nav-link"
+          ><i class="fas fa-table"></i> Inputan Tabel</a
+        >
+        <a href="rekapan.html" class="nav-link"
+          ><i class="fas fa-database"></i> Rekapan</a
+        >
+        <a href="panduan-penggunaan.html" class="nav-link"
+          ><i class="fas fa-book-open"></i> Info</a
+        >
+        <a href="install-aplikasi.html" class="nav-link active"
+          ><i class="fas fa-download"></i> Install App</a
+        >
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="header-section">
+        <h1><i class="fas fa-mobile-screen-button"></i> Install Aplikasi</h1>
+        <p>
+          Pasang aplikasi E-Kinerja di perangkat Anda untuk pengalaman terbaik.
+        </p>
+
+        <!-- Tombol Install Langsung -->
+        <div style="margin-top: 25px">
+          <button
+            id="installBtnPage"
+            class="install-btn-direct"
+            onclick="promptInstall()"
+          >
+            <i class="fas fa-download"></i> Install Sekarang
+          </button>
+          <p
+            style="margin-top: 12px; font-size: 0.8rem; color: var(--text-dim)"
+          >
+            ⎙ Atau klik tombol di atas untuk install otomatis via PWA
+          </p>
+        </div>
+      </div>
+
+      <div class="install-card">
+        <h3><i class="fas fa-mobile-alt"></i> Cara Install di Android</h3>
+        <div class="steps-container">
+          <div class="step-item">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Buka Menu Browser</h4>
+              <p>
+                Buka aplikasi ini menggunakan Chrome, lalu ketuk ikon tiga titik
+                di pojok kanan atas layar.
+              </p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Pilih "Pasang Aplikasi"</h4>
+              <p>
+                Gulir ke bawah dan pilih opsi "Pasang Aplikasi" atau "Add to
+                Home Screen".
+              </p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Konfirmasi Install</h4>
+              <p>
+                Ketuk "Pasang" untuk mengonfirmasi. Aplikasi akan muncul di
+                layar utama.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-card">
+        <h3><i class="fab fa-apple"></i> Cara Install di iPhone / iPad</h3>
+        <div class="steps-container">
+          <div class="step-item">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Buka Menu Share</h4>
+              <p>
+                Buka aplikasi ini menggunakan Safari, lalu ketuk ikon Share di
+                pojok bawah layar.
+              </p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Pilih "Tambah ke Layar Utama"</h4>
+              <p>Gulir ke bawah dan pilih opsi "Tambah ke Layar Utama".</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Selesai</h4>
+              <p>
+                Ketuk "Tambah" di pojok kanan atas. Aplikasi akan siap di layar
+                utama.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-card">
+        <h3><i class="fas fa-desktop"></i> Cara Install di Komputer</h3>
+        <div class="browser-list">
+          <div class="browser-badge"><i class="fab fa-chrome"></i> Chrome</div>
+          <div class="browser-badge"><i class="fab fa-edge"></i> Edge</div>
+          <div class="browser-badge"><i class="fab fa-opera"></i> Opera</div>
+        </div>
+        <div class="steps-container" style="margin-top: 15px">
+          <div class="step-item">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Buka Install Icon</h4>
+              <p>
+                Jika ikon install muncul di 右iksaat Anda mengakses aplikasi
+                ini, klik ikon tersebut untuk memulai instalasi.
+              </p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Ikuti Petunjuk</h4>
+              <p>
+                Ikuti petunjuk di layar untuk menyelesaikan instalasi aplikasi.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-card">
+        <h3><i class="fas fa-star"></i> Keunggulan Aplikasi Terinstall</h3>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <i class="fas fa-bolt"></i>
+            <span>Akses Cepat</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-wifi"></i>
+            <span>Offline Mode</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-expand"></i>
+            <span>Layar Penuh</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-bell"></i>
+            <span>Notifikasi</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-rocket"></i>
+            <span>Loading Cepat</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-shield-halved"></i>
+            <span>Aman & Privasi</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        Aplikasi Laporan E-kinerja // BY Sneijderlino<br />
+      </div>
+    </div>
+
+    <!-- Install Button - Floating -->
+    <button
+      id="installBtn"
+      class="install-btn-float"
+      style="display: none"
+      onclick="promptInstall()"
+    >
+      <i class="fas fa-download"></i> Install Aplikasi
+    </button>
+
+    <style>
+      .install-btn-float {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--primary), #2563eb);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 999;
+        transition: 0.3s;
+      }
+      .install-btn-float:hover {
+        transform: translateX(-50%) scale(1.05);
+        box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
+      }
+      .install-btn-float i {
+        font-size: 1.1rem;
+      }
+    </style>
+
+    <script>
+      let deferredPrompt;
+      const installBtn = document.getElementById("installBtn");
+      const installBtnPage = document.getElementById("installBtnPage");
+      const statusText = document.querySelector(".header-section p:last-child");
+
+      // Cek apakah browser mendukung PWA installation
+      function checkPWASupport() {
+        if (!("serviceWorker" in navigator)) {
+          showStatus(
+            "❌ Browser ini tidak mendukung PWA. Gunakan Chrome/Android untuk install.",
+            "error",
+          );
+          return;
+        }
+        if (window.location.protocol === "file:") {
+          showStatus(
+            "⚠️ Buka dari server (HTTPS) untuk install PWA. Atau gunakan cara manual di bawah.",
+            "warning",
+          );
+          return;
+        }
+        // Event akan dipicu oleh browser saat bisa diinstall
+      }
+
+      function showStatus(message, type) {
+        if (statusText) {
+          statusText.textContent = message;
+          statusText.style.color = type === "error" ? "#f87171" : "#f59e0b";
+        }
+      }
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Tampilkan floating button
+        if (installBtn) installBtn.style.display = "flex";
+        // Update text di halaman
+        if (statusText)
+          statusText.textContent = "🔥 Siap install! Klik tombol di atas.";
+      });
+
+      function promptInstall() {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === "accepted") {
+              console.log("User accepted the A2HS prompt");
+              showStatus("✅ Aplikasi berhasil diinstall!", "success");
+            } else {
+              showStatus("❌ Install dibatalkan.", "error");
+            }
+            deferredPrompt = null;
+          });
+        } else {
+          // PWA belum ready, cek原因
+          checkPWASupport();
+
+          // Cek via manifest
+          fetch("manifest.json")
+            .then(() =>
+              showStatus(
+                "🔄 Situs sudah bisa diinstall. Refresh dan coba lagi.",
+                "success",
+              ),
+            )
+            .catch(() => {});
+        }
+      }
+
+      window.addEventListener("appinstalled", () => {
+        if (installBtn) installBtn.style.display = "none";
+        showStatus(
+          "🎉 Aplikasi berhasil diinstall ke perangkat Anda!",
+          "success",
+        );
+        console.log("PWA was installed");
+      });
+
+      // Jalank cek awal
+      document.addEventListener("DOMContentLoaded", checkPWASupport);
+    </script>
+  </body>
+</html>

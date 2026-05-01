@@ -11,6 +11,14 @@
       property="og:image"
       content="https://ekinerja-pro.sneijderlino.workers.dev/logo-link.png"
     />
+    <!-- App Icons for PWA and Web -->
+    <link rel="icon" href="logo-link.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="logo-link.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="logo-link.png" sizes="180x180" />
+    <link rel="apple-touch-icon" href="logo-link.png" sizes="152x152" />
+    <link rel="apple-touch-icon" href="logo-link.png" sizes="120x120" />
+    <link rel="apple-touch-icon" href="logo-link.png" sizes="76x76" />
+    <meta name="theme-color" content="#3b82f6" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="assets/css/index.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -245,11 +253,12 @@
       }
 
       .btn {
+        /* Material Design Button - Rounded corners, shadow, ripple */
         background: linear-gradient(135deg, var(--primary), var(--secondary));
         color: white;
         border: none;
         padding: 12px 16px;
-        border-radius: 8px;
+        border-radius: 12px;
         cursor: pointer;
         font-weight: 600;
         font-size: 12px;
@@ -258,6 +267,10 @@
         transition: 0.3s;
         width: 100%;
         margin-bottom: 8px;
+        /* Material Design Shadow */
+        box-shadow:
+          0 2px 5px rgba(0, 0, 0, 0.15),
+          0 1px 3px rgba(0, 0, 0, 0.1);
       }
 
       .btn:hover {

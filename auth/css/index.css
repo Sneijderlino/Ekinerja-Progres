@@ -137,7 +137,21 @@ input, textarea { width: 100%; background: #fff; border: 1px solid #cbd5e1; padd
 .logo-upload-btn:hover, .upload-box:hover { background: #e2e8f0; border-color: #94a3b8; }
 .logo-upload-btn:active, .upload-box:active { transform: translateY(1px); background: #dbeafe; border-color: #93c5fd; }
 .action-area { padding: 20px; background: #fff; border-top: 1px solid #e2e8f0; }
-.btn { width: 100%; padding: 14px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; transition: transform 0.15s ease, filter 0.15s ease;
+/* Material Design Button */
+.btn { 
+    width: 100%; 
+    padding: 14px; 
+    border-radius: 12px; 
+    border: none; 
+    font-weight: 700; 
+    cursor: pointer; 
+    margin-bottom: 10px; 
+    text-transform: uppercase; 
+    font-size: 0.85rem; 
+    transition: transform 0.15s ease, filter 0.15s ease;
+    /* Material Design Shadow */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15), 
+                0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .btn:active { transform: translateY(1px); filter: brightness(0.92); }
 .btn-preview { background: var(--accent); color: white; }
