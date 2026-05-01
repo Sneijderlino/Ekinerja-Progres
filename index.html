@@ -469,7 +469,83 @@
       box-shadow: 0 10px 25px rgba(45, 212, 191, 0.5);
     }
     .fab-add i { transition: 0.3s; }
-@keyframes pulse {
+    .fab-menu {
+      position: fixed;
+      bottom: 110px;
+      right: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px) scale(0.95);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    }
+    .fab-menu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+    .fab-menu-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(15, 23, 42, 0.98);
+      color: #e2e8f0;
+      text-decoration: none;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.35);
+      font-weight: 700;
+      font-size: 0.95rem;
+      backdrop-filter: blur(12px);
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    }
+    .fab-menu-item i {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #38bdf8;
+    }
+    .fab-menu-item:hover {
+      transform: translateX(-6px);
+      background: rgba(30, 41, 59, 0.98);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .fab-add {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 65px;
+      height: 65px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      border: none;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 1001;
+      transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: pulse 2s infinite;
+    }
+    .fab-add.open {
+      transform: rotate(45deg);
+    }
+    .fab-add:hover {
+      transform: scale(1.1) rotate(90deg);
+      background: var(--secondary);
+      box-shadow: 0 10px 25px rgba(45, 212, 191, 0.5);
+    }
+    @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
       70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
       100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
@@ -649,7 +725,7 @@
       <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
 <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
       <a href="install-aplikasi.html" class="nav-link"><i class="fas fa-download"></i> Install App</a>
-      <button class="nav-hamburger" aria-label="Menu" onclick="window.EkinToggleMobileNav()">
+      <button class="nav-hamburger" aria-label="Menu" onclick="toggleSideDrawer()">
         <i class="fas fa-bars"></i>
       </button>
     </div>
@@ -663,9 +739,19 @@
     </div>
   </nav>
 
-<button class="fab-add" title="Buka Menu" onclick="toggleSideDrawer()">
+<button class="fab-add" title="Tambah Laporan" onclick="toggleFabMenu()">
     <i class="fas fa-plus"></i>
   </button>
+  <div class="fab-menu" id="fabMenu">
+    <a href="inputan.html" class="fab-menu-item" onclick="closeFabMenu()">
+      <i class="fas fa-edit"></i>
+      <span>Input Non Tabel</span>
+    </a>
+    <a href="inputan-tabel.html" class="fab-menu-item" onclick="closeFabMenu()">
+      <i class="fas fa-table"></i>
+      <span>Inputan Tabel</span>
+    </a>
+  </div>
 
   <!-- Side Drawer -->
   <div class="side-drawer-overlay" id="sideDrawerOverlay" onclick="closeSideDrawer()"></div>
@@ -952,6 +1038,7 @@ window.EkinToggleMobileNav = function() {
 
     /* ========== SIDE DRAWER FUNCTIONS ========== */
     function toggleSideDrawer() {
+      closeFabMenu();
       var overlay = document.getElementById('sideDrawerOverlay');
       var drawer = document.getElementById('sideDrawer');
       if (!overlay || !drawer) return;
@@ -973,6 +1060,33 @@ window.EkinToggleMobileNav = function() {
       overlay.classList.remove('open');
       drawer.classList.remove('open');
     }
+
+    function toggleFabMenu() {
+      var fab = document.querySelector('.fab-add');
+      var menu = document.getElementById('fabMenu');
+      if (!menu || !fab) return;
+      menu.classList.toggle('open');
+      fab.classList.toggle('open');
+    }
+
+    function closeFabMenu() {
+      var fab = document.querySelector('.fab-add');
+      var menu = document.getElementById('fabMenu');
+      if (!menu || !fab) return;
+      menu.classList.remove('open');
+      fab.classList.remove('open');
+    }
+
+    document.addEventListener('click', function(event) {
+      var fab = document.querySelector('.fab-add');
+      var menu = document.getElementById('fabMenu');
+      if (!fab || !menu) return;
+      if (menu.classList.contains('open')) {
+        if (!fab.contains(event.target) && !menu.contains(event.target)) {
+          closeFabMenu();
+        }
+      }
+    });
 
     function injectSideDrawerAuth() {
       var container = document.getElementById('sideDrawerAuth');
