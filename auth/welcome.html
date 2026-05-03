@@ -7,9 +7,11 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>E-Kinerja | Aplikasi Laporan Produktivitas ASN</title>
-    <meta property="og:image"
-    content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png" />
-    <link rel="manifest" href="/manifest.json" />
+    <meta
+      property="og:image"
+      content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png"
+    />
+    <link rel="manifest" href="../manifest.json" />
     <link rel="stylesheet" href="css/index.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,7 +22,7 @@
         <a href="#" class="nav-link active"
           ><i class="fas fa-home"></i> Beranda</a
         >
-        <a href="panduan-penggunaan.html" class="nav-link"
+        <a href="/panduan-penggunaan.html" class="nav-link"
           ><i class="fas fa-book-open"></i> Panduan</a
         >
         <div class="nav-auth">
@@ -63,7 +65,7 @@
           <a href="daftar.html" class="btn btn-primary hero-btn">
             <i class="fas fa-user-plus"></i> Mulai Sekarang - Gratis
           </a>
-          <a href="panduan-penggunaan.html" class="btn btn-secondary hero-btn">
+          <a href="/panduan-penggunaan.html" class="btn btn-secondary hero-btn">
             <i class="fas fa-info-circle"></i> Pelajari Lebih Lanjut
           </a>
         </div>
@@ -196,7 +198,7 @@
             <p>Aplikasi Modern untuk ASN Produktif</p>
           </div>
           <div class="footer-links">
-            <a href="panduan-penggunaan.html">Panduan</a>
+            <a href="/panduan-penggunaan.html">Panduan</a>
             <a href="masuk.html">Masuk</a>
             <a href="daftar.html">Daftar</a>
           </div>
@@ -219,7 +221,7 @@
         const currentUser = localStorage.getItem("current_user");
         if (currentUser) {
           // User already logged in, redirect to dashboard
-          window.location.href = "index.html";
+          window.location.href = "/index.html";
         }
       });
     </script>

@@ -24,6 +24,21 @@ function generateUUID() {
     return deviceId;
 }
 
+(function registerAuthServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker
+                .register('/service-worker.js', { scope: '/' })
+                .then((registration) => {
+                    console.log('Auth Service Worker terdaftar dengan scope:', registration.scope);
+                })
+                .catch((error) => {
+                    console.warn('Gagal mendaftar Service Worker pada auth:', error);
+                });
+        });
+    }
+})();
+
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
@@ -47,10 +62,11 @@ function checkLicense() {
     const uuid = document.getElementById('display-uuid').innerText;
     const input = document.getElementById('input-license').value.trim();
     
-    // Algoritma Validasi: Base64 dari (UUID + SALT) diambil 8 karakter pertama
-    const validKey = btoa(uuid + SALT).substring(0, 8).toUpperCase();
+    // Algoritma Validasi: key harus persis sama dengan base64(UUID + SALT) 16 karakter pertama
+    const validKey = btoa(uuid + SALT).substring(0, 16).toUpperCase();
+    const isValid = input === validKey;
 
-    if(input === validKey) {
+    if (isValid) {
         localStorage.setItem('ghost_pro_activated', 'true');
         showToast("SYSTEM ACTIVATED!");
         unlockApp();
@@ -141,10 +157,7 @@ function checkLoginAccess() {
     if (!currentUser) {
         console.warn('No user session found');
         alert('Harap login terlebih dahulu untuk mengakses fitur input laporan!');
-        window.location.href = 'login.html';
-        return;
-    }
-    
+            window.location.href = '/login.html';
     // User sudah login - allow access
     console.log('✓ User ' + currentUser.username + ' berhasil mengakses fitur input');
 }
@@ -400,7 +413,7 @@ async function saveReport() {
     const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
     if (!currentUser) {
         alert('Harap login terlebih dahulu untuk menyimpan laporan!');
-        window.location.href = 'login.html';
+        window.location.href = '/login.html';
         return;
     }
     const dateInput = document.getElementById('in-report-date');

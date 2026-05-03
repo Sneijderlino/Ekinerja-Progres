@@ -1060,19 +1060,19 @@
   <body data-auth-init>
     <nav class="navbar animate__animated animate__fadeInDown">
       <div class="nav-container">
-        <a href="index.html" class="nav-link"
+        <a href="/index.html" class="nav-link"
           ><i class="fas fa-tower-broadcast"></i> Dash</a
         >
-        <a href="inputan.html" class="nav-link"
+        <a href="/inputan.html" class="nav-link"
           ><i class="fas fa-edit"></i> Input</a
         >
-        <a href="inputan-tabel.html" class="nav-link"
+        <a href="/inputan-tabel.html" class="nav-link"
           ><i class="fas fa-table"></i> Inputan Tabel</a
         >
-        <a href="rekapan.html" class="nav-link active"
+        <a href="/rekapan.html" class="nav-link active"
           ><i class="fas fa-database"></i> Rekapan</a
         >
-        <a href="panduan-penggunaan.html" class="nav-link"
+        <a href="/panduan-penggunaan.html" class="nav-link"
           ><i class="fas fa-book-open"></i> Info</a
         >
         <button
@@ -1084,19 +1084,19 @@
         </button>
       </div>
       <div class="mobile-nav" id="mobileNav">
-        <a href="index.html" class="nav-link"
+        <a href="/index.html" class="nav-link"
           ><i class="fas fa-tower-broadcast"></i> Dash</a
         >
-        <a href="inputan.html" class="nav-link"
+        <a href="/inputan.html" class="nav-link"
           ><i class="fas fa-edit"></i> Input</a
         >
-        <a href="inputan-tabel.html" class="nav-link"
+        <a href="/inputan-tabel.html" class="nav-link"
           ><i class="fas fa-table"></i> Inputan Tabel</a
         >
-        <a href="rekapan.html" class="nav-link active"
+        <a href="/rekapan.html" class="nav-link active"
           ><i class="fas fa-database"></i> Rekapan</a
         >
-        <a href="panduan-penggunaan.html" class="nav-link"
+        <a href="/panduan-penggunaan.html" class="nav-link"
           ><i class="fas fa-book-open"></i> Info</a
         >
       </div>
@@ -1116,22 +1116,22 @@
         </button>
       </div>
       <div class="side-drawer-links">
-        <a href="index.html" class="side-drawer-link"
+        <a href="/index.html" class="side-drawer-link"
           ><i class="fas fa-tower-broadcast"></i> Dash</a
         >
-        <a href="inputan.html" class="side-drawer-link"
+        <a href="/inputan.html" class="side-drawer-link"
           ><i class="fas fa-edit"></i> Input</a
         >
-        <a href="inputan-tabel.html" class="side-drawer-link"
+        <a href="/inputan-tabel.html" class="side-drawer-link"
           ><i class="fas fa-table"></i> Inputan Tabel</a
         >
-        <a href="rekapan.html" class="side-drawer-link active"
+        <a href="/rekapan.html" class="side-drawer-link active"
           ><i class="fas fa-database"></i> Rekapan</a
         >
-        <a href="panduan-penggunaan.html" class="side-drawer-link"
+        <a href="/panduan-penggunaan.html" class="side-drawer-link"
           ><i class="fas fa-book-open"></i> Info</a
         >
-        <a href="install-aplikasi.html" class="side-drawer-link"
+        <a href="/install-aplikasi.html" class="side-drawer-link"
           ><i class="fas fa-download"></i> Install App</a
         >
       </div>
@@ -1140,7 +1140,7 @@
     </div>
 
     <div class="container">
-      <a href="index.html" class="btn-back-rekapan">← Kembali ke Home</a>
+      <a href="/index.html" class="btn-back-rekapan">← Kembali ke Home</a>
 
       <div class="header">
         <h1><i class="fas fa-database"></i> REKAPAN E-Kinerja</h1>
@@ -1345,7 +1345,7 @@
           if (!user) {
             console.warn("No user session found on rekapan.html");
             alert("Harap login terlebih dahulu untuk mengakses fitur rekapan!");
-            window.location.href = "login.html";
+            window.location.href = "/login.html";
             return;
           }
           // User sudah login - allow access
@@ -1357,7 +1357,7 @@
           alert(
             "Terjadi kesalahan saat memverifikasi login. Silakan refresh halaman.",
           );
-          window.location.href = "login.html";
+          window.location.href = "/login.html";
         }
       })();
 
@@ -1820,15 +1820,15 @@
 
         if (user) {
           container.innerHTML =
-            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
+            '<a href="/login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
             '<i class="fas fa-sign-out-alt"></i> Keluar' +
             "</a>";
         } else {
           container.innerHTML =
-            '<a href="login.html" class="side-drawer-auth-btn masuk" onclick="closeSideDrawer()">' +
+            '<a href="/login.html" class="side-drawer-auth-btn masuk" onclick="closeSideDrawer()">' +
             '<i class="fas fa-sign-in-alt"></i> Masuk' +
             "</a>" +
-            '<a href="register.html" class="side-drawer-auth-btn daftar" onclick="closeSideDrawer()">' +
+            '<a href="/register.html" class="side-drawer-auth-btn daftar" onclick="closeSideDrawer()">' +
             '<i class="fas fa-user-plus"></i> Buat Akun' +
             "</a>";
         }
@@ -1859,5 +1859,6 @@
         }
       });
     </script>
+    <script src="assets/js/index.js"></script>
   </body>
 </html>
