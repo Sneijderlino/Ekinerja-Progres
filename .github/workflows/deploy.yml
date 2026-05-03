@@ -87,7 +87,7 @@ jobs:
             });
 
       - name: 🔔 Slack notification (optional)
-        if: always() && secrets.SLACK_WEBHOOK != ''
+        if: always()
         uses: slackapi/slack-github-action@v1
         with:
           payload: |
@@ -106,3 +106,4 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        continue-on-error: true
