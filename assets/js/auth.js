@@ -106,7 +106,7 @@
       clearSession();
       // Dispatch event untuk update UI
       window.dispatchEvent(new CustomEvent('authStateChanged'));
-      window.location.href = '/index.html';
+      window.location.href = 'index.html';
     },
 
     isLoggedIn() {

@@ -1,48 +1,3 @@
-// --- PWA NAVIGATION FIX FOR ANDROID ---
-// Fix untuk memastikan navigasi bekerja di PWA Android
-(function() {
-    function registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker
-                    .register('/service-worker.js', { scope: '/' })
-                    .then((registration) => {
-                        console.log('Service Worker terdaftar dengan scope:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.warn('Gagal mendaftar Service Worker:', error);
-                    });
-            });
-        }
-    }
-
-    function fixPWANavigation() {
-        document.addEventListener('click', function(e) {
-            const link = e.target.closest('a[href$=".html"]');
-            if (!link) return;
-
-            const href = link.getAttribute('href');
-            if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('#')) {
-                return;
-            }
-
-            e.preventDefault();
-            const resolvedUrl = new URL(href, window.location.href);
-            window.location.href = resolvedUrl.href;
-        }, true);
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            registerServiceWorker();
-            fixPWANavigation();
-        });
-    } else {
-        registerServiceWorker();
-        fixPWANavigation();
-    }
-})();
-
 // --- GHOST-SEC ANTI-PIRACY CORE ---
 const SALT = "SNEJDER_PRO_2026";
 
@@ -168,7 +123,7 @@ function checkLoginAccess() {
     if (!currentUser) {
         console.warn('No user session found');
         alert('Harap login terlebih dahulu untuk mengakses fitur input laporan!');
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
         return;
     }
     
@@ -580,6 +535,19 @@ function clearTtdImage() {
     if (fileInput) fileInput.value = '';
 }
 
+function addTask() {
+    const input = document.getElementById('task-input');
+    const value = input.value.trim();
+    if (!value) return alert('Masukkan item kegiatan terlebih dahulu.');
+
+    const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
+    tasks.push(value);
+    localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
+    input.value = '';
+    renderTaskList();
+    showToast('Item kegiatan berhasil ditambahkan!');
+}
+
 function clearReportPhotos() {
     ['img1', 'img2', 'img3', 'img4'].forEach((targetId) => {
         const previewBox = document.getElementById(targetId);
@@ -668,7 +636,10 @@ function resetReportForm(preserveTitleSubtitle = false) {
         customCheckbox.checked = false;
     }
     document.getElementById('in-uraian').value = '';
+    document.getElementById('task-input').value = '';
     updateTanggal();
+    localStorage.setItem('ghost_tasks', JSON.stringify([]));
+    renderTaskList();
     clearReportPhotos();
 
     // Data TTD sengaja tidak direset agar tetap tersimpan untuk laporan baru
@@ -681,11 +652,32 @@ function startNewReport() {
     showToast('Form laporan baru siap diisi.');
 }
 
+function editTask(index) {
+    const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
+    const newValue = prompt('Ubah detail kegiatan:', tasks[index]);
+    if (newValue === null) return;
+    const trimmed = newValue.trim();
+    if (!trimmed) return alert('Isi tidak boleh kosong.');
+    tasks[index] = trimmed;
+    localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
+    renderTaskList();
+    showToast('Item kegiatan berhasil diperbarui!');
+}
+
+function deleteTask(index) {
+    if (!confirm('Anda yakin ingin menghapus item kegiatan ini?')) return;
+    const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
+    tasks.splice(index, 1);
+    localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
+    renderTaskList();
+    showToast('Item kegiatan berhasil dihapus!');
+}
+
 async function saveReport() {
     const currentUser = getCurrentLoginUser();
     if (!currentUser) {
         alert('Harap login terlebih dahulu untuk menyimpan laporan!');
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
         return;
     }
     const dateInput = document.getElementById('in-report-date');
@@ -710,7 +702,7 @@ async function saveReport() {
         kab: document.getElementById('in-kab').value.trim(),
         kota: document.getElementById('in-kota').value.trim(),
         uraian: document.getElementById('in-uraian').value.trim(),
-        tasks: [],
+        tasks: JSON.parse(localStorage.getItem('ghost_tasks') || '[]'),
         logo: localStorage.getItem('ghost_logo') || document.getElementById('out-logo').src,
         photos: await compressReportPhotos(getReportPhotoSources()),
         ttd: ttdData,
@@ -825,6 +817,8 @@ function editReport(index) {
     }
     toggleTtdFeature();
 
+    localStorage.setItem('ghost_tasks', JSON.stringify(report.tasks));
+    renderTaskList();
     renderIdentity();
     renderKop();
     renderTtd();
@@ -948,17 +942,12 @@ function exportSavedReportPDF(index) {
 
 const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_E-Kinerja_${report.nama || 'Laporan'}.pdf`;
     const element = document.getElementById('printable-area');
-    const cleanupSignature = prepareSignatureExport(element);
     const opt = {
         margin: 10,
         filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: [210, 330], orientation: 'portrait' },
-        pagebreak: {
-            mode: ['css', 'legacy'],
-            avoid: ['.signature-container', '.ttd-block']
-        }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     createPdfBlob(element, opt).then(async (blob) => {
@@ -967,9 +956,6 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         console.error(err);
         alert('Gagal ekspor PDF dari laporan tersimpan. Pastikan koneksi internet tersedia atau gunakan browser Android dengan dukungan download.');
     }).finally(() => {
-        if (typeof cleanupSignature === 'function') {
-            cleanupSignature();
-        }
         hidePdfLoading();
         document.getElementById('out-nama').innerText = currentPreview.nama;
         document.getElementById('out-nip').innerText = currentPreview.nip;
@@ -1094,6 +1080,57 @@ function renderSavedReports() {
     });
 }
 
+function renderTaskList() {
+    const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
+    const listEl = document.getElementById('task-list');
+    const outListEl = document.getElementById('out-task-list');
+    const outContainer = document.getElementById('out-task-list-container');
+
+    listEl.innerHTML = '';
+    outListEl.innerHTML = '';
+
+    if (!tasks.length) {
+        listEl.innerHTML = '<li style="justify-content: center; color: #64748b;">Belum ada item kegiatan.</li>';
+        outContainer.style.display = 'none';
+        return;
+    }
+
+    tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        const text = document.createElement('span');
+        text.innerText = task;
+
+        const actions = document.createElement('div');
+        actions.style.display = 'flex';
+        actions.style.gap = '8px';
+
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.className = 'edit-btn';
+        editBtn.innerText = 'Edit';
+        editBtn.onclick = () => editTask(index);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.innerText = 'Hapus';
+        deleteBtn.onclick = () => deleteTask(index);
+
+        actions.appendChild(editBtn);
+        actions.appendChild(deleteBtn);
+        li.appendChild(text);
+        li.appendChild(actions);
+        listEl.appendChild(li);
+
+        const outItem = document.createElement('li');
+        outItem.style.marginBottom = '6px';
+        outItem.innerText = task;
+        outListEl.appendChild(outItem);
+    });
+
+    outContainer.style.display = 'block';
+}
+
 function unlockKop() {
     document.getElementById('kop-display').style.display = 'none';
     document.getElementById('kop-inputs').style.display = 'block';
@@ -1198,43 +1235,6 @@ function createPdfBlob(element, opt) {
             reject(new Error('Error saat membuat PDF: ' + e.message));
         }
     });
-}
-
-function prepareSignatureExport(element) {
-    const ttdBlock = document.getElementById('out-ttd-block');
-    if (!ttdBlock || ttdBlock.classList.contains('hidden')) {
-        return null;
-    }
-
-    ttdBlock.classList.add('pdf-safe-ttd');
-
-    const containerRect = element.getBoundingClientRect();
-    const signatureRect = ttdBlock.getBoundingClientRect();
-    const pageHeightPx = (element.clientWidth / 210) * 297;
-    const topOffset = signatureRect.top - containerRect.top;
-    const topInPage = topOffset % pageHeightPx;
-    const needsBreak = topInPage + signatureRect.height > pageHeightPx - 30;
-
-    if (!needsBreak) {
-        return () => {
-            ttdBlock.classList.remove('pdf-safe-ttd');
-        };
-    }
-
-    let pageBreakNode = document.getElementById('pdf-page-break-before');
-    if (!pageBreakNode) {
-        pageBreakNode = document.createElement('div');
-        pageBreakNode.id = 'pdf-page-break-before';
-        pageBreakNode.className = 'pdf-page-break-before';
-        ttdBlock.parentNode.insertBefore(pageBreakNode, ttdBlock);
-    }
-
-    return () => {
-        ttdBlock.classList.remove('pdf-safe-ttd');
-        if (pageBreakNode && pageBreakNode.parentNode) {
-            pageBreakNode.parentNode.removeChild(pageBreakNode);
-        }
-    };
 }
 
 function downloadPdfBlob(blob, filename) {
@@ -1343,14 +1343,9 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: [210, 330], orientation: 'portrait' },
-        pagebreak: {
-            mode: ['css', 'legacy'],
-            avoid: ['.signature-container', '.ttd-block']
-        }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    const cleanupSignature = prepareSignatureExport(element);
     try {
         const blob = await createPdfBlob(element, opt);
         const saved = await savePdfFile(blob, filename);
@@ -1359,9 +1354,6 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         console.error('PDF Export Error:', err);
         alert('Gagal ekspor PDF: ' + (err.message || 'Terjadi kesalahan tidak terduga. Coba lagi.'));
     } finally {
-        if (typeof cleanupSignature === 'function') {
-            cleanupSignature();
-        }
         hidePdfLoading();
     }
 }
@@ -1382,6 +1374,7 @@ window.onload = () => {
     renderTtd();
     renderTtdImagePreview();
     renderTtdFeatureState();
+    renderTaskList();
     initReportStorage().finally(() => {
         renderSavedReports();
     });
@@ -1410,6 +1403,16 @@ window.onload = () => {
         });
     }
     updateTanggal();
+
+    const taskInput = document.getElementById('task-input');
+    if (taskInput) {
+        taskInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                addTask();
+            }
+        });
+    }
 
     const searchInput = document.getElementById('report-search');
     const filterSelect = document.getElementById('report-filter');

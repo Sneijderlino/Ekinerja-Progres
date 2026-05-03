@@ -11,7 +11,7 @@
       property="og:image"
       content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png"
     />
-    <link rel="manifest" href="../manifest.json" />
+    <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="css/index.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -49,7 +49,7 @@
     <div id="app-shell" style="visibility: visible">
       <nav class="navbar animate__animated animate__fadeInDown">
         <div class="nav-container">
-          <a href="/index.html" class="nav-link"
+          <a href="../index.html" class="nav-link"
             ><i class="fas fa-home"></i> Beranda</a>
           <a href="#" class="nav-link active"
             ><i class="fas fa-sign-in-alt"></i> Masuk</a>
@@ -60,7 +60,7 @@
           </button>
         </div>
         <div class="mobile-nav-menu" id="mobileNavMenu">
-          <a href="/index.html" class="nav-link"><i class="fas fa-home"></i> Beranda</a>
+          <a href="../index.html" class="nav-link"><i class="fas fa-home"></i> Beranda</a>
           <a href="#" class="nav-link active"><i class="fas fa-sign-in-alt"></i> Masuk</a>
           <a href="daftar.html" class="nav-link"><i class="fas fa-user-plus"></i> Daftar</a>
         </div>
@@ -124,7 +124,7 @@
               <button
                 type="button"
                 class="btn btn-secondary"
-                onclick="location.href = '/index.html'"
+                onclick="location.href = '../index.html'"
               >
                 <i class="fas fa-arrow-left"></i> Kembali
               </button>
@@ -178,7 +178,7 @@
         // Check if user is already logged in
         const currentUser = localStorage.getItem("ekin_session");
         if (currentUser) {
-          window.location.href = "/index.html";
+          window.location.href = "../index.html";
           return;
         }
 
@@ -221,7 +221,7 @@
           showToast("Login berhasil! Mengalihkan...");
 
           setTimeout(() => {
-            window.location.href = "/index.html";
+            window.location.href = "../index.html";
           }, 1000);
         });
       });

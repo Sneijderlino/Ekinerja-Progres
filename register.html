@@ -323,23 +323,23 @@
   <body>
     <nav class="navbar">
       <div class="nav-container">
-        <a href="/index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
-        <a href="/inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
-        <a href="/rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
-        <a href="/panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
-        <a href="/login.html" class="nav-link"><i class="fas fa-sign-in-alt"></i> Masuk</a>
-        <a href="/register.html" class="nav-link" style="color: var(--primary); background: rgba(59,130,246,0.15);"><i class="fas fa-user-plus"></i> Daftar</a>
+        <a href="index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
+        <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+        <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+        <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+        <a href="login.html" class="nav-link"><i class="fas fa-sign-in-alt"></i> Masuk</a>
+        <a href="register.html" class="nav-link" style="color: var(--primary); background: rgba(59,130,246,0.15);"><i class="fas fa-user-plus"></i> Daftar</a>
         <button class="nav-hamburger" aria-label="Menu" onclick="window.EkinToggleMobileNav()">
           <i class="fas fa-bars"></i>
         </button>
       </div>
       <div class="mobile-nav" id="mobileNav">
-        <a href="/index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
-        <a href="/inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
-        <a href="/rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
-        <a href="/panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
-        <a href="/login.html" class="nav-link"><i class="fas fa-sign-in-alt"></i> Masuk</a>
-        <a href="/register.html" class="nav-link" style="color: var(--primary);"><i class="fas fa-user-plus"></i> Daftar</a>
+        <a href="index.html" class="nav-link"><i class="fas fa-tower-broadcast"></i> Dash</a>
+        <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+        <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+        <a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+        <a href="login.html" class="nav-link"><i class="fas fa-sign-in-alt"></i> Masuk</a>
+        <a href="register.html" class="nav-link" style="color: var(--primary);"><i class="fas fa-user-plus"></i> Daftar</a>
       </div>
     </nav>
 
@@ -398,7 +398,7 @@
         </form>
 
         <div class="form-footer">
-          <p>Sudah punya akun? <a href="/login.html">Masuk di sini</a></p>
+          <p>Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
         </div>
     </div>
 
@@ -473,12 +473,12 @@
         saveUsers(users);
 
         showToast('Pendaftaran berhasil! Mengalihkan ke login...', 'success');
-        setTimeout(() => window.location.href = '/login.html', 1500);
+        setTimeout(() => window.location.href = 'login.html', 1500);
       });
 
       // Redirect if already logged in
       if (localStorage.getItem('ekin_session')) {
-        window.location.href = '/index.html';
+        window.location.href = 'index.html';
       }
     </script>
   </body>

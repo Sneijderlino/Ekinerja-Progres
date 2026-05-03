@@ -743,23 +743,23 @@
 <body data-auth-init>
   <nav class="navbar animate__animated animate__fadeInDown">
     <div class="nav-container">
-      <a href="/index.html" class="nav-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
-      <a href="/inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
-      <a href="/inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
-      <a href="/rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
-<a href="/panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
-      <a href="/install-aplikasi.html" class="nav-link"><i class="fas fa-download"></i> Install App</a>
+      <a href="#" class="nav-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
+      <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+      <a href="inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
+      <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+<a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+      <a href="install-aplikasi.html" class="nav-link"><i class="fas fa-download"></i> Install App</a>
       <button class="nav-hamburger" aria-label="Menu" onclick="toggleSideDrawer()">
         <i class="fas fa-bars"></i>
       </button>
     </div>
     <div class="mobile-nav" id="mobileNav">
-      <a href="/index.html" class="nav-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
-      <a href="/inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
-      <a href="/inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
-      <a href="/rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
-<a href="/panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
-      <a href="/install-aplikasi.html" class="nav-link"><i class="fas fa-download"></i> Install App</a>
+      <a href="#" class="nav-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
+      <a href="inputan.html" class="nav-link"><i class="fas fa-edit"></i> Input</a>
+      <a href="inputan-tabel.html" class="nav-link"><i class="fas fa-table"></i> Inputan Tabel</a>
+      <a href="rekapan.html" class="nav-link"><i class="fas fa-database"></i> Rekapan</a>
+<a href="panduan-penggunaan.html" class="nav-link"><i class="fas fa-book-open"></i> Info</a>
+      <a href="install-aplikasi.html" class="nav-link"><i class="fas fa-download"></i> Install App</a>
     </div>
   </nav>
 
@@ -767,11 +767,11 @@
     <i class="fas fa-plus"></i>
   </button>
   <div class="fab-menu" id="fabMenu">
-    <a href="/inputan.html" class="fab-menu-item" onclick="closeFabMenu()">
+    <a href="inputan.html" class="fab-menu-item" onclick="closeFabMenu()">
       <i class="fas fa-edit"></i>
       <span>Input Non Tabel</span>
     </a>
-    <a href="/inputan-tabel.html" class="fab-menu-item" onclick="closeFabMenu()">
+    <a href="inputan-tabel.html" class="fab-menu-item" onclick="closeFabMenu()">
       <i class="fas fa-table"></i>
       <span>Inputan Tabel</span>
     </a>
@@ -787,12 +787,12 @@
       </button>
     </div>
     <div class="side-drawer-links">
-      <a href="/index.html" class="side-drawer-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
-      <a href="/inputan.html" class="side-drawer-link"><i class="fas fa-edit"></i> Input</a>
-      <a href="/inputan-tabel.html" class="side-drawer-link"><i class="fas fa-table"></i> Inputan Tabel</a>
-      <a href="/rekapan.html" class="side-drawer-link"><i class="fas fa-database"></i> Rekapan</a>
-      <a href="/panduan-penggunaan.html" class="side-drawer-link"><i class="fas fa-book-open"></i> Info</a>
-      <a href="/install-aplikasi.html" class="side-drawer-link"><i class="fas fa-download"></i> Install App</a>
+      <a href="#" class="side-drawer-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
+      <a href="inputan.html" class="side-drawer-link"><i class="fas fa-edit"></i> Input</a>
+      <a href="inputan-tabel.html" class="side-drawer-link"><i class="fas fa-table"></i> Inputan Tabel</a>
+      <a href="rekapan.html" class="side-drawer-link"><i class="fas fa-database"></i> Rekapan</a>
+      <a href="panduan-penggunaan.html" class="side-drawer-link"><i class="fas fa-book-open"></i> Info</a>
+      <a href="install-aplikasi.html" class="side-drawer-link"><i class="fas fa-download"></i> Install App</a>
     </div>
     <div class="side-drawer-divider"></div>
     <div class="side-drawer-auth" id="sideDrawerAuth">
@@ -1119,15 +1119,15 @@ window.EkinToggleMobileNav = function() {
       var user = (window.EkinAuth) ? window.EkinAuth.getCurrentUser() : null;
       if (user) {
         container.innerHTML = 
-          '<a href="/login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
+          '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
             '<i class="fas fa-sign-out-alt"></i> Keluar' +
           '</a>';
       } else {
         container.innerHTML = 
-          '<a href="/login.html" class="side-drawer-auth-btn masuk" onclick="closeSideDrawer()">' +
+          '<a href="login.html" class="side-drawer-auth-btn masuk" onclick="closeSideDrawer()">' +
             '<i class="fas fa-sign-in-alt"></i> Masuk' +
           '</a>' +
-          '<a href="/register.html" class="side-drawer-auth-btn daftar" onclick="closeSideDrawer()">' +
+          '<a href="register.html" class="side-drawer-auth-btn daftar" onclick="closeSideDrawer()">' +
             '<i class="fas fa-user-plus"></i> Buat Akun' +
           '</a>';
       }
@@ -1340,10 +1340,10 @@ function updateFABVisibility() {
       } else {
         panel.innerHTML = 
           '<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">' +
-            '<a href="/login.html" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(59,130,246,0.1));border:1px solid rgba(59,130,246,0.3);color:#3b82f6;padding:12px 24px;border-radius:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:0.2s;">' +
+            '<a href="login.html" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(59,130,246,0.1));border:1px solid rgba(59,130,246,0.3);color:#3b82f6;padding:12px 24px;border-radius:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:0.2s;">' +
               '<i class="fas fa-sign-in-alt"></i> Masuk' +
             '</a>' +
-            '<a href="/register.html" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;padding:12px 24px;border-radius:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:0.2s;box-shadow:0 8px 20px rgba(59,130,246,0.3);">' +
+            '<a href="register.html" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;padding:12px 24px;border-radius:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:0.2s;box-shadow:0 8px 20px rgba(59,130,246,0.3);">' +
               '<i class="fas fa-user-plus"></i> Buat Akun' +
             '</a>' +
           '</div>';
@@ -1412,6 +1412,5 @@ document.addEventListener("DOMContentLoaded", function () {
       updateChartData();
     });
 </script>
-<script src="assets/js/index.js"></script>
 </body>
 </html>

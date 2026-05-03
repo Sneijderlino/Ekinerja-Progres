@@ -12,36 +12,14 @@
       content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png"
     />
     <!-- App Icons for PWA and Web -->
-    <link
-      rel="icon"
-      href="assets/img/logo-apk.png"
-      type="image/png"
-      sizes="32x32"
-    />
-    <link
-      rel="icon"
-      href="assets/img/logo-apk.png"
-      type="image/png"
-      sizes="16x16"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="assets/img/logo-apk.png"
-      sizes="180x180"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="assets/img/logo-apk.png"
-      sizes="152x152"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="assets/img/logo-apk.png"
-      sizes="120x120"
-    />
+    <link rel="icon" href="assets/img/logo-apk.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="assets/img/logo-apk.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="180x180" />
+    <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="152x152" />
+    <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="120x120" />
     <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="76x76" />
     <meta name="theme-color" content="#3b82f6" />
-    <link rel="manifest" href="manifest.json" />
+    <link rel="manifest" href="/manifest.json" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -373,19 +351,19 @@
 
     <nav class="navbar animate__animated animate__fadeInDown">
       <div class="nav-container">
-        <a href="/index.html" class="nav-link"
+        <a href="index.html" class="nav-link"
           ><i class="fas fa-tower-broadcast"></i> Dash</a
         >
-        <a href="/inputan.html" class="nav-link active"
+        <a href="inputan.html" class="nav-link active"
           ><i class="fas fa-edit"></i> Input</a
         >
-        <a href="/inputan-tabel.html" class="nav-link"
+        <a href="inputan-tabel.html" class="nav-link"
           ><i class="fas fa-table"></i> Inputan Tabel</a
         >
-        <a href="/rekapan.html" class="nav-link"
+        <a href="rekapan.html" class="nav-link"
           ><i class="fas fa-database"></i> Rekapan</a
         >
-        <a href="/panduan-penggunaan.html" class="nav-link"
+        <a href="panduan-penggunaan.html" class="nav-link"
           ><i class="fas fa-book-open"></i> Info</a
         >
         <button
@@ -397,19 +375,19 @@
         </button>
       </div>
       <div class="mobile-nav" id="mobileNav">
-        <a href="/index.html" class="nav-link"
+        <a href="index.html" class="nav-link"
           ><i class="fas fa-tower-broadcast"></i> Dash</a
         >
-        <a href="/inputan.html" class="nav-link active"
+        <a href="inputan.html" class="nav-link active"
           ><i class="fas fa-edit"></i> Input</a
         >
-        <a href="/inputan-tabel.html" class="nav-link"
+        <a href="inputan-tabel.html" class="nav-link"
           ><i class="fas fa-table"></i> Inputan Tabel</a
         >
-        <a href="/rekapan.html" class="nav-link"
+        <a href="rekapan.html" class="nav-link"
           ><i class="fas fa-database"></i> Rekapan</a
         >
-        <a href="/panduan-penggunaan.html" class="nav-link"
+        <a href="panduan-penggunaan.html" class="nav-link"
           ><i class="fas fa-book-open"></i> Info</a
         >
       </div>
@@ -429,22 +407,22 @@
         </button>
       </div>
       <div class="side-drawer-links">
-        <a href="/index.html" class="side-drawer-link"
+        <a href="index.html" class="side-drawer-link"
           ><i class="fas fa-tower-broadcast"></i> Dash</a
         >
-        <a href="/inputan.html" class="side-drawer-link active"
+        <a href="inputan.html" class="side-drawer-link active"
           ><i class="fas fa-edit"></i> Input</a
         >
-        <a href="/inputan-tabel.html" class="side-drawer-link"
+        <a href="inputan-tabel.html" class="side-drawer-link"
           ><i class="fas fa-table"></i> Inputan Tabel</a
         >
-        <a href="/rekapan.html" class="side-drawer-link"
+        <a href="rekapan.html" class="side-drawer-link"
           ><i class="fas fa-database"></i> Rekapan</a
         >
-        <a href="/panduan-penggunaan.html" class="side-drawer-link"
+        <a href="panduan-penggunaan.html" class="side-drawer-link"
           ><i class="fas fa-book-open"></i> Info</a
         >
-        <a href="/install-aplikasi.html" class="side-drawer-link"
+        <a href="install-aplikasi.html" class="side-drawer-link"
           ><i class="fas fa-download"></i> Install App</a
         >
       </div>
@@ -739,6 +717,22 @@ Koordinasi Dengan Kepala Regu Terkait Informasi Kejadian Kebakaran</textarea
               placeholder="Uraian kegiatan..."
               rows="5"
             ></textarea>
+            <div class="task-entry">
+              <input
+                type="text"
+                id="task-input"
+                placeholder="Tambah item kegiatan..."
+              />
+              <button
+                type="button"
+                class="btn btn-preview"
+                onclick="addTask()"
+                style="margin-top: 0; width: 100%"
+              >
+                TAMBAH ITEM
+              </button>
+            </div>
+            <ul id="task-list" class="task-list"></ul>
           </div>
 
           <div class="section-card">
@@ -1039,7 +1033,7 @@ Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku
             </div>
           </div>
 
-          <div class="ttd-block signature-container hidden" id="out-ttd-block">
+          <div class="ttd-block hidden" id="out-ttd-block">
             <div class="ttd-place-date">
               <span id="out-ttd-tempat">Tiakur</span>,
               <span id="out-ttd-tanggal">-</span>
@@ -1110,15 +1104,15 @@ Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku
 
         if (user) {
           container.innerHTML =
-            '<a href="/login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
+            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
             '<i class="fas fa-sign-out-alt"></i> Keluar' +
             "</a>";
         } else {
           container.innerHTML =
-            '<a href="/login.html" class="side-drawer-auth-btn masuk" onclick="closeSideDrawer()">' +
+            '<a href="login.html" class="side-drawer-auth-btn masuk" onclick="closeSideDrawer()">' +
             '<i class="fas fa-sign-in-alt"></i> Masuk' +
             "</a>" +
-            '<a href="/register.html" class="side-drawer-auth-btn daftar" onclick="closeSideDrawer()">' +
+            '<a href="register.html" class="side-drawer-auth-btn daftar" onclick="closeSideDrawer()">' +
             '<i class="fas fa-user-plus"></i> Buat Akun' +
             "</a>";
         }

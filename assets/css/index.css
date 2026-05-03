@@ -548,7 +548,7 @@ input:hover, textarea:hover {
     background: white; 
     color: black; 
     width: 210mm; 
-    min-height: 330mm; 
+    min-height: 297mm; 
     padding: 15mm 20mm; 
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(15, 159, 255, 0.1);
     box-sizing: border-box;
@@ -696,16 +696,6 @@ input:hover, textarea:hover {
     font-size: 11pt;
     color: #000;
     line-height: 1.5;
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
-    -moz-column-break-inside: avoid;
-    page-break-inside: avoid;
-}
-.signature-container {
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
-    -moz-column-break-inside: avoid;
-    page-break-inside: avoid;
 }
 .ttd-place-date {
     margin-bottom: 8px;
@@ -757,69 +747,13 @@ input:hover, textarea:hover {
     clear: both;
 }
 
-.pdf-safe-ttd {
-    float: none !important;
-    width: auto !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    display: block !important;
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-}
-
-.pdf-page-break-before {
-    display: block !important;
-    break-before: page !important;
-    page-break-before: always !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    height: 1px !important;
-}
-
 @media print {
-    .ttd-block,
-    .signature-container {
-        display: block !important;
-        position: relative !important;
-        float: none !important;
-        width: auto !important;
-        max-width: 100% !important;
-        margin: 40px auto 0 auto !important;
-        text-align: left !important;
-        break-inside: avoid !important;
-        -webkit-column-break-inside: avoid !important;
-        -moz-column-break-inside: avoid !important;
-        page-break-inside: avoid !important;
-        page-break-before: avoid !important;
-        page-break-after: avoid !important;
-        -webkit-region-break-inside: avoid !important;
-    }
-    .ttd-block::after {
-        display: none !important;
-    }
-    .signature-container > * {
-        display: block !important;
-    }
-    .pdf-safe-ttd {
-        float: none !important;
-        width: auto !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        display: block !important;
-    }
-    .pdf-page-break-before {
-        display: block !important;
-        break-before: page !important;
-        page-break-before: always !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        height: 1px !important;
+    .ttd-block {
+        page-break-inside: avoid;
+        float: right;
+        width: 50%;
+        max-width: 260px;
+        text-align: left;
     }
 }
 

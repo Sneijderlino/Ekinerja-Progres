@@ -24,21 +24,6 @@ function generateUUID() {
     return deviceId;
 }
 
-(function registerAuthServiceWorker() {
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker
-                .register('/service-worker.js', { scope: '/' })
-                .then((registration) => {
-                    console.log('Auth Service Worker terdaftar dengan scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.warn('Gagal mendaftar Service Worker pada auth:', error);
-                });
-        });
-    }
-})();
-
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
@@ -157,7 +142,10 @@ function checkLoginAccess() {
     if (!currentUser) {
         console.warn('No user session found');
         alert('Harap login terlebih dahulu untuk mengakses fitur input laporan!');
-            window.location.href = '/login.html';
+        window.location.href = 'login.html';
+        return;
+    }
+    
     // User sudah login - allow access
     console.log('✓ User ' + currentUser.username + ' berhasil mengakses fitur input');
 }
@@ -413,7 +401,7 @@ async function saveReport() {
     const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
     if (!currentUser) {
         alert('Harap login terlebih dahulu untuk menyimpan laporan!');
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
         return;
     }
     const dateInput = document.getElementById('in-report-date');
