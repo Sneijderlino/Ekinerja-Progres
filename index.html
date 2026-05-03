@@ -1413,5 +1413,108 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 </script>
 <script src="assets/js/index.js"></script>
+
+<!-- Service Worker Controller untuk manage cache -->
+<script src="assets/js/sw-controller.js"></script>
+
+<!-- Update Notification Script -->
+<script>
+  // Listen untuk SW update
+  window.addEventListener('sw-update-available', () => {
+    const notification = document.createElement('div');
+    notification.id = 'app-update-notification';
+    notification.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      z-index: 10000;
+      animation: slideIn 0.4s ease-out;
+    `;
+    
+    const message = document.createElement('div');
+    message.innerHTML = `
+      <strong style="font-size: 14px; font-weight: 700;">✨ Update Tersedia!</strong>
+      <p style="margin: 4px 0 0; font-size: 12px; opacity: 0.95;">Versi terbaru siap dimuat. Refresh untuk update.</p>
+    `;
+    
+    const button = document.createElement('button');
+    button.innerHTML = '↻ Refresh';
+    button.style.cssText = `
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    `;
+    
+    button.onmouseover = () => {
+      button.style.background = 'rgba(255, 255, 255, 0.3)';
+    };
+    button.onmouseout = () => {
+      button.style.background = 'rgba(255, 255, 255, 0.2)';
+    };
+    button.onclick = () => {
+      notification.style.animation = 'slideOut 0.3s ease-in';
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
+    };
+    
+    notification.appendChild(message);
+    notification.appendChild(button);
+    document.body.appendChild(notification);
+    
+    // Auto-dismiss after 10 seconds
+    setTimeout(() => {
+      if (document.contains(notification)) {
+        notification.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => notification.remove(), 300);
+      }
+    }, 10000);
+  });
+
+  // Add animations
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideIn {
+      from {
+        transform: translateX(-400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(-400px);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+
 </body>
 </html>

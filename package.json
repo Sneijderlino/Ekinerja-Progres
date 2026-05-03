@@ -1,0 +1,30 @@
+{
+  "name": "ekinerja-pwa",
+  "version": "2.1.0",
+  "description": "Aplikasi PWA E-Kinerja Harian - Solusi modern untuk pelaporan kerja harian",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve",
+    "build": "echo 'Build complete - files ready for deployment'",
+    "dev": "serve -l 5000",
+    "test": "echo 'No tests configured'",
+    "deploy": "wrangler publish",
+    "deploy:pages": "wrangler pages publish . --project-name=ekinerja-pro"
+  },
+  "keywords": [
+    "pwa",
+    "e-kinerja",
+    "laporan kerja harian",
+    "offline-first",
+    "progressive web app"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@wrangler/cli": "^3.0.0",
+    "serve": "^14.1.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

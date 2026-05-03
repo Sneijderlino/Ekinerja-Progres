@@ -1,0 +1,35 @@
+name = "ekinerja-pro"
+type = "javascript"
+account_id = "" # Isi dengan account ID Cloudflare Anda
+workers_dev = true
+route = "" # Kosong untuk Pages, isi jika menggunakan Workers
+
+# Konfigurasi build
+build = { command = "npm run build", cwd = "." }
+
+# Static assets configuration
+env.production.vars = { ENVIRONMENT = "production" }
+
+# Triggers untuk auto-deploy
+triggers.crons = ["0 0 * * *"]
+
+# Compatibility untuk modern APIs
+compatibility_date = "2024-04-12"
+compatibility_flags = ["nodejs_compat"]
+
+# Dev configuration
+env.development.vars = { ENVIRONMENT = "development" }
+
+# Untuk Cloudflare Pages (lebih direkomendasikan daripada Workers)
+# Jika menggunakan Pages, gunakan file konfigurasi ini:
+# [env.production]
+# name = "ekinerja-pro-prod"
+# route = "ekinerja-pro.sneijderlino.workers.dev/*"
+# zone_id = ""
+
+# Custom domain configuration (opsional)
+# custom_domain = { name = "ekinerja.yourdomain.com", zone_id = "" }
+
+# Konfigurasi logging
+[observability]
+enabled = true
