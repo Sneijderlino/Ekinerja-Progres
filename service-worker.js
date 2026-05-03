@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ekin-pwa-cache-v2';
+const CACHE_NAME = 'ekin-pwa-cache-v1';
 const OFFLINE_FALLBACK = '/index.html';
 
 const CACHE_ASSETS = [
@@ -25,9 +25,6 @@ const CACHE_ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  // Cache busting: Check for new SW version
-  self.skipWaiting();
-
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(CACHE_ASSETS);
@@ -37,9 +34,6 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  // Force activation of new SW, claim clients immediately
-  self.clients.claim();
-
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -66,7 +60,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+  if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
