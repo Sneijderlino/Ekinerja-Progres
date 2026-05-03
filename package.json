@@ -4,12 +4,9 @@
   "description": "Aplikasi PWA E-Kinerja Harian - Solusi modern untuk pelaporan kerja harian",
   "main": "index.html",
   "scripts": {
-    "start": "serve",
     "build": "echo 'Build complete - files ready for deployment'",
-    "dev": "serve -l 5000",
-    "test": "echo 'No tests configured'",
-    "deploy": "wrangler publish",
-    "deploy:pages": "wrangler pages publish . --project-name=ekinerja-pro"
+    "start": "echo 'This is a static site. Use Cloudflare Pages for deployment.'",
+    "test": "echo 'No tests configured'"
   },
   "keywords": [
     "pwa",
@@ -20,10 +17,7 @@
   ],
   "author": "Your Name",
   "license": "MIT",
-  "devDependencies": {
-    "@wrangler/cli": "^3.0.0",
-    "serve": "^14.1.2"
-  },
+  "devDependencies": {},
   "engines": {
     "node": ">=16.0.0"
   }
