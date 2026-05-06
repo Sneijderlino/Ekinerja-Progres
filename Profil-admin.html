@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio | Sneijderlino Professional</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap");
+
+      :root {
+        --primary: #00f2ff;
+        --secondary: #7000ff;
+        --bg: #030712;
+        --card-w: 320px;
+        --card-h: 460px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: white;
+        overflow-x: hidden;
+        height: 400vh;
+      }
+
+      .glow {
+        position: fixed;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 242, 255, 0.15) 0%,
+          transparent 70%
+        );
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 30px;
+        display: flex;
+        justify-content: space-between;
+        z-index: 100;
+      }
+
+      .logo {
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--primary);
+      }
+
+      .viewport {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        perspective: 1500px;
+      }
+
+      .intro-text {
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        transition: opacity 0.5s;
+      }
+
+      .intro-text h1 {
+        font-size: 3.5rem;
+        text-transform: uppercase;
+        line-height: 0.9;
+      }
+
+      .card-wrapper {
+        position: relative;
+        width: var(--card-w);
+        height: var(--card-h);
+        transform-style: preserve-3d;
+        will-change: transform;
+      }
+
+      .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .front {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.05),
+          rgba(255, 255, 255, 0.01)
+        );
+        backdrop-filter: blur(15px);
+      }
+
+      .chip {
+        width: 50px;
+        height: 40px;
+        background: linear-gradient(135deg, #ffd700, #b8860b);
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
+
+      .photo-box {
+        width: 120px;
+        height: 120px;
+        background: #111;
+        border: 2px solid var(--primary);
+        border-radius: 15px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #profile-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Foto akan terpotong rapi memenuhi kotak */
+      }
+
+      .name {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+
+      .role {
+        color: var(--primary);
+        font-size: 0.8rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+
+      .barcode {
+        margin-top: auto;
+        height: 50px;
+        width: 100%;
+        background: repeating-linear-gradient(
+          90deg,
+          #fff,
+          #fff 2px,
+          transparent 2px,
+          transparent 7px
+        );
+        opacity: 0.3;
+      }
+
+      .back {
+        background: linear-gradient(135deg, var(--secondary), var(--bg));
+        transform: rotateY(180deg);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .contact-btn {
+        margin-top: 20px;
+        padding: 10px 25px;
+        background: var(--primary);
+        color: black;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.8rem;
+      }
+
+      .scroll-hint {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.7rem;
+        letter-spacing: 4px;
+        opacity: 0.6;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="progress-bar"
+      id="bar"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background: var(--primary);
+        width: 0%;
+        z-index: 1000;
+      "
+    ></div>
+    <div class="glow"></div>
+
+    <nav>
+      <div class="logo">SNEIJDERLINO</div>
+      <div>2026 ©</div>
+    </nav>
+
+    <div class="viewport">
+      <div class="intro-text" id="intro">
+        <h1>SNEIJDER<br /><span style="color: var(--primary)">LINO</span></h1>
+        <p style="margin-top: 15px; opacity: 0.5">
+          Gulir ke bawah untuk melihat profil identitas Developer
+        </p>
+      </div>
+
+      <div class="card-wrapper" id="card">
+        <div class="card-face front">
+          <div class="chip"></div>
+          <div class="photo-box">
+            <img id="profile-img" src="admin-foto.png" alt="Profile" />
+          </div>
+          <div class="name">Sneijderlino</div>
+          <div class="role">Developer</div>
+          <p style="font-size: 0.75rem; color: #888; line-height: 1.5">
+            Dimana seni bertemu kode untuk menciptakan masa depan.
+          </p>
+          <div class="barcode"></div>
+        </div>
+
+        <div class="card-face back">
+          <h3 style="margin-bottom: 20px">CONTACT</h3>
+          <p style="font-size: 0.9rem">WA: 082292964110</p>
+          <p style="font-size: 0.8rem; opacity: 0.7">
+            Sneijderlino_official@gmail.com
+          </p>
+          <a href="https://wa.me/6282292964110" class="contact-btn"
+            >Mulai chat</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint">SCROLL TO ROTATE CARD</div>
+
+    <script>
+      const card = document.getElementById("card");
+      const intro = document.getElementById("intro");
+      const bar = document.getElementById("bar");
+
+      window.addEventListener("scroll", () => {
+        const scrollY = window.scrollY;
+        const maxScroll =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const scrollFraction = scrollY / maxScroll;
+
+        bar.style.width = scrollFraction * 100 + "%";
+        intro.style.opacity = 1 - scrollFraction * 4;
+        intro.style.transform = `translateY(-${scrollFraction * 100}px)`;
+
+        const rotationY = scrollFraction * 720;
+        const rotationX = Math.sin(scrollFraction * Math.PI * 2) * 20;
+        const scale = 0.8 + Math.sin(scrollFraction * Math.PI) * 0.2;
+
+        card.style.transform = `rotateY(${rotationY}deg) rotateX(${rotationX}deg) scale(${scale})`;
+
+        if (scrollFraction < 0.05) {
+          card.style.opacity = scrollFraction * 20;
+        } else {
+          card.style.opacity = 1;
+        }
+      });
+
+      card.style.opacity = 0;
+    </script>
+  </body>
+</html>
