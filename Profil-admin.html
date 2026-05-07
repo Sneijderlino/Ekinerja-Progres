@@ -452,7 +452,18 @@
         color: #a9b2bf;
 
         max-width: 650px;
+
+        /* Animasi scroll untuk paragraf 1 */
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
       }
+
+      .intro-desc.scroll-show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
 
       .hero-buttons {
         margin-top: 40px;
@@ -1076,10 +1087,6 @@
             Sistem ini membantu pengguna membuat laporan cepat, rapi,
             profesional, dan efisien tanpa perlu lagi mengetik manual di
             Word maupun Excel, serta melakukan export PDF secara berulang.
-            Dengan tampilan futuristik modern, animasi interaktif premium,
-            dan workflow digital yang efisien, eKinerja Pro menghadirkan
-            pengalaman kerja yang lebih cepat, praktis, dan modern.
-
           </div>
 
           <div class="hero-buttons">
@@ -1286,6 +1293,9 @@
 
       const revealsLeft = document.querySelectorAll(".reveal-left");
 
+      const introDesc = document.querySelector(".intro-desc");
+
+
       /* =====================================================
    ACTION BUTTON NAVIGATION
 ===================================================== */
@@ -1330,6 +1340,12 @@
 
       window.addEventListener("scroll", () => {
         const scrollY = window.scrollY;
+
+        if (introDesc) {
+          const rect = introDesc.getBoundingClientRect();
+          const inView = rect.top < window.innerHeight - 120;
+          if (inView) introDesc.classList.add("scroll-show");
+        }
 
         const maxScroll =
           document.documentElement.scrollHeight - window.innerHeight;
