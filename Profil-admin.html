@@ -344,7 +344,7 @@
 .photo-box img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: cover;
         object-position: center;
         display: block;
       }
@@ -1316,7 +1316,6 @@
 
       if (startSystemBtn) {
         startSystemBtn.addEventListener("click", (e) => {
-          // Pastikan benar-benar redirect, bukan anchor (#)
           e.preventDefault();
           window.location.href = "index.html";
         });
@@ -1335,9 +1334,7 @@
         setTimeout(goToSystemFlow, 50);
       }
 
-      /* =====================================================
-   SCROLL EFFECT
-===================================================== */
+      /*SCROLL EFFECT */
 
       window.addEventListener("scroll", () => {
         const scrollY = window.scrollY;
