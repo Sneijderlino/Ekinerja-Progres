@@ -198,17 +198,16 @@
 
       .hero {
         min-height: 100vh;
-
         display: flex;
         align-items: center;
         justify-content: center;
-
         padding-top: 180px;
         padding-bottom: 120px;
 
         position: relative;
         overflow: hidden;
       }
+
 
       .hero::before {
         content: "";
@@ -230,17 +229,26 @@
         width: 100%;
         max-width: 1500px;
 
+        /* Layout utama tetap flex, tapi pastikan item (card) bisa benar-benar center */
         display: flex;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
+
         gap: 120px;
-
         padding: 0 8%;
-
         flex-wrap: wrap;
 
         perspective: 1800px;
       }
+
+      /* Pastikan card selalu center terhadap container hero */
+      .card-wrapper {
+        align-self: center;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
 
       /* =====================================================
    CARD
