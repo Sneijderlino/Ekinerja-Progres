@@ -3,17 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio | Sneijderlino Professional</title>
+
+    <title>eKinerja Pro | Sneijderlino</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap");
+      /* =====================================================
+   FONT
+===================================================== */
+
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap");
+
+      /* =====================================================
+   ROOT
+===================================================== */
 
       :root {
         --primary: #00f2ff;
-        --secondary: #7000ff;
-        --bg: #030712;
-        --card-w: 320px;
-        --card-h: 460px;
+        --secondary: #6a00ff;
+        --bg: #020617;
+        --bg2: #09111f;
+
+        --glass: rgba(255, 255, 255, 0.04);
+        --border: rgba(255, 255, 255, 0.08);
+
+        --text: #ffffff;
+        --muted: #8f9bad;
+
+        --card-w: 340px;
+        --card-h: 480px;
       }
+
+      /* =====================================================
+   RESET
+===================================================== */
 
       * {
         margin: 0;
@@ -22,144 +47,322 @@
         font-family: "Space Grotesk", sans-serif;
       }
 
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
-        background-color: var(--bg);
-        color: white;
+        background: linear-gradient(to bottom, #020617, #071120, #020617);
+        color: var(--text);
         overflow-x: hidden;
-        height: 400vh;
+        position: relative;
+      }
+
+      /* =====================================================
+   BACKGROUND
+===================================================== */
+
+      .bg-grid {
+        position: fixed;
+        inset: 0;
+        z-index: -10;
+
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+
+        background-size: 40px 40px;
       }
 
       .glow {
         position: fixed;
-        width: 400px;
-        height: 400px;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: -5;
+
         background: radial-gradient(
           circle,
-          rgba(0, 242, 255, 0.15) 0%,
+          rgba(0, 242, 255, 0.18) 0%,
           transparent 70%
         );
-        top: 50%;
-        left: 50%;
+
         transform: translate(-50%, -50%);
-        z-index: -1;
+        transition: 0.08s linear;
       }
+
+      /* =====================================================
+   PROGRESS BAR
+===================================================== */
+
+      .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        width: 0%;
+        z-index: 9999;
+
+        background: linear-gradient(90deg, var(--primary), #7effff);
+
+        box-shadow: 0 0 25px var(--primary);
+      }
+
+      /* =====================================================
+   NAVBAR
+===================================================== */
 
       nav {
         position: fixed;
         top: 0;
+        left: 0;
         width: 100%;
-        padding: 30px;
+        z-index: 3000;
+
         display: flex;
         justify-content: space-between;
-        z-index: 100;
+        align-items: center;
+
+        padding: 22px 40px;
+
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(20px);
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       }
 
       .logo {
+        font-size: 1rem;
         font-weight: 700;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
         color: var(--primary);
       }
 
-      .viewport {
+      .nav-right {
+        display: flex;
+        gap: 25px;
+        color: #8f8f8f;
+        font-size: 0.85rem;
+      }
+
+      /* =====================================================
+   MARQUEE
+===================================================== */
+
+      .top-marquee {
         position: fixed;
-        top: 0;
+        top: 80px;
         left: 0;
         width: 100%;
-        height: 100vh;
+        z-index: 2500;
+
+        overflow: hidden;
+
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .marquee-track {
         display: flex;
-        justify-content: center;
+        width: max-content;
+
+        animation: marquee 25s linear infinite;
+      }
+
+      .marquee-track div {
+        padding: 12px 50px;
+        white-space: nowrap;
+
+        font-size: 0.75rem;
+        letter-spacing: 4px;
+
+        color: #a7ffff;
+      }
+
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* =====================================================
+   HERO
+===================================================== */
+
+      .hero {
+        min-height: 100vh;
+
+        display: flex;
         align-items: center;
-        perspective: 1500px;
+        justify-content: center;
+
+        padding-top: 180px;
+        padding-bottom: 120px;
+
+        position: relative;
+        overflow: hidden;
       }
 
-      .intro-text {
+      .hero::before {
+        content: "";
+
         position: absolute;
-        text-align: center;
-        width: 100%;
-        transition: opacity 0.5s;
+        width: 900px;
+        height: 900px;
+
+        background: radial-gradient(
+          circle,
+          rgba(0, 242, 255, 0.12),
+          transparent 70%
+        );
+
+        filter: blur(50px);
       }
 
-      .intro-text h1 {
-        font-size: 3.5rem;
-        text-transform: uppercase;
-        line-height: 0.9;
+      .viewport {
+        width: 100%;
+        max-width: 1500px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 120px;
+
+        padding: 0 8%;
+
+        flex-wrap: wrap;
+
+        perspective: 1800px;
       }
+
+      /* =====================================================
+   CARD
+===================================================== */
 
       .card-wrapper {
         position: relative;
+
         width: var(--card-w);
         height: var(--card-h);
+
+        flex-shrink: 0;
+
         transform-style: preserve-3d;
         will-change: transform;
+
+        transition: 0.2s ease;
+
+        z-index: 5;
       }
 
       .card-face {
         position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        flex-direction: column;
+        inset: 0;
+
         padding: 30px;
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+
+        border-radius: 35px;
+        overflow: hidden;
+
+        backface-visibility: hidden;
+
+        border: 1px solid var(--border);
+
+        box-shadow:
+          0 0 40px rgba(0, 0, 0, 0.5),
+          inset 0 0 40px rgba(255, 255, 255, 0.03);
       }
 
       .front {
+        display: flex;
+        flex-direction: column;
+
         background: linear-gradient(
           135deg,
-          rgba(255, 255, 255, 0.05),
-          rgba(255, 255, 255, 0.01)
+          rgba(255, 255, 255, 0.08),
+          rgba(255, 255, 255, 0.02)
         );
-        backdrop-filter: blur(15px);
+
+        backdrop-filter: blur(25px);
+      }
+
+      .back {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        transform: rotateY(180deg);
+
+        background: linear-gradient(135deg, #0b1020, var(--secondary));
       }
 
       .chip {
-        width: 50px;
-        height: 40px;
-        background: linear-gradient(135deg, #ffd700, #b8860b);
-        border-radius: 8px;
+        width: 60px;
+        height: 42px;
+
+        border-radius: 12px;
+
         margin-bottom: 30px;
+
+        background: linear-gradient(135deg, #ffe27a, #b8860b);
       }
 
       .photo-box {
         width: 120px;
         height: 120px;
-        background: #111;
-        border: 2px solid var(--primary);
-        border-radius: 15px;
-        margin-bottom: 20px;
+
+        border-radius: 25px;
         overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+
+        border: 2px solid var(--primary);
+
+        margin-bottom: 22px;
       }
 
-      #profile-img {
+      .photo-box img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Foto akan terpotong rapi memenuhi kotak */
+        object-fit: cover;
       }
 
       .name {
         font-size: 1.8rem;
         font-weight: 700;
-        margin-bottom: 5px;
       }
 
       .role {
+        margin-top: 10px;
+        margin-bottom: 18px;
+
         color: var(--primary);
+
         font-size: 0.8rem;
         letter-spacing: 3px;
-        text-transform: uppercase;
-        margin-bottom: 20px;
+      }
+
+      .card-desc {
+        font-size: 0.85rem;
+        line-height: 1.9;
+        color: #b7b7b7;
       }
 
       .barcode {
-        margin-top: auto;
-        height: 50px;
         width: 100%;
+        height: 55px;
+
+        margin-top: auto;
+
+        opacity: 0.25;
+
         background: repeating-linear-gradient(
           90deg,
           #fff,
@@ -167,36 +370,135 @@
           transparent 2px,
           transparent 7px
         );
-        opacity: 0.3;
-      }
-
-      .back {
-        background: linear-gradient(135deg, var(--secondary), var(--bg));
-        transform: rotateY(180deg);
-        justify-content: center;
-        align-items: center;
-        text-align: center;
       }
 
       .contact-btn {
-        margin-top: 20px;
-        padding: 10px 25px;
+        margin-top: 25px;
+
+        padding: 14px 28px;
+
+        border-radius: 50px;
+
         background: var(--primary);
         color: black;
+
         text-decoration: none;
-        border-radius: 50px;
         font-weight: 700;
-        font-size: 0.8rem;
+
+        transition: 0.4s ease;
       }
 
+      .contact-btn:hover {
+        transform: translateY(-4px) scale(1.04);
+
+        box-shadow: 0 0 30px rgba(0, 242, 255, 0.45);
+      }
+
+      /* =====================================================
+   INTRO
+===================================================== */
+
+      .intro-text {
+        flex: 1;
+        max-width: 700px;
+        min-width: 300px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+
+        padding: 12px 18px;
+
+        border-radius: 50px;
+
+        background: rgba(255, 255, 255, 0.04);
+
+        border: 1px solid rgba(255, 255, 255, 0.08);
+
+        margin-bottom: 25px;
+
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+
+        color: #b6ffff;
+      }
+
+      .intro-text h1 {
+        font-size: clamp(3rem, 8vw, 7rem);
+        line-height: 0.95;
+        text-transform: uppercase;
+      }
+
+      .intro-text h1 span {
+        color: var(--primary);
+      }
+
+      .intro-desc {
+        margin-top: 30px;
+
+        font-size: 1rem;
+        line-height: 2;
+
+        color: #a9b2bf;
+
+        max-width: 650px;
+      }
+
+      .hero-buttons {
+        margin-top: 40px;
+
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+      }
+
+      .hero-buttons a {
+        padding: 15px 28px;
+
+        border-radius: 50px;
+
+        text-decoration: none;
+        font-weight: 700;
+
+        transition: 0.4s ease;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: black;
+      }
+
+      .btn-secondary {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .btn-primary:hover,
+      .btn-secondary:hover {
+        transform: translateY(-5px);
+      }
+
+      /* =====================================================
+   SCROLL TEXT
+===================================================== */
+
       .scroll-hint {
-        position: fixed;
-        bottom: 30px;
+        position: absolute;
+
+        bottom: 40px;
         left: 50%;
+
         transform: translateX(-50%);
-        font-size: 0.7rem;
+
+        font-size: 0.75rem;
         letter-spacing: 4px;
-        opacity: 0.6;
+
+        opacity: 0.5;
+
         animation: pulse 2s infinite;
       }
 
@@ -205,99 +507,878 @@
         100% {
           opacity: 0.3;
         }
+
         50% {
           opacity: 1;
         }
       }
+
+      /* =====================================================
+   SECTION
+===================================================== */
+
+      section {
+        padding: 140px 10%;
+        position: relative;
+        z-index: 10;
+      }
+
+      .section-title {
+        text-align: center;
+        margin-bottom: 80px;
+      }
+
+      .section-title h2 {
+        font-size: clamp(2.5rem, 7vw, 4.5rem);
+      }
+
+      .section-title span {
+        color: var(--primary);
+      }
+
+      .section-title p {
+        max-width: 800px;
+
+        margin: auto;
+        margin-top: 25px;
+
+        line-height: 2;
+        color: #96a3b4;
+      }
+
+      /* =====================================================
+   FEATURE GRID
+===================================================== */
+
+      .feature-grid {
+        display: grid;
+
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+        gap: 28px;
+      }
+
+      .feature-card {
+        position: relative;
+        overflow: hidden;
+
+        padding: 35px;
+
+        border-radius: 30px;
+
+        background: rgba(255, 255, 255, 0.03);
+
+        border: 1px solid rgba(255, 255, 255, 0.06);
+
+        backdrop-filter: blur(20px);
+
+        transition: 0.5s ease;
+
+        opacity: 0;
+        transform: translateY(60px);
+      }
+
+      .feature-card.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .feature-card::before {
+        content: "";
+
+        position: absolute;
+        inset: 0;
+
+        background: linear-gradient(
+          135deg,
+          transparent,
+          rgba(0, 242, 255, 0.08),
+          transparent
+        );
+
+        transform: translateX(-100%);
+        transition: 1s ease;
+      }
+
+      .feature-card:hover::before {
+        transform: translateX(100%);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-12px);
+
+        border-color: var(--primary);
+
+        box-shadow: 0 0 35px rgba(0, 242, 255, 0.18);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 22px;
+      }
+
+      .feature-card h3 {
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .feature-card p {
+        line-height: 1.9;
+        color: #9ba6b6;
+      }
+
+      /* =====================================================
+   TIMELINE
+===================================================== */
+
+      .timeline {
+        margin-top: 120px;
+
+        display: grid;
+        gap: 30px;
+      }
+
+      .timeline-box {
+        padding: 35px;
+
+        border-radius: 30px;
+
+        background: rgba(255, 255, 255, 0.03);
+
+        border: 1px solid rgba(255, 255, 255, 0.06);
+
+        backdrop-filter: blur(15px);
+
+        transition: 0.5s ease;
+
+        opacity: 0;
+        transform: translateX(-80px);
+      }
+
+      .timeline-box.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .timeline-box:hover {
+        border-color: var(--primary);
+
+        transform: translateY(-8px);
+      }
+
+      .timeline-box h3 {
+        margin-bottom: 15px;
+        color: var(--primary);
+      }
+
+      .timeline-box p {
+        line-height: 1.9;
+        color: #9ba6b6;
+      }
+
+      /* =====================================================
+   STATS
+===================================================== */
+
+      .stats {
+        margin-top: 120px;
+
+        display: grid;
+
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+        gap: 25px;
+      }
+
+      .stat-box {
+        padding: 40px;
+
+        border-radius: 30px;
+
+        background: rgba(255, 255, 255, 0.03);
+
+        border: 1px solid rgba(255, 255, 255, 0.06);
+
+        text-align: center;
+
+        transition: 0.4s ease;
+      }
+
+      .stat-box:hover {
+        transform: translateY(-10px);
+
+        border-color: var(--primary);
+      }
+
+      .stat-box h1 {
+        font-size: 3rem;
+        color: var(--primary);
+
+        margin-bottom: 10px;
+      }
+
+      /* =====================================================
+   TERMINAL
+===================================================== */
+
+      .terminal {
+        margin-top: 120px;
+
+        border-radius: 30px;
+        overflow: hidden;
+
+        background: #030913;
+
+        border: 1px solid rgba(255, 255, 255, 0.08);
+
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+      }
+
+      .terminal-top {
+        padding: 16px 20px;
+
+        display: flex;
+        gap: 10px;
+
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .red {
+        background: #ff4d4d;
+      }
+      .yellow {
+        background: #ffcc00;
+      }
+      .green {
+        background: #00ff88;
+      }
+
+      .terminal-body {
+        padding: 35px;
+
+        color: #00ff88;
+
+        line-height: 2;
+        font-size: 0.95rem;
+      }
+
+      /* =====================================================
+   UI ENHANCEMENT OVERLAY
+===================================================== */
+
+      .scanline {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.045) 0px,
+          rgba(255, 255, 255, 0.045) 1px,
+          transparent 2px,
+          transparent 4px
+        );
+        mix-blend-mode: overlay;
+        opacity: 0.14;
+      }
+
+      .vignette {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        background: radial-gradient(
+          circle at 50% 30%,
+          rgba(0, 242, 255, 0.05) 0%,
+          rgba(0, 0, 0, 0.35) 55%,
+          rgba(0, 0, 0, 0.62) 100%
+        );
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .scanline {
+          display: none;
+        }
+      }
+
+      .typing {
+        overflow: hidden;
+        white-space: nowrap;
+
+        width: 0;
+
+        border-right: 2px solid #00ff88;
+
+        animation:
+          typing 3.8s steps(48, end) forwards,
+          blink 0.85s infinite;
+      }
+
+      @keyframes typing {
+        from {
+          width: 0;
+          filter: drop-shadow(0 0 0 rgba(0, 255, 136, 0));
+        }
+        to {
+          width: 100%;
+          filter: drop-shadow(0 0 14px rgba(0, 255, 136, 0.28));
+        }
+      }
+
+      @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
+
+      /* =====================================================
+   FLOAT ICONS
+===================================================== */
+
+      .float-icons {
+        position: fixed;
+
+        right: 20px;
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+
+        z-index: 1500;
+      }
+
+      .float-icons a {
+        width: 58px;
+        height: 58px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        text-decoration: none;
+
+        font-size: 1.4rem;
+        color: white;
+
+        background: rgba(255, 255, 255, 0.05);
+
+        border: 1px solid rgba(255, 255, 255, 0.08);
+
+        backdrop-filter: blur(15px);
+
+        transition: 0.4s ease;
+      }
+
+      .float-icons a:hover {
+        transform: scale(1.1);
+
+        border-color: var(--primary);
+
+        box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+      }
+
+      /* =====================================================
+   FOOTER
+===================================================== */
+
+      .footer {
+        padding: 80px 20px;
+        text-align: center;
+
+        color: #677284;
+
+        letter-spacing: 3px;
+      }
+
+      @media (max-width: 950px) {
+        .viewport {
+          flex-direction: column;
+          text-align: center;
+          gap: 70px;
+        }
+
+        .hero-buttons {
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          padding: 18px 20px;
+        }
+
+        .top-marquee {
+          top: 72px;
+        }
+
+        .hero {
+          padding-top: 170px;
+        }
+
+        .intro-text h1 {
+          font-size: 3.4rem;
+        }
+
+        .card-wrapper {
+          transform: scale(0.92);
+        }
+
+        section {
+          padding-left: 6%;
+          padding-right: 6%;
+        }
+
+        .float-icons {
+          bottom: 20px;
+          top: auto;
+          right: 50%;
+
+          transform: translateX(50%);
+
+          flex-direction: row;
+        }
+      }
     </style>
   </head>
+
   <body>
-    <div
-      class="progress-bar"
-      id="bar"
-      style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 4px;
-        background: var(--primary);
-        width: 0%;
-        z-index: 1000;
-      "
-    ></div>
+    <div class="bg-grid"></div>
     <div class="glow"></div>
 
+    <div class="progress-bar" id="bar"></div>
+
+    <!-- NAVBAR -->
+
     <nav>
-      <div class="logo">SNEIJDERLINO</div>
-      <div>2026 ©</div>
+      <div class="logo">LAPORAN E-KINERJA PRO</div>
+
+      <div class="nav-right">
+        <div>AUTOMATION SYSTEM</div>
+        <div>2026</div>
+      </div>
     </nav>
 
-    <div class="viewport">
-      <div class="intro-text" id="intro">
-        <h1>SNEIJDER<br /><span style="color: var(--primary)">LINO</span></h1>
-        <p style="margin-top: 15px; opacity: 0.5">
-          Gulir ke bawah untuk melihat profil identitas Developer
-        </p>
-      </div>
+    <!-- MARQUEE -->
 
-      <div class="card-wrapper" id="card">
-        <div class="card-face front">
-          <div class="chip"></div>
-          <div class="photo-box">
-            <img id="profile-img" src="admin-foto.png" alt="Profile" />
-          </div>
-          <div class="name">Sneijderlino</div>
-          <div class="role">Developer</div>
-          <p style="font-size: 0.75rem; color: #888; line-height: 1.5">
-            Dimana seni bertemu kode untuk menciptakan masa depan.
-          </p>
-          <div class="barcode"></div>
-        </div>
+    <div class="top-marquee">
+      <div class="marquee-track">
+        <div>⚡ EKINERJA PRO AUTOMATION SYSTEM ⚡</div>
+        <div>⚡ AUTO GENERATE LAPORAN HARIAN ⚡</div>
+        <div>⚡ NO MORE MANUAL EXCEL & WORD ⚡</div>
+        <div>⚡ FAST • SMART • MODERN ⚡</div>
 
-        <div class="card-face back">
-          <h3 style="margin-bottom: 20px">CONTACT</h3>
-          <p style="font-size: 0.9rem">WA: 082292964110</p>
-          <p style="font-size: 0.8rem; opacity: 0.7">
-            Sneijderlino_official@gmail.com
-          </p>
-          <a href="https://wa.me/6282292964110" class="contact-btn"
-            >Mulai chat</a
-          >
-        </div>
+        <div>⚡ EKINERJA PRO AUTOMATION SYSTEM ⚡</div>
+        <div>⚡ AUTO GENERATE LAPORAN HARIAN ⚡</div>
+        <div>⚡ NO MORE MANUAL EXCEL & WORD ⚡</div>
+        <div>⚡ FAST • SMART • MODERN ⚡</div>
       </div>
     </div>
 
-    <div class="scroll-hint">SCROLL TO ROTATE CARD</div>
+    <!-- HERO -->
+
+    <section class="hero">
+      <div class="viewport">
+        <!-- CARD PALING ATAS -->
+
+        <div class="card-wrapper" id="card">
+          <div class="card-face front">
+            <div class="chip"></div>
+
+            <div class="photo-box">
+              <img src="admin-foto.png" />
+            </div>
+
+            <div class="name">Sneijderlino</div>
+
+            <div class="role">Pengembang Aplikasi eKinerja Pro</div>
+
+            <div class="card-desc">
+              fokus membuat sistem modern, responsif, dan mudah digunakan untuk
+              kebutuhan digital masa kini.
+            </div>
+
+            <div class="barcode"></div>
+          </div>
+
+          <div class="card-face back">
+            <h2>SMART WORKFLOW</h2>
+
+            <p style="margin-top: 20px">⚡ Auto Generate Laporan</p>
+
+            <p style="margin-top: 10px">⚡ Input Cepat & Efisien</p>
+
+            <p style="margin-top: 10px">⚡ Modern Dashboard System</p>
+
+            <a href="#" class="contact-btn" aria-label="Open system"
+              >OPEN SYSTEM</a
+            >
+          </div>
+        </div>
+
+        <!-- TEXT -->
+
+        <div class="intro-text" id="intro">
+          <div class="badge">⚡ DIGITAL EKINERJA AUTOMATION</div>
+
+          <h1>
+            EKINERJA
+            <span>PRO</span>
+          </h1>
+
+          <div class="intro-desc">
+            eKinerja Pro adalah aplikasi web modern yang dirancang untuk
+            mempermudah pembuatan laporan eKinerja harian secara otomatis.
+            Sistem ini membantu pengguna membuat laporan cepat, rapi,
+            profesional, dan efisien tanpa perlu lagi mengetik manual di Word,
+            Excel, maupun melakukan export PDF secara berulang. Dengan tampilan
+            futuristik modern, animasi interaktif premium, dan workflow digital
+            yang efisien, eKinerja Pro menghadirkan pengalaman kerja yang lebih
+            cepat, praktis, dan modern.
+          </div>
+
+          <div class="hero-buttons">
+            <a href="index.html" class="btn-primary" id="startSystemBtn">
+              START APLIKASI
+            </a>
+
+            <a href="#system-flow" class="btn-secondary" id="viewFeaturesBtn">
+              LIHAT FITUR
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-hint">SCROLL TO EXPLORE SYSTEM</div>
+    </section>
+
+    <!-- UI ENHANCEMENT OVERLAY -->
+    <div class="scanline"></div>
+    <div class="vignette"></div>
+
+    <!-- FLOAT -->
+
+    <div class="float-icons">
+      <a href="#">⚡</a>
+      <a href="#">📊</a>
+      <a href="#">🚀</a>
+      <a href="#">💻</a>
+    </div>
+
+    <!-- FEATURES -->
+
+    <section>
+      <div class="section-title">
+        <h2>FITUR <span>CERDAS</span></h2>
+
+        <p>
+          Dirancang khusus untuk mempercepat pekerjaan administrasi dan
+          pembuatan laporan harian dengan sistem otomatis yang modern dan
+          efisien.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">⚡</div>
+          <h3>Auto Generate</h3>
+          <p>
+            Laporan harian dibuat otomatis dengan sistem cepat tanpa perlu
+            mengetik ulang secara manual setiap hari.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon">📄</div>
+          <h3>Instant Report</h3>
+          <p>
+            Semua data tersusun otomatis menjadi laporan profesional yang rapi
+            dan siap digunakan.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon">📊</div>
+          <h3>Modern Dashboard</h3>
+          <p>
+            Dashboard futuristik dengan visual modern yang mempermudah
+            monitoring pekerjaan harian.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon">🚀</div>
+          <h3>Fast Workflow</h3>
+          <p>
+            Mempercepat proses administrasi sehingga pekerjaan menjadi lebih
+            efisien dan hemat waktu.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon">☁️</div>
+          <h3>Cloud System</h3>
+          <p>
+            Data tersimpan aman dan dapat diakses kapan saja dengan sistem
+            digital modern.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon">🛡️</div>
+          <h3>Secure Data</h3>
+          <p>
+            Sistem keamanan modern menjaga data laporan dan aktivitas pengguna
+            tetap aman.
+          </p>
+        </div>
+      </div>
+
+      <!-- TERMINAL -->
+
+      <div class="terminal">
+        <div class="terminal-top">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+        </div>
+
+        <div class="terminal-body"> 
+  <div class="typing">> MEMULAI SISTEM LAPORAN EKINERJA PRO...</div> 
+  <div>> Menghubungkan mesin otomasi...</div> 
+  <div>> Memuat dasbor laporan pintar...</div> 
+  <div>> Pembuatan otomatis siap...</div> 
+  <div>> Sistem berhasil daring.</div> 
+</div>
+
+
+      <!-- STATS -->
+
+    <div class="stats"> 
+  <div class="stat-box"> 
+    <h1>100%</h1> 
+    <p>Alur Kerja Otomatis</p> 
+  </div> 
+  <div class="stat-box"> 
+    <h1>24/7</h1> 
+    <p>Sistem Aktif</p> 
+  </div> 
+  <div class="stat-box"> 
+    <h1>10x</h1> 
+    <p>Pelaporan Lebih Cepat</p> 
+  </div> 
+  <div class="stat-box"> 
+    <h1>∞</h1> 
+    <p>Peningkatan Efisiensi</p> 
+  </div> 
+</div>
+
+
+    <!-- TIMELINE -->
+
+    <section id="system-flow">
+      <div class="section-title">
+        <h2>ALUR <span>SISTEM</span></h2>
+
+        <p>
+          Workflow modern yang membantu proses pembuatan laporan menjadi lebih
+          cepat, praktis, dan efisien.
+        </p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-box reveal-left">
+          <h3>01 • INPUT AKTIVITAS</h3>
+          <p>
+            Pengguna hanya perlu memasukkan aktivitas harian dengan cepat
+            melalui sistem dashboard modern.
+          </p>
+        </div>
+
+        <div class="timeline-box reveal-left">
+          <h3>02 • AUTO PROCESS</h3>
+          <p>
+            Sistem otomatis memproses data dan menyusun format laporan secara
+            profesional.
+          </p>
+        </div>
+
+        <div class="timeline-box reveal-left">
+          <h3>03 • GENERATE REPORT</h3>
+          <p>
+            Laporan eKinerja langsung tersedia tanpa perlu edit manual di Word
+            atau Excel.
+          </p>
+        </div>
+
+        <div class="timeline-box reveal-left">
+          <h3>04 • READY TO USE</h3>
+          <p>
+            Laporan siap digunakan dengan tampilan modern, rapi, dan efisien.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+   LAPORAN EKINERJA PRO • SISTEM OTOMASI • ALUR KERJA MUDAH & CEPAT •
+    </div>
 
     <script>
+      /* =====================================================
+   ELEMENT
+===================================================== */
+
       const card = document.getElementById("card");
       const intro = document.getElementById("intro");
       const bar = document.getElementById("bar");
 
+      const glow = document.querySelector(".glow");
+
+      const reveals = document.querySelectorAll(".reveal");
+
+      const revealsLeft = document.querySelectorAll(".reveal-left");
+
+      /* =====================================================
+   ACTION BUTTON NAVIGATION
+===================================================== */
+
+      const startSystemBtn = document.getElementById("startSystemBtn");
+      const viewFeaturesBtn = document.getElementById("viewFeaturesBtn");
+
+      function goToSystemFlow() {
+        const target = document.getElementById("system-flow");
+        if (target && typeof target.scrollIntoView === "function") {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.replaceState(null, "", "#system-flow");
+        } else {
+          location.hash = "#system-flow";
+        }
+      }
+
+      if (startSystemBtn) {
+        startSystemBtn.addEventListener("click", (e) => {
+          // Pastikan benar-benar redirect, bukan anchor (#)
+          e.preventDefault();
+          window.location.href = "index.html";
+        });
+      }
+
+      if (viewFeaturesBtn) {
+        viewFeaturesBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          goToSystemFlow();
+        });
+      }
+
+      // Jika dibuka dari hash, langsung scroll ke SYSTEM FLOW
+      if (location.hash === "#system-flow") {
+        // delay biar layout selesai
+        setTimeout(goToSystemFlow, 50);
+      }
+
+      /* =====================================================
+   SCROLL EFFECT
+===================================================== */
+
       window.addEventListener("scroll", () => {
         const scrollY = window.scrollY;
+
         const maxScroll =
           document.documentElement.scrollHeight - window.innerHeight;
+
         const scrollFraction = scrollY / maxScroll;
 
+        /* PROGRESS */
+
         bar.style.width = scrollFraction * 100 + "%";
-        intro.style.opacity = 1 - scrollFraction * 4;
-        intro.style.transform = `translateY(-${scrollFraction * 100}px)`;
+
+        /* INTRO */
+
+        intro.style.transform = `translateY(-${scrollFraction * 80}px)`;
+
+        /* CARD ROTATION */
 
         const rotationY = scrollFraction * 720;
-        const rotationX = Math.sin(scrollFraction * Math.PI * 2) * 20;
-        const scale = 0.8 + Math.sin(scrollFraction * Math.PI) * 0.2;
 
-        card.style.transform = `rotateY(${rotationY}deg) rotateX(${rotationX}deg) scale(${scale})`;
+        const rotationX = Math.sin(scrollFraction * Math.PI * 2) * 8;
 
-        if (scrollFraction < 0.05) {
-          card.style.opacity = scrollFraction * 20;
-        } else {
-          card.style.opacity = 1;
-        }
+        const scale = 1 + Math.sin(scrollFraction * Math.PI) * 0.04;
+
+        card.style.transform = `
+rotateY(${rotationY}deg)
+rotateX(${rotationX}deg)
+scale(${scale})
+`;
+
+        /* REVEAL ANIMATION */
+
+        reveals.forEach((el) => {
+          const top = el.getBoundingClientRect().top;
+
+          if (top < window.innerHeight - 100) {
+            el.classList.add("show");
+          }
+        });
+
+        revealsLeft.forEach((el) => {
+          const top = el.getBoundingClientRect().top;
+
+          if (top < window.innerHeight - 100) {
+            el.classList.add("show");
+          }
+        });
       });
 
-      card.style.opacity = 0;
+      /* =====================================================
+   GLOW FOLLOW
+===================================================== */
+
+      document.addEventListener("mousemove", (e) => {
+        glow.style.left = e.clientX + "px";
+
+        glow.style.top = e.clientY + "px";
+      });
+
+      /* =====================================================
+   CARD HOVER EFFECT
+===================================================== */
+
+      const featureCards = document.querySelectorAll(".feature-card");
+
+      featureCards.forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+
+          const x = e.clientX - rect.left;
+
+          const y = e.clientY - rect.top;
+
+          card.style.background = `
+radial-gradient(
+circle at ${x}px ${y}px,
+rgba(0,242,255,0.15),
+rgba(255,255,255,0.03)
+)
+`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.background = "rgba(255,255,255,0.03)";
+        });
+      });
     </script>
   </body>
 </html>
