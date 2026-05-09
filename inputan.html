@@ -12,11 +12,33 @@
       content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png"
     />
     <!-- App Icons for PWA and Web -->
-    <link rel="icon" href="assets/img/logo-apk.png" type="image/png" sizes="32x32" />
-    <link rel="icon" href="assets/img/logo-apk.png" type="image/png" sizes="16x16" />
-    <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="180x180" />
-    <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="152x152" />
-    <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="120x120" />
+    <link
+      rel="icon"
+      href="assets/img/logo-apk.png"
+      type="image/png"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      href="assets/img/logo-apk.png"
+      type="image/png"
+      sizes="16x16"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="assets/img/logo-apk.png"
+      sizes="180x180"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="assets/img/logo-apk.png"
+      sizes="152x152"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="assets/img/logo-apk.png"
+      sizes="120x120"
+    />
     <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="76x76" />
     <meta name="theme-color" content="#3b82f6" />
     <link rel="manifest" href="/manifest.json" />
@@ -625,17 +647,33 @@
                 accept="image/*"
                 onchange="previewLogo(this)"
               />
-              <input
-                type="text"
+              <textarea
                 id="in-instansi"
-                value="Dinas Satuan Polisi Pamong Praja Dan Pemadam Kebakaran"
-              />
-              <input
-                type="text"
+                rows="3"
+                style="resize: vertical; min-height: 54px"
+              >
+Dinas Satuan Polisi Pamong Praja Dan Pemadam Kebakaran</textarea
+              >
+              <textarea
                 id="in-kab"
-                value="Kabupaten Maluku Barat Daya"
-              />
-              <input type="text" id="in-kota" value="Kota Tiakur" />
+                rows="3"
+                style="resize: vertical; min-height: 54px"
+              >
+Kabupaten Maluku Barat Daya</textarea
+              >
+              <textarea
+                id="in-kota"
+                rows="3"
+                style="resize: vertical; min-height: 54px"
+              >
+Kota Tiakur</textarea
+              >
+              <textarea
+                id="in-gmail"
+                rows="3"
+                style="resize: vertical; min-height: 54px"
+                placeholder="Gmail instansi (contoh: contoh@gmail.com)"
+              ></textarea>
               <button
                 class="btn btn-preview"
                 style="font-size: 0.75rem; padding: 10px"
@@ -643,6 +681,313 @@
               >
                 KUNCI KOP LAPORAN
               </button>
+
+              <div id="kop-tampilan-settings" style="margin-top: 14px">
+                <div
+                  style="font-weight: 900; color: #0f1929; margin-bottom: 10px"
+                >
+                  Pengaturan Tampilan Kop
+                </div>
+
+                <div style="display: grid; gap: 8px; margin-bottom: 12px">
+                  <label class="date-checkbox" style="margin: 0">
+                    <input
+                      type="checkbox"
+                      id="kop-opt-instansi"
+                      onchange="updateKopTampilanFokus()"
+                    />
+                    <span>Input Kolom 1</span>
+                  </label>
+                  <label class="date-checkbox" style="margin: 0">
+                    <input
+                      type="checkbox"
+                      id="kop-opt-kab"
+                      onchange="updateKopTampilanFokus()"
+                    />
+                    <span>Input Kolom 2</span>
+                  </label>
+                  <label class="date-checkbox" style="margin: 0">
+                    <input
+                      type="checkbox"
+                      id="kop-opt-kota"
+                      onchange="updateKopTampilanFokus()"
+                    />
+                    <span>Input Kolom 3</span>
+                  </label>
+                  <label class="date-checkbox" style="margin: 0">
+                    <input
+                      type="checkbox"
+                      id="kop-opt-gmail"
+                      onchange="updateKopTampilanFokus()"
+                    />
+                    <span>Input Kolom 4</span>
+                  </label>
+                  <label class="date-checkbox" style="margin: 0">
+                    <input
+                      type="checkbox"
+                      id="kop-opt-logo"
+                      onchange="updateKopTampilanFokus()"
+                    />
+                    <span>Logo</span>
+                  </label>
+                </div>
+
+                <div id="kop-font-panel" style="display: none">
+                  <div
+                    style="
+                      font-weight: 800;
+                      color: #0f1929;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    Kontrol Font Kop
+                  </div>
+
+                  <div
+                    style="
+                      display: grid;
+                      grid-template-columns: 1fr 1fr;
+                      gap: 10px;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-preview"
+                      style="margin: 0; padding: 10px 8px; font-size: 0.75rem"
+                      onclick="kopSetFontBold(true)"
+                    >
+                      Tebal
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-preview"
+                      style="margin: 0; padding: 10px 8px; font-size: 0.75rem"
+                      onclick="kopSetFontBold(false)"
+                    >
+                      Normal
+                    </button>
+                  </div>
+
+                  <div
+                    style="
+                      display: grid;
+                      grid-template-columns: 1fr 1fr;
+                      gap: 10px;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    <div>
+                      <div
+                        style="
+                          font-size: 0.8rem;
+                          font-weight: 800;
+                          color: #0f1929;
+                          margin-bottom: 6px;
+                        "
+                      >
+                        Ukuran Huruf
+                      </div>
+                      <input
+                        type="number"
+                        id="kop-font-size"
+                        value="10"
+                        min="6"
+                        max="30"
+                        step="1"
+                        style="margin-bottom: 0"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        style="
+                          font-size: 0.8rem;
+                          font-weight: 800;
+                          color: #0f1929;
+                          margin-bottom: 6px;
+                        "
+                      >
+                        Jarak Huruf
+                      </div>
+                      <input
+                        type="number"
+                        id="kop-font-spacing"
+                        value="0.5"
+                        min="-2"
+                        max="5"
+                        step="0.1"
+                        style="margin-bottom: 0"
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    style="
+                      display: grid;
+                      grid-template-columns: 1fr 1fr;
+                      gap: 10px;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    <div>
+                      <div
+                        style="
+                          font-size: 0.8rem;
+                          font-weight: 800;
+                          color: #0f1929;
+                          margin-bottom: 6px;
+                        "
+                      >
+                        Line Spacing
+                      </div>
+                      <input
+                        type="number"
+                        id="kop-line-spacing"
+                        value="1.2"
+                        min="0.8"
+                        max="2.0"
+                        step="0.05"
+                        style="margin-bottom: 0"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        style="
+                          font-size: 0.8rem;
+                          font-weight: 800;
+                          color: #0f1929;
+                          margin-bottom: 6px;
+                        "
+                      >
+                        Line Spacing Cepat
+                      </div>
+                      <div
+                        style="
+                          display: grid;
+                          grid-template-columns: 1fr 1fr;
+                          gap: 8px;
+                        "
+                      >
+                        <button
+                          type="button"
+                          class="btn btn-preview"
+                          style="
+                            margin: 0;
+                            padding: 10px 6px;
+                            font-size: 0.75rem;
+                          "
+                          onclick="kopSetLineSpacingQuick('dekat')"
+                        >
+                          Dekat
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-preview"
+                          style="
+                            margin: 0;
+                            padding: 10px 6px;
+                            font-size: 0.75rem;
+                          "
+                          onclick="kopSetLineSpacingQuick('sedang')"
+                        >
+                          Sedang
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="btn btn-preview"
+                    style="margin: 0; padding: 10px 8px; font-size: 0.75rem"
+                    onclick="kopApplyFontSettings()"
+                  >
+                    Terapkan Pengaturan Font
+                  </button>
+
+                  <div style="display: flex; gap: 8px; margin-top: 10px">
+                    <button
+                      type="button"
+                      class="btn"
+                      style="
+                        flex: 1;
+                        margin: 0;
+                        background: rgba(59, 130, 246, 0.15);
+                        border: 1px solid rgba(59, 130, 246, 0.35);
+                        box-shadow: none;
+                        font-size: 11px;
+                      "
+                      onclick="kopToggleUnderline('on')"
+                    >
+                      GARIS BAWAH: ON
+                    </button>
+                    <button
+                      type="button"
+                      class="btn"
+                      style="
+                        flex: 1;
+                        margin: 0;
+                        background: rgba(59, 130, 246, 0.15);
+                        border: 1px solid rgba(59, 130, 246, 0.35);
+                        box-shadow: none;
+                        font-size: 11px;
+                      "
+                      onclick="kopToggleUnderline('off')"
+                    >
+                      GARIS BAWAH: OFF
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  id="kop-logo-panel"
+                  style="display: none; margin-top: 12px"
+                >
+                  <div
+                    style="
+                      font-weight: 800;
+                      color: #0f1929;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    Kontrol Logo
+                  </div>
+
+                  <div
+                    style="
+                      display: grid;
+                      grid-template-columns: 1fr 1fr;
+                      gap: 10px;
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-preview"
+                      style="margin: 0; padding: 10px 8px; font-size: 0.75rem"
+                      onclick="kopSetLogoPosition('kiri')"
+                    >
+                      Ke Kiri
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-preview"
+                      style="margin: 0; padding: 10px 8px; font-size: 0.75rem"
+                      onclick="kopSetLogoPosition('kanan')"
+                    >
+                      Ke Kanan
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  class="btn btn-print"
+                  style="margin-top: 12px; margin-bottom: 0"
+                  onclick="kopResetTampilanAwal()"
+                >
+                  Kembali ke Pengaturan Awal
+                </button>
+              </div>
             </div>
           </div>
 
@@ -962,6 +1307,12 @@ Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku
               <h2 id="out-instansi"></h2>
               <h2 id="out-kab">KABUPATEN MALUKU BARAT DAYA</h2>
               <p id="out-kota" style="font-weight: normal">Kota Tiakur</p>
+              <p
+                id="out-gmail"
+                style="font-weight: normal; font-size: 10pt; margin-top: 2px"
+              >
+                -
+              </p>
             </div>
           </header>
           <div class="line-double"></div>

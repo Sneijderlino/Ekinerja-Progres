@@ -132,7 +132,9 @@ function checkLoginAccess() {
 }
 
 
-const inputs = ['in-instansi', 'in-kab', 'in-kota', 'in-nama', 'in-nip', 'in-jabatan', 'in-uraian', 'in-report-title', 'in-report-subtitle'];
+const inputs = ['in-instansi', 'in-kab', 'in-kota', 'in-gmail', 'in-nama', 'in-nip', 'in-jabatan', 'in-uraian', 'in-report-title', 'in-report-subtitle'];
+
+
 const ttdInputs = ['in-ttd-tempat', 'in-ttd-tanggal', 'in-ttd-jabatan', 'in-ttd-nama', 'in-ttd-pangkat', 'in-ttd-nip'];
 let savedReportFilter = { query: '', type: 'all' };
 
@@ -372,8 +374,11 @@ function lockKop() {
     const data = {
         instansi: document.getElementById('in-instansi').value,
         kab: document.getElementById('in-kab').value,
-        kota: document.getElementById('in-kota').value
+        kota: document.getElementById('in-kota').value,
+        gmail: document.getElementById('in-gmail').value
     };
+
+
     localStorage.setItem('ghost_kop', JSON.stringify(data));
     renderKop();
     showToast("Kop Instansi Berhasil Dikunci!");
@@ -1134,6 +1139,9 @@ function renderTaskList() {
 function unlockKop() {
     document.getElementById('kop-display').style.display = 'none';
     document.getElementById('kop-inputs').style.display = 'block';
+
+    // Inisialisasi panel tampilan kop (jika elemen sudah ada)
+    kopInitTampilanKop();
 }
 
 function renderIdentity() {
@@ -1165,10 +1173,13 @@ function renderKop() {
         document.getElementById('in-instansi').value = data.instansi;
         document.getElementById('in-kab').value = data.kab;
         document.getElementById('in-kota').value = data.kota;
+        document.getElementById('in-gmail').value = data.gmail || '';
 
         document.getElementById('out-instansi').innerText = data.instansi.toUpperCase();
         document.getElementById('out-kab').innerText = data.kab.toUpperCase();
         document.getElementById('out-kota').innerText = data.kota;
+        document.getElementById('out-gmail').innerText = data.gmail || '-';
+
 
         document.getElementById('kop-display').style.display = 'block';
         document.getElementById('kop-inputs').style.display = 'none';
@@ -1176,6 +1187,9 @@ function renderKop() {
 
     const savedLogo = localStorage.getItem('ghost_logo');
     if (savedLogo) document.getElementById('out-logo').src = savedLogo;
+
+    // Pastikan panel tampilan kop tetap sesuai default
+    kopInitTampilanKop();
 }
 
 function previewImg(input, targetId) {
@@ -1312,6 +1326,207 @@ function hidePdfLoading() {
     if (overlay) overlay.style.display = 'none';
 }
 
+// ================== TAMBAHAN: PENGATURAN TAMPILAN KOP ==================
+const KOP_TAMPILAN_DEFAULT = {
+    fontBold: false,
+    fontSize: 10,
+    fontSpacing: 0.5,
+    logoPosition: 'kiri'
+};
+
+const kopTampilanState = {
+    fontBold: KOP_TAMPILAN_DEFAULT.fontBold,
+    fontSize: KOP_TAMPILAN_DEFAULT.fontSize,
+    fontSpacing: KOP_TAMPILAN_DEFAULT.fontSpacing,
+    // line spacing untuk line-height
+    lineSpacing: 1.2,
+    logoPosition: KOP_TAMPILAN_DEFAULT.logoPosition,
+    underline: false,
+};
+
+
+function kopGetCheckedElements() {
+    const checked = {
+        instansi: !!document.getElementById('kop-opt-instansi')?.checked,
+        kab: !!document.getElementById('kop-opt-kab')?.checked,
+        kota: !!document.getElementById('kop-opt-kota')?.checked,
+        gmail: !!document.getElementById('kop-opt-gmail')?.checked,
+        logo: !!document.getElementById('kop-opt-logo')?.checked
+    };
+
+    const targets = [];
+    if (checked.instansi) targets.push(document.getElementById('out-instansi'));
+    if (checked.kab) targets.push(document.getElementById('out-kab'));
+    if (checked.kota) targets.push(document.getElementById('out-kota'));
+    if (checked.gmail) targets.push(document.getElementById('out-gmail'));
+
+    return {
+        targets: targets.filter(Boolean),
+        logoEnabled: checked.logo
+    };
+}
+
+function kopInitTampilanKop() {
+    // Jika panel belum ada, stop
+    const panelFont = document.getElementById('kop-font-panel');
+    const panelLogo = document.getElementById('kop-logo-panel');
+    const panelWrap = document.getElementById('kop-tampilan-settings');
+    if (!panelFont || !panelLogo || !panelWrap) return;
+
+    // default: panel tersembunyi sampai ada checkbox aktif
+    // isi nilai input kontrol
+    const sizeInput = document.getElementById('kop-font-size');
+    const spacingInput = document.getElementById('kop-font-spacing');
+    if (sizeInput && !sizeInput.value) sizeInput.value = KOP_TAMPILAN_DEFAULT.fontSize;
+    if (spacingInput && !spacingInput.value) spacingInput.value = KOP_TAMPILAN_DEFAULT.fontSpacing;
+
+    // default state untuk logo
+    kopTampilanState.fontBold = KOP_TAMPILAN_DEFAULT.fontBold;
+    kopTampilanState.fontSize = Number(sizeInput?.value || KOP_TAMPILAN_DEFAULT.fontSize);
+    kopTampilanState.fontSpacing = Number(spacingInput?.value || KOP_TAMPILAN_DEFAULT.fontSpacing);
+    kopTampilanState.logoPosition = KOP_TAMPILAN_DEFAULT.logoPosition;
+
+    // tombol reset ke default
+    updateKopTampilanFokus();
+}
+
+function updateKopTampilanFokus() {
+    const { targets, logoEnabled } = kopGetCheckedElements();
+
+    const fontPanel = document.getElementById('kop-font-panel');
+    const logoPanel = document.getElementById('kop-logo-panel');
+
+    const hasFontTargets = targets.length > 0;
+    if (fontPanel) fontPanel.style.display = hasFontTargets ? 'block' : 'none';
+    if (logoPanel) logoPanel.style.display = logoEnabled ? 'block' : 'none';
+
+    // Jika logo dicentang, pastikan posisi diterapkan
+    if (logoEnabled) {
+        kopSetLogoPosition(kopTampilanState.logoPosition);
+    }
+}
+
+function kopSetFontBold(isBold) {
+    kopTampilanState.fontBold = !!isBold;
+    // Terapkan langsung ke elemen yang diceklis
+    const { targets } = kopGetCheckedElements();
+    targets.forEach((el) => {
+        if (!el) return;
+        el.style.fontWeight = kopTampilanState.fontBold ? 'bold' : 'normal';
+    });
+}
+
+function kopApplyFontSettings() {
+    const sizeInput = document.getElementById('kop-font-size');
+    const spacingInput = document.getElementById('kop-font-spacing');
+    const lineSpacingInput = document.getElementById('kop-line-spacing');
+
+    if (sizeInput) kopTampilanState.fontSize = Number(sizeInput.value);
+    if (spacingInput) kopTampilanState.fontSpacing = Number(spacingInput.value);
+    if (lineSpacingInput) kopTampilanState.lineSpacing = Number(lineSpacingInput.value);
+
+    const { targets } = kopGetCheckedElements();
+    targets.forEach((el) => {
+        if (!el) return;
+        el.style.fontSize = `${kopTampilanState.fontSize}pt`;
+        el.style.letterSpacing = `${kopTampilanState.fontSpacing}px`;
+        // Line spacing hanya satu kontrol sesuai permintaan: pakai line-height
+        el.style.lineHeight = String(kopTampilanState.lineSpacing);
+    });
+}
+
+function kopSetLineSpacingQuick(type) {
+    // nilai cepat untuk line-height
+    // dekat=1.0, sedang=1.2, renggang=1.5
+    let val = 1.2;
+    if (type === 'dekat') val = 1.0;
+    if (type === 'sedang') val = 1.2;
+
+    const input = document.getElementById('kop-line-spacing');
+    if (input) input.value = String(val);
+    kopApplyFontSettings();
+}
+
+function kopSetLogoPosition(pos) {
+    const logo = document.getElementById('out-logo');
+    if (!logo) return;
+
+    const next = pos === 'kanan' ? 'kanan' : 'kiri';
+    kopTampilanState.logoPosition = next;
+
+    // geser logo
+    if (next === 'kiri') {
+        logo.style.left = '0';
+        logo.style.right = '';
+    } else {
+        logo.style.left = '';
+        logo.style.right = '0';
+    }
+}
+
+function kopToggleUnderline(onOff) {
+    kopTampilanState.underline = onOff === 'on' || onOff === true;
+    const { targets } = kopGetCheckedElements();
+
+    // Garis bawah (underline) untuk elemen KOP yang dipilih.
+    targets.forEach((el) => {
+        if (!el) return;
+        el.style.textDecoration = kopTampilanState.underline ? 'underline' : '';
+        // Agar ketebalan underline konsisten saat export PDF
+        el.style.textDecorationThickness = kopTampilanState.underline ? '2px' : '';
+    });
+}
+
+// Support alias: tombol pengguna biasanya menyebut "garis bawa".
+function kopToggleGarisBawa(onOff) {
+    kopToggleUnderline(onOff);
+}
+
+
+
+function kopResetTampilanAwal() {
+
+    // Reset state kontrol
+    kopTampilanState.fontBold = KOP_TAMPILAN_DEFAULT.fontBold;
+    kopTampilanState.underline = false;
+
+    kopTampilanState.fontSize = KOP_TAMPILAN_DEFAULT.fontSize;
+    kopTampilanState.fontSpacing = KOP_TAMPILAN_DEFAULT.fontSpacing;
+    kopTampilanState.logoPosition = KOP_TAMPILAN_DEFAULT.logoPosition;
+
+    const sizeInput = document.getElementById('kop-font-size');
+    const spacingInput = document.getElementById('kop-font-spacing');
+    if (sizeInput) sizeInput.value = KOP_TAMPILAN_DEFAULT.fontSize;
+    if (spacingInput) spacingInput.value = KOP_TAMPILAN_DEFAULT.fontSpacing;
+
+    // Uncheck semua checkbox
+    ['kop-opt-instansi','kop-opt-kab','kop-opt-kota','kop-opt-gmail','kop-opt-logo'].forEach((id)=>{
+        const el = document.getElementById(id);
+        if (el) el.checked = false;
+    });
+
+    // Reset style pada target elemen sesuai mapping
+    ['out-instansi','out-kab','out-kota','out-gmail'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.fontWeight = '';
+        el.style.fontSize = '';
+        el.style.letterSpacing = '';
+        el.style.lineHeight = '';
+        el.style.textDecoration = '';
+        el.style.textDecorationThickness = '';
+    });
+
+
+    const logo = document.getElementById('out-logo');
+    if (logo) {
+        logo.style.left = '0';
+        logo.style.right = '';
+    }
+
+    updateKopTampilanFokus();
+}
+
 async function exportToPDF() {
     showPdfLoading();
     
@@ -1403,6 +1618,23 @@ window.onload = () => {
         });
     }
     updateTanggal();
+
+
+
+    // Agar user bisa menekan Enter untuk pindah/ubah baris saat mengisi teks area laporan
+    const uraianEl = document.getElementById('in-uraian');
+    if (uraianEl) {
+        uraianEl.addEventListener('keydown', (event) => {
+            // Biarkan default pada textarea (Enter = baris baru)
+            // Tidak ada preventDefault di sini.
+            // Tambahan: Ctrl+Enter bisa digunakan untuk memindahkan fokus ke textarea/subjudul berikutnya jika ada.
+            if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                const subtitleEl = document.getElementById('in-report-subtitle');
+                if (subtitleEl) subtitleEl.focus();
+            }
+        });
+    }
 
     const taskInput = document.getElementById('task-input');
     if (taskInput) {
