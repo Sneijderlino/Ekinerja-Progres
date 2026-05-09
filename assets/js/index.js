@@ -1494,6 +1494,18 @@ function kopInitTampilanKop() {
     const panelLogo = document.getElementById('kop-logo-panel');
     if (!panelFont || !panelLogo) return;
 
+    // Jika ada riwayat setting tersimpan, jangan mengubah elemen teks.
+    // Ini penting supaya saat user "KUNCI KOP" lalu buka lagi,
+    // nilai input kop (contoh: user mengubah jadi 10) tidak hilang.
+    // (style akan diterapkan ulang oleh renderKop())
+    const savedKopRaw = localStorage.getItem('ghost_kop');
+    const hasSavedKop = !!savedKopRaw;
+    if (hasSavedKop) {
+        // tetap sinkronkan kontrol UI agar sesuai keadaan awal panel
+        updateKopTampilanFokus();
+        return;
+    }
+
     // Set style default langsung (biar selalu rapi saat halaman dibuka / reload)
     kopSetDefaultStylePerKolom();
 
@@ -1590,6 +1602,22 @@ function kopApplyFontSettings() {
         el.style.lineHeight = String(kopTampilanState.lineSpacing);
         el.style.fontWeight = kopTampilanState.fontBold ? 'bold' : 'normal';
     });
+
+    // Simpan ke ghost_kop agar nilai yang user input tidak hilang saat buka kembali
+    try {
+        const raw = localStorage.getItem('ghost_kop');
+        if (raw) {
+            const data = JSON.parse(raw);
+            data.kopTampilan = data.kopTampilan || {};
+            data.kopTampilan.fontBold = kopTampilanState.fontBold;
+            data.kopTampilan.fontSize = kopTampilanState.fontSize;
+            data.kopTampilan.fontSpacing = kopTampilanState.fontSpacing;
+            data.kopTampilan.lineSpacing = kopTampilanState.lineSpacing;
+            localStorage.setItem('ghost_kop', JSON.stringify(data));
+        }
+    } catch (e) {
+        // ignore
+    }
 }
 
 function kopSetLineSpacingQuick(type) {
@@ -1611,6 +1639,19 @@ function kopToggleUnderline(onOff) {
         el.style.textDecoration = kopTampilanState.underline ? 'underline' : '';
         el.style.textDecorationThickness = kopTampilanState.underline ? '2px' : '';
     });
+
+    // Simpan ke ghost_kop agar riwayat underline tidak hilang saat buka kembali
+    try {
+        const raw = localStorage.getItem('ghost_kop');
+        if (raw) {
+            const data = JSON.parse(raw);
+            data.kopTampilan = data.kopTampilan || {};
+            data.kopTampilan.underline = kopTampilanState.underline;
+            localStorage.setItem('ghost_kop', JSON.stringify(data));
+        }
+    } catch (e) {
+        // ignore
+    }
 }
 
 // alias untuk tombol yang user sebut "garis bawa"
