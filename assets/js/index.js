@@ -392,8 +392,12 @@ function lockKop() {
             fontSpacing: kopTampilanState?.fontSpacing,
             lineSpacing: kopTampilanState?.lineSpacing,
             underline: !!kopTampilanState?.underline,
+
+            // logo
             logoPosition: kopTampilanState?.logoPosition,
+            logoScale: kopTampilanState?.logoScale,
         }
+
     };
 
     localStorage.setItem('ghost_kop', JSON.stringify(data));
@@ -1231,6 +1235,7 @@ function renderKop() {
             if (typeof t.lineSpacing !== 'undefined') kopTampilanState.lineSpacing = Number(t.lineSpacing);
             if (typeof t.underline !== 'undefined') kopTampilanState.underline = !!t.underline;
             if (typeof t.logoPosition !== 'undefined') kopTampilanState.logoPosition = t.logoPosition;
+            if (typeof t.logoScale !== 'undefined') kopTampilanState.logoScale = Number(t.logoScale) || 1;
 
             // reset dan apply style sesuai state yang tersimpan
             kopInitTampilanKop();
@@ -1260,7 +1265,10 @@ function renderKop() {
             // apply posisi logo jika logo dipilih
             if (!!t.optLogo) {
                 kopSetLogoPosition(kopTampilanState.logoPosition);
+                if (kopTampilanState.logoScale) kopSetLogoSize(kopTampilanState.logoScale);
             }
+            // kalau logo tidak dicentang, ukuran tidak perlu dipaksa
+
         } else {
             // bila tidak ada setting tersimpan, gunakan default
             kopInitTampilanKop();
@@ -1431,7 +1439,10 @@ const kopTampilanState = {
     lineSpacing: KOP_TAMPILAN_DEFAULT.kol1.lineSpacing,
     logoPosition: KOP_TAMPILAN_DEFAULT.logoPosition,
     underline: false,
+    // scale ukuran logo (untuk persist saat lock kop)
+    logoScale: 1,
 };
+
 
 function kopApplyStyleToElement(el, cfg) {
     if (!el) return;
@@ -1535,6 +1546,24 @@ function kopSetLogoPosition(pos) {
         logo.style.right = '0';
     }
 }
+
+function kopSetLogoSize(scale) {
+    // scale: 0.5 - 2.0 (default 1)
+    const logo = document.getElementById('out-logo');
+    if (!logo) return;
+
+    const s = Number(scale);
+    if (Number.isNaN(s) || s <= 0) return;
+
+    // simpan ke state supaya bisa persist saat lock kop
+    kopTampilanState.logoScale = s;
+
+    // terapkan ke style
+    const baseWidth = 60; // sesuai CSS .report-logo width: 60px
+    logo.style.width = `${baseWidth * s}px`;
+    logo.style.height = 'auto';
+}
+
 
 function kopSetFontBold(isBold) {
     kopTampilanState.fontBold = !!isBold;

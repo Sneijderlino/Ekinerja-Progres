@@ -958,6 +958,7 @@ Kota Tiakur</textarea
                       display: grid;
                       grid-template-columns: 1fr 1fr;
                       gap: 10px;
+                      margin-bottom: 10px;
                     "
                   >
                     <button
@@ -976,6 +977,43 @@ Kota Tiakur</textarea
                     >
                       Ke Kanan
                     </button>
+                  </div>
+
+                  <div
+                    style="
+                      display: grid;
+                      grid-template-columns: 1fr 1fr;
+                      gap: 10px;
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-preview"
+                      style="margin: 0; padding: 10px 8px; font-size: 0.75rem"
+                      onclick="kopSetLogoSize(0.8)"
+                    >
+                      Perkecil
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-preview"
+                      style="margin: 0; padding: 10px 8px; font-size: 0.75rem"
+                      onclick="kopSetLogoSize(1.2)"
+                    >
+                      Perbesar
+                    </button>
+                  </div>
+
+                  <div
+                    style="
+                      margin-top: 10px;
+                      color: #64748b;
+                      font-size: 0.75rem;
+                      font-weight: 700;
+                      text-align: center;
+                    "
+                  >
+                    Tip: Gunakan Perkecil/Perbesar untuk skala logo
                   </div>
                 </div>
 
@@ -1305,8 +1343,8 @@ Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku
             />
             <div class="header-text">
               <h2 id="out-instansi"></h2>
-              <h2 id="out-kab">KABUPATEN MALUKU BARAT DAYA</h2>
-              <p id="out-kota" style="font-weight: normal">Kota Tiakur</p>
+              <h2 id="out-kab"></h2>
+              <p id="out-kota" style="font-weight: normal">Kota</p>
               <p
                 id="out-gmail"
                 style="font-weight: normal; font-size: 10pt; margin-top: 2px"
