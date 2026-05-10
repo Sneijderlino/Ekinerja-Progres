@@ -132,9 +132,7 @@ function checkLoginAccess() {
 }
 
 
-const inputs = ['in-instansi', 'in-kab', 'in-kota', 'in-gmail', 'in-nama', 'in-nip', 'in-jabatan', 'in-uraian', 'in-report-title', 'in-report-subtitle'];
-
-
+const inputs = ['in-instansi', 'in-kab', 'in-kota', 'in-nama', 'in-nip', 'in-jabatan', 'in-uraian', 'in-report-title', 'in-report-subtitle'];
 const ttdInputs = ['in-ttd-tempat', 'in-ttd-tanggal', 'in-ttd-jabatan', 'in-ttd-nama', 'in-ttd-pangkat', 'in-ttd-nip'];
 let savedReportFilter = { query: '', type: 'all' };
 
@@ -374,44 +372,12 @@ function lockKop() {
     const data = {
         instansi: document.getElementById('in-instansi').value,
         kab: document.getElementById('in-kab').value,
-        kota: document.getElementById('in-kota').value,
-        gmail: document.getElementById('in-gmail').value,
-
-        // simpan juga semua setting tampilan kop
-        kopTampilan: {
-            // checkbox kolom
-            optInstansi: !!document.getElementById('kop-opt-instansi')?.checked,
-            optKab: !!document.getElementById('kop-opt-kab')?.checked,
-            optKota: !!document.getElementById('kop-opt-kota')?.checked,
-            optGmail: !!document.getElementById('kop-opt-gmail')?.checked,
-            optLogo: !!document.getElementById('kop-opt-logo')?.checked,
-
-            // kontrol font
-            fontBold: !!kopTampilanState?.fontBold,
-            fontSize: kopTampilanState?.fontSize,
-            fontSpacing: kopTampilanState?.fontSpacing,
-            lineSpacing: kopTampilanState?.lineSpacing,
-            underline: !!kopTampilanState?.underline,
-
-            // logo
-            logoPosition: kopTampilanState?.logoPosition,
-            logoScale: kopTampilanState?.logoScale,
-        }
-
+        kota: document.getElementById('in-kota').value
     };
-
     localStorage.setItem('ghost_kop', JSON.stringify(data));
     renderKop();
-
-    // Lock berarti semua kontrol kop tidak lagi bisa berubah sampai user unlock.
-    // Jadi tampilkan panel dalam mode terkunci.
-    document.getElementById('kop-display')?.style && (document.getElementById('kop-display').style.display = 'block');
-    document.getElementById('kop-inputs')?.style && (document.getElementById('kop-inputs').style.display = 'none');
-
     showToast("Kop Instansi Berhasil Dikunci!");
 }
-
-
 
 function updateTtdPreview() {
     const tempat = document.getElementById('in-ttd-tempat')?.value || 'Tiakur';
@@ -1168,9 +1134,6 @@ function renderTaskList() {
 function unlockKop() {
     document.getElementById('kop-display').style.display = 'none';
     document.getElementById('kop-inputs').style.display = 'block';
-
-    // Inisialisasi panel tampilan kop (jika elemen sudah ada)
-    kopInitTampilanKop();
 }
 
 function renderIdentity() {
@@ -1198,92 +1161,22 @@ function renderKop() {
         const data = JSON.parse(savedKop);
         document.getElementById('txt-instansi').innerText = data.instansi.toUpperCase();
         document.getElementById('txt-kab').innerText = data.kab.toUpperCase();
-
+        
         document.getElementById('in-instansi').value = data.instansi;
         document.getElementById('in-kab').value = data.kab;
         document.getElementById('in-kota').value = data.kota;
-        document.getElementById('in-gmail').value = data.gmail || '';
 
         document.getElementById('out-instansi').innerText = data.instansi.toUpperCase();
         document.getElementById('out-kab').innerText = data.kab.toUpperCase();
         document.getElementById('out-kota').innerText = data.kota;
-        document.getElementById('out-gmail').innerText = data.gmail || '-';
 
-        // tampilkan panel kop dalam mode terkunci
         document.getElementById('kop-display').style.display = 'block';
         document.getElementById('kop-inputs').style.display = 'none';
-
-        // Terapkan semua setting tampilan kop yang pernah disimpan
-        if (data.kopTampilan) {
-            const t = data.kopTampilan;
-
-            // checkbox kolom
-            const setCheck = (id, val) => {
-                const el = document.getElementById(id);
-                if (el) el.checked = !!val;
-            };
-            setCheck('kop-opt-instansi', t.optInstansi);
-            setCheck('kop-opt-kab', t.optKab);
-            setCheck('kop-opt-kota', t.optKota);
-            setCheck('kop-opt-gmail', t.optGmail);
-            setCheck('kop-opt-logo', t.optLogo);
-
-            // state font
-            if (typeof t.fontBold !== 'undefined') kopTampilanState.fontBold = !!t.fontBold;
-            if (typeof t.fontSize !== 'undefined') kopTampilanState.fontSize = Number(t.fontSize);
-            if (typeof t.fontSpacing !== 'undefined') kopTampilanState.fontSpacing = Number(t.fontSpacing);
-            if (typeof t.lineSpacing !== 'undefined') kopTampilanState.lineSpacing = Number(t.lineSpacing);
-            if (typeof t.underline !== 'undefined') kopTampilanState.underline = !!t.underline;
-            if (typeof t.logoPosition !== 'undefined') kopTampilanState.logoPosition = t.logoPosition;
-            if (typeof t.logoScale !== 'undefined') kopTampilanState.logoScale = Number(t.logoScale) || 1;
-
-            // reset dan apply style sesuai state yang tersimpan
-            kopInitTampilanKop();
-
-            // kopInitTampilanKop mengembalikan default, jadi kita apply ulang state yang tersimpan
-            kopTampilanState.fontBold = !!t.fontBold;
-            kopTampilanState.fontSize = Number(t.fontSize);
-            kopTampilanState.fontSpacing = Number(t.fontSpacing);
-            kopTampilanState.lineSpacing = Number(t.lineSpacing);
-            kopTampilanState.underline = !!t.underline;
-            kopTampilanState.logoPosition = t.logoPosition;
-
-            // apply font settings ke elemen yang diceklis
-            // (gunakan langsung apply yang ada agar konsisten)
-            // pastikan kontrol UI nilainya ikut
-            const sizeInput = document.getElementById('kop-font-size');
-            const spacingInput = document.getElementById('kop-font-spacing');
-            const lineSpacingInput = document.getElementById('kop-line-spacing');
-            if (sizeInput) sizeInput.value = String(kopTampilanState.fontSize);
-            if (spacingInput) spacingInput.value = String(kopTampilanState.fontSpacing);
-            if (lineSpacingInput) lineSpacingInput.value = String(kopTampilanState.lineSpacing);
-
-            // apply pada target kop
-            kopApplyFontSettings();
-            kopToggleUnderline(kopTampilanState.underline ? 'on' : 'off');
-
-            // apply posisi logo jika logo dipilih
-            if (!!t.optLogo) {
-                kopSetLogoPosition(kopTampilanState.logoPosition);
-                if (kopTampilanState.logoScale) kopSetLogoSize(kopTampilanState.logoScale);
-            }
-            // kalau logo tidak dicentang, ukuran tidak perlu dipaksa
-
-        } else {
-            // bila tidak ada setting tersimpan, gunakan default
-            kopInitTampilanKop();
-        }
     }
 
     const savedLogo = localStorage.getItem('ghost_logo');
     if (savedLogo) document.getElementById('out-logo').src = savedLogo;
-
-    // Pastikan panel tampilan kop tetap ada (default), bila belum terkunci
-    if (!localStorage.getItem('ghost_kop')) {
-        kopInitTampilanKop();
-    }
 }
-
 
 function previewImg(input, targetId) {
     const target = document.getElementById(targetId);
@@ -1419,284 +1312,7 @@ function hidePdfLoading() {
     if (overlay) overlay.style.display = 'none';
 }
 
-// ================== TAMBAHAN: PENGATURAN TAMPILAN KOP ==================
-// Default tampilan per kolom (sesuai request user)
-const KOP_TAMPILAN_DEFAULT = {
-    kol1: { fontBold: false, fontSize: 10, fontSpacing: 0.5, lineSpacing: 1.2 },
-    kol2: { fontBold: true,  fontSize: 12, fontSpacing: 0.5, lineSpacing: 1.2 },
-    kol3: { fontBold: false, fontSize: 9,  fontSpacing: 0.5, lineSpacing: 1.2 },
-    // gmail: line spacing (line-height) 0
-    kol4: { fontBold: false, fontSize: 9,  fontSpacing: 0.5, lineSpacing: 0 },
-
-    logoPosition: 'kiri'
-};
-
-// State pengaturan kop (untuk kontrol UI: tebal/normal + ukuran)
-const kopTampilanState = {
-    fontBold: false,
-    fontSize: KOP_TAMPILAN_DEFAULT.kol1.fontSize,
-    fontSpacing: KOP_TAMPILAN_DEFAULT.kol1.fontSpacing,
-    lineSpacing: KOP_TAMPILAN_DEFAULT.kol1.lineSpacing,
-    logoPosition: KOP_TAMPILAN_DEFAULT.logoPosition,
-    underline: false,
-    // scale ukuran logo (untuk persist saat lock kop)
-    logoScale: 1,
-};
-
-
-function kopApplyStyleToElement(el, cfg) {
-    if (!el) return;
-    el.style.fontWeight = cfg.fontBold ? 'bold' : 'normal';
-    el.style.fontSize = `${cfg.fontSize}pt`;
-    el.style.letterSpacing = `${cfg.fontSpacing}px`;
-    el.style.lineHeight = String(cfg.lineSpacing);
-}
-
-function kopSetDefaultStylePerKolom() {
-    kopApplyStyleToElement(document.getElementById('out-instansi'), KOP_TAMPILAN_DEFAULT.kol1);
-    kopApplyStyleToElement(document.getElementById('out-kab'),      KOP_TAMPILAN_DEFAULT.kol2);
-    kopApplyStyleToElement(document.getElementById('out-kota'),     KOP_TAMPILAN_DEFAULT.kol3);
-    kopApplyStyleToElement(document.getElementById('out-gmail'),    KOP_TAMPILAN_DEFAULT.kol4);
-
-    // reset underline juga biar kembali bersih
-    ['out-instansi','out-kab','out-kota','out-gmail'].forEach((id) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.style.textDecoration = '';
-        el.style.textDecorationThickness = '';
-    });
-}
-
-function kopGetCheckedElements() {
-    const checked = {
-        instansi: !!document.getElementById('kop-opt-instansi')?.checked,
-        kab: !!document.getElementById('kop-opt-kab')?.checked,
-        kota: !!document.getElementById('kop-opt-kota')?.checked,
-        gmail: !!document.getElementById('kop-opt-gmail')?.checked,
-        logo: !!document.getElementById('kop-opt-logo')?.checked
-    };
-
-    const targets = [];
-    if (checked.instansi) targets.push(document.getElementById('out-instansi'));
-    if (checked.kab) targets.push(document.getElementById('out-kab'));
-    if (checked.kota) targets.push(document.getElementById('out-kota'));
-    if (checked.gmail) targets.push(document.getElementById('out-gmail'));
-
-    return {
-        targets: targets.filter(Boolean),
-        logoEnabled: checked.logo
-    };
-}
-
-function kopInitTampilanKop() {
-    // Jika panel belum ada, stop
-    const panelFont = document.getElementById('kop-font-panel');
-    const panelLogo = document.getElementById('kop-logo-panel');
-    if (!panelFont || !panelLogo) return;
-
-    // Jika ada riwayat setting tersimpan, jangan mengubah elemen teks.
-    // Ini penting supaya saat user "KUNCI KOP" lalu buka lagi,
-    // nilai input kop (contoh: user mengubah jadi 10) tidak hilang.
-    // (style akan diterapkan ulang oleh renderKop())
-    const savedKopRaw = localStorage.getItem('ghost_kop');
-    const hasSavedKop = !!savedKopRaw;
-    if (hasSavedKop) {
-        // tetap sinkronkan kontrol UI agar sesuai keadaan awal panel
-        updateKopTampilanFokus();
-        return;
-    }
-
-    // Set style default langsung (biar selalu rapi saat halaman dibuka / reload)
-    kopSetDefaultStylePerKolom();
-
-    // default kontrol UI mengikuti kolom 1
-    const sizeInput = document.getElementById('kop-font-size');
-    const spacingInput = document.getElementById('kop-font-spacing');
-    const lineSpacingInput = document.getElementById('kop-line-spacing');
-
-    if (sizeInput) sizeInput.value = KOP_TAMPILAN_DEFAULT.kol1.fontSize;
-    if (spacingInput) spacingInput.value = KOP_TAMPILAN_DEFAULT.kol1.fontSpacing;
-    if (lineSpacingInput) lineSpacingInput.value = KOP_TAMPILAN_DEFAULT.kol1.lineSpacing;
-
-    kopTampilanState.fontBold = KOP_TAMPILAN_DEFAULT.kol1.fontBold;
-    kopTampilanState.fontSize = KOP_TAMPILAN_DEFAULT.kol1.fontSize;
-    kopTampilanState.fontSpacing = KOP_TAMPILAN_DEFAULT.kol1.fontSpacing;
-    kopTampilanState.lineSpacing = KOP_TAMPILAN_DEFAULT.kol1.lineSpacing;
-    kopTampilanState.logoPosition = KOP_TAMPILAN_DEFAULT.logoPosition;
-
-    // default panel (tampilan bergantung checkbox)
-    updateKopTampilanFokus();
-}
-
-function updateKopTampilanFokus() {
-    const { targets, logoEnabled } = kopGetCheckedElements();
-
-    const fontPanel = document.getElementById('kop-font-panel');
-    const logoPanel = document.getElementById('kop-logo-panel');
-
-    const hasFontTargets = targets.length > 0;
-    if (fontPanel) fontPanel.style.display = hasFontTargets ? 'block' : 'none';
-    if (logoPanel) logoPanel.style.display = logoEnabled ? 'block' : 'none';
-
-    if (logoEnabled) {
-        kopSetLogoPosition(kopTampilanState.logoPosition);
-    }
-}
-
-function kopSetLogoPosition(pos) {
-    const logo = document.getElementById('out-logo');
-    if (!logo) return;
-
-    const next = pos === 'kanan' ? 'kanan' : 'kiri';
-    kopTampilanState.logoPosition = next;
-
-    if (next === 'kiri') {
-        logo.style.left = '0';
-        logo.style.right = '';
-    } else {
-        logo.style.left = '';
-        logo.style.right = '0';
-    }
-}
-
-function kopSetLogoSize(scale) {
-    // scale: 0.5 - 2.0 (default 1)
-    const logo = document.getElementById('out-logo');
-    if (!logo) return;
-
-    const s = Number(scale);
-    if (Number.isNaN(s) || s <= 0) return;
-
-    // simpan ke state supaya bisa persist saat lock kop
-    kopTampilanState.logoScale = s;
-
-    // terapkan ke style
-    const baseWidth = 60; // sesuai CSS .report-logo width: 60px
-    logo.style.width = `${baseWidth * s}px`;
-    logo.style.height = 'auto';
-}
-
-
-function kopSetFontBold(isBold) {
-    kopTampilanState.fontBold = !!isBold;
-    const { targets } = kopGetCheckedElements();
-    targets.forEach((el) => {
-        el.style.fontWeight = kopTampilanState.fontBold ? 'bold' : 'normal';
-    });
-}
-
-function kopApplyFontSettings() {
-    const sizeInput = document.getElementById('kop-font-size');
-    const spacingInput = document.getElementById('kop-font-spacing');
-    const lineSpacingInput = document.getElementById('kop-line-spacing');
-
-    if (sizeInput) kopTampilanState.fontSize = Number(sizeInput.value);
-    if (spacingInput) kopTampilanState.fontSpacing = Number(spacingInput.value);
-    if (lineSpacingInput) kopTampilanState.lineSpacing = Number(lineSpacingInput.value);
-
-    const { targets } = kopGetCheckedElements();
-    targets.forEach((el) => {
-        if (!el) return;
-        el.style.fontSize = `${kopTampilanState.fontSize}pt`;
-        el.style.letterSpacing = `${kopTampilanState.fontSpacing}px`;
-        el.style.lineHeight = String(kopTampilanState.lineSpacing);
-        el.style.fontWeight = kopTampilanState.fontBold ? 'bold' : 'normal';
-    });
-
-    // Simpan ke ghost_kop agar nilai yang user input tidak hilang saat buka kembali
-    try {
-        const raw = localStorage.getItem('ghost_kop');
-        if (raw) {
-            const data = JSON.parse(raw);
-            data.kopTampilan = data.kopTampilan || {};
-            data.kopTampilan.fontBold = kopTampilanState.fontBold;
-            data.kopTampilan.fontSize = kopTampilanState.fontSize;
-            data.kopTampilan.fontSpacing = kopTampilanState.fontSpacing;
-            data.kopTampilan.lineSpacing = kopTampilanState.lineSpacing;
-            localStorage.setItem('ghost_kop', JSON.stringify(data));
-        }
-    } catch (e) {
-        // ignore
-    }
-}
-
-function kopSetLineSpacingQuick(type) {
-    let val = 1.2;
-    if (type === 'dekat') val = 1.0;
-    if (type === 'sedang') val = 1.2;
-
-    const input = document.getElementById('kop-line-spacing');
-    if (input) input.value = String(val);
-    kopApplyFontSettings();
-}
-
-function kopToggleUnderline(onOff) {
-    kopTampilanState.underline = onOff === 'on' || onOff === true;
-    const { targets } = kopGetCheckedElements();
-
-    targets.forEach((el) => {
-        if (!el) return;
-        el.style.textDecoration = kopTampilanState.underline ? 'underline' : '';
-        el.style.textDecorationThickness = kopTampilanState.underline ? '2px' : '';
-    });
-
-    // Simpan ke ghost_kop agar riwayat underline tidak hilang saat buka kembali
-    try {
-        const raw = localStorage.getItem('ghost_kop');
-        if (raw) {
-            const data = JSON.parse(raw);
-            data.kopTampilan = data.kopTampilan || {};
-            data.kopTampilan.underline = kopTampilanState.underline;
-            localStorage.setItem('ghost_kop', JSON.stringify(data));
-        }
-    } catch (e) {
-        // ignore
-    }
-}
-
-// alias untuk tombol yang user sebut "garis bawa"
-function kopToggleGarisBawa(onOff) {
-    kopToggleUnderline(onOff);
-}
-
-function kopResetTampilanAwal() {
-    // reset state
-    kopTampilanState.underline = false;
-    kopTampilanState.fontBold = KOP_TAMPILAN_DEFAULT.kol1.fontBold;
-    kopTampilanState.fontSize = KOP_TAMPILAN_DEFAULT.kol1.fontSize;
-    kopTampilanState.fontSpacing = KOP_TAMPILAN_DEFAULT.kol1.fontSpacing;
-    kopTampilanState.lineSpacing = KOP_TAMPILAN_DEFAULT.kol1.lineSpacing;
-    kopTampilanState.logoPosition = KOP_TAMPILAN_DEFAULT.logoPosition;
-
-    // reset style per kolom (rapi sesuai request)
-    kopSetDefaultStylePerKolom();
-
-    // reset input kontrol ke kolom 1
-    const sizeInput = document.getElementById('kop-font-size');
-    const spacingInput = document.getElementById('kop-font-spacing');
-    const lineSpacingInput = document.getElementById('kop-line-spacing');
-    if (sizeInput) sizeInput.value = KOP_TAMPILAN_DEFAULT.kol1.fontSize;
-    if (spacingInput) spacingInput.value = KOP_TAMPILAN_DEFAULT.kol1.fontSpacing;
-    if (lineSpacingInput) lineSpacingInput.value = KOP_TAMPILAN_DEFAULT.kol1.lineSpacing;
-
-    // uncheck semua checkbox kop
-    ['kop-opt-instansi','kop-opt-kab','kop-opt-kota','kop-opt-gmail','kop-opt-logo'].forEach((id)=>{
-        const el = document.getElementById(id);
-        if (el) el.checked = false;
-    });
-
-    // reset logo posisi
-    const logo = document.getElementById('out-logo');
-    if (logo) {
-        logo.style.left = '0';
-        logo.style.right = '';
-    }
-
-    updateKopTampilanFokus();
-}
-
 async function exportToPDF() {
-
     showPdfLoading();
     
     // Tunggu html2pdf library siap dengan retry
@@ -1787,23 +1403,6 @@ window.onload = () => {
         });
     }
     updateTanggal();
-
-
-
-    // Agar user bisa menekan Enter untuk pindah/ubah baris saat mengisi teks area laporan
-    const uraianEl = document.getElementById('in-uraian');
-    if (uraianEl) {
-        uraianEl.addEventListener('keydown', (event) => {
-            // Biarkan default pada textarea (Enter = baris baru)
-            // Tidak ada preventDefault di sini.
-            // Tambahan: Ctrl+Enter bisa digunakan untuk memindahkan fokus ke textarea/subjudul berikutnya jika ada.
-            if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
-                event.preventDefault();
-                const subtitleEl = document.getElementById('in-report-subtitle');
-                if (subtitleEl) subtitleEl.focus();
-            }
-        });
-    }
 
     const taskInput = document.getElementById('task-input');
     if (taskInput) {
