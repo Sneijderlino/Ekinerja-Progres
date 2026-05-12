@@ -132,7 +132,7 @@ function checkLoginAccess() {
 }
 
 
-const inputs = ['in-instansi', 'in-kab', 'in-kota', 'in-nama', 'in-nip', 'in-jabatan', 'in-uraian', 'in-report-title', 'in-report-subtitle'];
+const inputs = ['in-instansi', 'in-kab', 'in-kota', 'in-gmail', 'in-nama', 'in-nip', 'in-jabatan', 'in-uraian', 'in-report-title', 'in-report-subtitle'];
 const ttdInputs = ['in-ttd-tempat', 'in-ttd-tanggal', 'in-ttd-jabatan', 'in-ttd-nama', 'in-ttd-pangkat', 'in-ttd-nip'];
 let savedReportFilter = { query: '', type: 'all' };
 
@@ -292,6 +292,10 @@ function showToast(msg) {
 inputs.forEach(id => {
     const el = document.getElementById(id);
     if(el) {
+        // Skip KOP content inputs as they're handled separately with styled rendering
+        if (['in-instansi', 'in-kab', 'in-kota', 'in-gmail'].includes(id)) {
+            return;
+        }
         el.addEventListener('input', function() {
             const outId = id.replace('in-', 'out-');
             let val = this.value;
@@ -308,6 +312,74 @@ ttdInputs.forEach(id => {
     if(el) {
         el.addEventListener('input', function() {
             updateTtdPreview();
+        });
+    }
+});
+
+// Event listeners untuk KOP styling inputs
+for (let i = 1; i <= 4; i++) {
+    const fontInput = document.getElementById(`kop-font-${i}`);
+    const lineInput = document.getElementById(`kop-line-${i}`);
+    const boldInput = document.getElementById(`kop-bold-${i}`);
+    
+    if (fontInput) {
+        fontInput.addEventListener('input', () => {
+            // Update preview with current styling, without changing locked state
+            const outInstansi = document.getElementById('out-instansi');
+            const outKab = document.getElementById('out-kab');
+            const outKota = document.getElementById('out-kota');
+            const outGmail = document.getElementById('out-gmail');
+            
+            if (outInstansi) renderMultiLineStyledIntoElement(outInstansi, document.getElementById('in-instansi').value || '-', 0);
+            if (outKab) renderMultiLineStyledIntoElement(outKab, document.getElementById('in-kab').value || '-', 1);
+            if (outKota) renderMultiLineStyledIntoElement(outKota, document.getElementById('in-kota').value || '-', 2);
+            if (outGmail) renderMultiLineStyledIntoElement(outGmail, document.getElementById('in-gmail').value || '-', 3);
+        });
+    }
+    
+    if (lineInput) {
+        lineInput.addEventListener('input', () => {
+            // Update preview with current styling, without changing locked state
+            const outInstansi = document.getElementById('out-instansi');
+            const outKab = document.getElementById('out-kab');
+            const outKota = document.getElementById('out-kota');
+            const outGmail = document.getElementById('out-gmail');
+            
+            if (outInstansi) renderMultiLineStyledIntoElement(outInstansi, document.getElementById('in-instansi').value || '-', 0);
+            if (outKab) renderMultiLineStyledIntoElement(outKab, document.getElementById('in-kab').value || '-', 1);
+            if (outKota) renderMultiLineStyledIntoElement(outKota, document.getElementById('in-kota').value || '-', 2);
+            if (outGmail) renderMultiLineStyledIntoElement(outGmail, document.getElementById('in-gmail').value || '-', 3);
+        });
+    }
+    
+    if (boldInput) {
+        boldInput.addEventListener('change', () => {
+            // Update preview with current styling, without changing locked state
+            const outInstansi = document.getElementById('out-instansi');
+            const outKab = document.getElementById('out-kab');
+            const outKota = document.getElementById('out-kota');
+            const outGmail = document.getElementById('out-gmail');
+            
+            if (outInstansi) renderMultiLineStyledIntoElement(outInstansi, document.getElementById('in-instansi').value || '-', 0);
+            if (outKab) renderMultiLineStyledIntoElement(outKab, document.getElementById('in-kab').value || '-', 1);
+            if (outKota) renderMultiLineStyledIntoElement(outKota, document.getElementById('in-kota').value || '-', 2);
+            if (outGmail) renderMultiLineStyledIntoElement(outGmail, document.getElementById('in-gmail').value || '-', 3);
+        });
+    }
+}
+
+// Event listeners untuk KOP content inputs (instansi, kab, kota, gmail)
+const kopContentInputs = ['in-instansi', 'in-kab', 'in-kota', 'in-gmail'];
+kopContentInputs.forEach((id, idx) => {
+    const el = document.getElementById(id);
+    if (el) {
+        el.addEventListener('input', function() {
+            const outId = id.replace('in-', 'out-');
+            const outEl = document.getElementById(outId);
+            if (outEl) {
+                const text = this.value.toUpperCase();
+                renderMultiLineStyledIntoElement(outEl, text || '-', idx);
+            }
         });
     }
 });
@@ -372,11 +444,65 @@ function lockKop() {
     const data = {
         instansi: document.getElementById('in-instansi').value,
         kab: document.getElementById('in-kab').value,
-        kota: document.getElementById('in-kota').value
+        kota: document.getElementById('in-kota').value,
+        gmail: document.getElementById('in-gmail').value
     };
     localStorage.setItem('ghost_kop', JSON.stringify(data));
+    localStorage.setItem('ghost_kop_style', JSON.stringify(getKopStyleFromUI()));
     renderKop();
     showToast("Kop Instansi Berhasil Dikunci!");
+}
+
+function getKopStyleFromUI() {
+    const styles = [];
+    for (let i = 1; i <= 4; i += 1) {
+        const fontSize = parseInt(document.getElementById(`kop-font-${i}`)?.value, 10);
+        const lineHeightValue = parseFloat(document.getElementById(`kop-line-${i}`)?.value);
+        const bold = Boolean(document.getElementById(`kop-bold-${i}`)?.checked);
+
+        styles.push({
+            fontSize: Number.isFinite(fontSize) && fontSize > 0 ? fontSize : 16,
+            lineHeight: Number.isFinite(lineHeightValue) && lineHeightValue > 0 ? lineHeightValue : 1.2,
+            bold
+        });
+    }
+    return styles;
+}
+
+function buildStyledLineHTML(text, style) {
+    const safeText = String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    return `<span style="font-size:${style.fontSize}px; line-height:${style.lineHeight}; font-weight:${style.bold ? 'bold' : 'normal'}; display:inline-block">${safeText}</span>`;
+}
+
+function renderMultiLineStyledIntoElement(outEl, rawText, styleIndexOffset = 0) {
+    if (!outEl) return;
+    const lines = String(rawText || '')
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+    let styles = [];
+    try {
+        styles = JSON.parse(localStorage.getItem('ghost_kop_style') || '[]');
+    } catch (error) {
+        styles = [];
+    }
+
+    const html = lines
+        .map((line) => {
+            const style = styles[styleIndexOffset] || {
+                fontSize: 16,
+                lineHeight: 1.2,
+                bold: false
+            };
+            return buildStyledLineHTML(line, style);
+        })
+        .join('<br />');
+
+    outEl.innerHTML = html || '-';
 }
 
 function updateTtdPreview() {
@@ -649,6 +775,7 @@ function resetReportForm(preserveTitleSubtitle = false) {
 
 function startNewReport() {
     resetReportForm(true);
+    renderKop();
     showToast('Form laporan baru siap diisi.');
 }
 
@@ -701,7 +828,9 @@ async function saveReport() {
         instansi: document.getElementById('in-instansi').value.trim(),
         kab: document.getElementById('in-kab').value.trim(),
         kota: document.getElementById('in-kota').value.trim(),
+        gmail: document.getElementById('in-gmail').value.trim(),
         uraian: document.getElementById('in-uraian').value.trim(),
+        kopStyle: JSON.parse(localStorage.getItem('ghost_kop_style') || '[]'),
         tasks: JSON.parse(localStorage.getItem('ghost_tasks') || '[]'),
         logo: localStorage.getItem('ghost_logo') || document.getElementById('out-logo').src,
         photos: await compressReportPhotos(getReportPhotoSources()),
@@ -758,6 +887,7 @@ async function saveReport() {
 
     renderSavedReports();
     resetReportForm(true);
+    renderKop();
     showToast('Laporan tersimpan dan form otomatis disiapkan untuk laporan baru.');
 }
 
@@ -793,7 +923,16 @@ function editReport(index) {
     document.getElementById('in-instansi').value = report.instansi;
     document.getElementById('in-kab').value = report.kab;
     document.getElementById('in-kota').value = report.kota;
+    document.getElementById('in-gmail').value = report.gmail || '';
     document.getElementById('in-uraian').value = report.uraian;
+
+    localStorage.setItem('ghost_kop', JSON.stringify({
+        instansi: report.instansi || '',
+        kab: report.kab || '',
+        kota: report.kota || '',
+        gmail: report.gmail || ''
+    }));
+    localStorage.setItem('ghost_kop_style', JSON.stringify(report.kopStyle || getKopStyleFromUI()));
 
     if (report.ttd) {
         document.getElementById('in-ttd-tempat').value = report.ttd.tempat || 'Tiakur';
@@ -840,10 +979,29 @@ function renderPreviewData(report) {
     document.getElementById('out-nama').innerText = report.nama.toUpperCase() || '-';
     document.getElementById('out-nip').innerText = report.nip || '-';
     document.getElementById('out-jabatan').innerText = report.jabatan || '-';
-    document.getElementById('out-instansi').innerText = report.instansi.toUpperCase() || '-';
-    document.getElementById('out-kab').innerText = report.kab.toUpperCase() || '-';
-    document.getElementById('out-kota').innerText = report.kota || '-';
     document.getElementById('out-uraian').innerText = report.uraian || '-';
+
+    const kopStyles = Array.isArray(report.kopStyle)
+        ? report.kopStyle
+        : JSON.parse(localStorage.getItem('ghost_kop_style') || '[]');
+    localStorage.setItem('ghost_kop_style', JSON.stringify(kopStyles));
+    localStorage.setItem('ghost_kop', JSON.stringify({
+        instansi: report.instansi || '',
+        kab: report.kab || '',
+        kota: report.kota || '',
+        gmail: report.gmail || ''
+    }));
+    const outInstansi = document.getElementById('out-instansi');
+    const outKab = document.getElementById('out-kab');
+    const outKota = document.getElementById('out-kota');
+    const outGmail = document.getElementById('out-gmail');
+
+    renderMultiLineStyledIntoElement(outInstansi, report.instansi ? report.instansi.toUpperCase() : '-', 0);
+    renderMultiLineStyledIntoElement(outKab, report.kab ? report.kab.toUpperCase() : '-', 1);
+    renderMultiLineStyledIntoElement(outKota, report.kota || '-', 2);
+    if (outGmail) {
+        renderMultiLineStyledIntoElement(outGmail, report.gmail || '-', 3);
+    }
 
     const outListEl = document.getElementById('out-task-list');
     const outContainer = document.getElementById('out-task-list-container');
@@ -919,9 +1077,10 @@ function exportSavedReportPDF(index) {
         nama: document.getElementById('out-nama').innerText,
         nip: document.getElementById('out-nip').innerText,
         jabatan: document.getElementById('out-jabatan').innerText,
-        instansi: document.getElementById('out-instansi').innerText,
-        kab: document.getElementById('out-kab').innerText,
-        kota: document.getElementById('out-kota').innerText,
+        instansiHtml: document.getElementById('out-instansi').innerHTML,
+        kabHtml: document.getElementById('out-kab').innerHTML,
+        kotaHtml: document.getElementById('out-kota').innerHTML,
+        gmailHtml: document.getElementById('out-gmail').innerHTML,
         uraian: document.getElementById('out-uraian').innerText,
         tasksHtml: document.getElementById('out-task-list').innerHTML,
         logoSrc: document.getElementById('out-logo').src,
@@ -960,9 +1119,10 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         document.getElementById('out-nama').innerText = currentPreview.nama;
         document.getElementById('out-nip').innerText = currentPreview.nip;
         document.getElementById('out-jabatan').innerText = currentPreview.jabatan;
-        document.getElementById('out-instansi').innerText = currentPreview.instansi;
-        document.getElementById('out-kab').innerText = currentPreview.kab;
-        document.getElementById('out-kota').innerText = currentPreview.kota;
+        document.getElementById('out-instansi').innerHTML = currentPreview.instansiHtml;
+        document.getElementById('out-kab').innerHTML = currentPreview.kabHtml;
+        document.getElementById('out-kota').innerHTML = currentPreview.kotaHtml;
+        document.getElementById('out-gmail').innerHTML = currentPreview.gmailHtml;
         document.getElementById('out-uraian').innerText = currentPreview.uraian;
         document.getElementById('out-task-list').innerHTML = currentPreview.tasksHtml;
         document.getElementById('out-task-list-container').style.display = currentPreview.tasksHtml ? 'block' : 'none';
@@ -1165,13 +1325,39 @@ function renderKop() {
         document.getElementById('in-instansi').value = data.instansi;
         document.getElementById('in-kab').value = data.kab;
         document.getElementById('in-kota').value = data.kota;
-
-        document.getElementById('out-instansi').innerText = data.instansi.toUpperCase();
-        document.getElementById('out-kab').innerText = data.kab.toUpperCase();
-        document.getElementById('out-kota').innerText = data.kota;
+        document.getElementById('in-gmail').value = data.gmail || '';
 
         document.getElementById('kop-display').style.display = 'block';
         document.getElementById('kop-inputs').style.display = 'none';
+
+        const outInstansi = document.getElementById('out-instansi');
+        const outKab = document.getElementById('out-kab');
+        const outKota = document.getElementById('out-kota');
+        const outGmail = document.getElementById('out-gmail');
+
+        renderMultiLineStyledIntoElement(outInstansi, data.instansi, 0);
+        renderMultiLineStyledIntoElement(outKab, data.kab, 1);
+        renderMultiLineStyledIntoElement(outKota, data.kota, 2);
+        if (outGmail) {
+            renderMultiLineStyledIntoElement(outGmail, data.gmail || '-', 3);
+        }
+
+        try {
+            const savedStyle = JSON.parse(localStorage.getItem('ghost_kop_style') || '[]');
+            if (Array.isArray(savedStyle)) {
+                savedStyle.forEach((style, index) => {
+                    const row = index + 1;
+                    const fontInput = document.getElementById(`kop-font-${row}`);
+                    const lineInput = document.getElementById(`kop-line-${row}`);
+                    const boldInput = document.getElementById(`kop-bold-${row}`);
+                    if (fontInput) fontInput.value = style.fontSize || 16;
+                    if (lineInput) lineInput.value = style.lineHeight || 1.2;
+                    if (boldInput) boldInput.checked = Boolean(style.bold);
+                });
+            }
+        } catch (error) {
+            // ignore invalid saved style
+        }
     }
 
     const savedLogo = localStorage.getItem('ghost_logo');

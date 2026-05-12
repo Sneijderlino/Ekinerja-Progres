@@ -12,11 +12,33 @@
       content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png"
     />
     <!-- App Icons for PWA and Web -->
-    <link rel="icon" href="assets/img/logo-apk.png" type="image/png" sizes="32x32" />
-    <link rel="icon" href="assets/img/logo-apk.png" type="image/png" sizes="16x16" />
-    <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="180x180" />
-    <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="152x152" />
-    <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="120x120" />
+    <link
+      rel="icon"
+      href="assets/img/logo-apk.png"
+      type="image/png"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      href="assets/img/logo-apk.png"
+      type="image/png"
+      sizes="16x16"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="assets/img/logo-apk.png"
+      sizes="180x180"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="assets/img/logo-apk.png"
+      sizes="152x152"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="assets/img/logo-apk.png"
+      sizes="120x120"
+    />
     <link rel="apple-touch-icon" href="assets/img/logo-apk.png" sizes="76x76" />
     <meta name="theme-color" content="#3b82f6" />
     <link rel="manifest" href="/manifest.json" />
@@ -577,6 +599,86 @@
         transform: translateY(-2px);
         box-shadow: 0 10px 25px rgba(59, 130, 246, 0.45);
       }
+      .kop-baris-style-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 90px 90px 110px;
+        align-items: center;
+        margin: 14px 0 8px;
+      }
+      .kop-baris-style-grid .grid-header {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--text-dim);
+      }
+      .kop-baris-style-grid input[type="number"] {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text);
+      }
+      .kop-inputs textarea,
+      .kop-inputs input[type="text"] {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+        resize: vertical;
+        box-sizing: border-box;
+        margin-top: 10px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+      .kop-inputs textarea:focus,
+      .kop-inputs input[type="text"]:focus {
+        outline: none;
+        border-color: rgba(59, 130, 246, 0.85);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+      }
+      .kop-baris-style-grid input[id^="kop-font-"] {
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.15),
+          rgba(168, 85, 247, 0.15)
+        );
+        border: 2px solid #3b82f6;
+        color: #60a5fa;
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+      .kop-baris-style-grid input[id^="kop-font-"]:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+      }
+      .kop-baris-style-grid input[id^="kop-line-"] {
+        background: linear-gradient(
+          135deg,
+          rgba(34, 197, 94, 0.15),
+          rgba(59, 130, 246, 0.15)
+        );
+        border: 2px solid #22c55e;
+        color: #4ade80;
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+      .kop-baris-style-grid input[id^="kop-line-"]:focus {
+        border-color: #22c55e;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+      }
+      .kop-baris-style-grid label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+      }
+      .kop-baris-style-grid input[type="checkbox"] {
+        accent-color: var(--primary);
+      }
       .side-drawer-auth-btn.keluar {
         background: rgba(239, 68, 68, 0.15);
         border: 1px solid rgba(239, 68, 68, 0.3);
@@ -625,17 +727,111 @@
                 accept="image/*"
                 onchange="previewLogo(this)"
               />
-              <input
-                type="text"
+              <textarea
                 id="in-instansi"
-                value="Dinas Satuan Polisi Pamong Praja Dan Pemadam Kebakaran"
-              />
+                rows="3"
+                placeholder="Masukkan nama instansi, tekan Enter untuk baris baru"
+              >
+Dinas Satuan Polisi Pamong Praja Dan Pemadam Kebakaran</textarea
+              >
+              <textarea
+                id="in-kab"
+                rows="2"
+                placeholder="Masukkan nama kabupaten, tekan Enter untuk baris baru"
+              >
+Kabupaten Maluku Barat Daya</textarea
+              >
+              <textarea
+                id="in-kota"
+                rows="2"
+                placeholder="Masukkan nama kota atau lokasi, tekan Enter untuk baris baru"
+              >
+Kota Tiakur</textarea
+              >
               <input
                 type="text"
-                id="in-kab"
-                value="Kabupaten Maluku Barat Daya"
+                id="in-gmail"
+                placeholder="Email/Gmail"
+                value=""
               />
-              <input type="text" id="in-kota" value="Kota Tiakur" />
+              <div class="kop-baris-style-grid">
+                <div class="grid-header">Baris</div>
+                <div class="grid-header">Font</div>
+                <div class="grid-header">Line</div>
+                <div class="grid-header">Bold</div>
+
+                <div>Baris 1</div>
+                <input
+                  type="number"
+                  id="kop-font-1"
+                  value="18"
+                  min="8"
+                  step="1"
+                />
+                <input
+                  type="number"
+                  id="kop-line-1"
+                  value="1.2"
+                  min="1"
+                  step="0.1"
+                />
+                <label
+                  ><input type="checkbox" id="kop-bold-1" checked /> Bold</label
+                >
+
+                <div>Baris 2</div>
+                <input
+                  type="number"
+                  id="kop-font-2"
+                  value="16"
+                  min="8"
+                  step="1"
+                />
+                <input
+                  type="number"
+                  id="kop-line-2"
+                  value="1.2"
+                  min="1"
+                  step="0.1"
+                />
+                <label
+                  ><input type="checkbox" id="kop-bold-2" checked /> Bold</label
+                >
+
+                <div>Baris 3</div>
+                <input
+                  type="number"
+                  id="kop-font-3"
+                  value="14"
+                  min="8"
+                  step="1"
+                />
+                <input
+                  type="number"
+                  id="kop-line-3"
+                  value="1.2"
+                  min="1"
+                  step="0.1"
+                />
+                <label><input type="checkbox" id="kop-bold-3" /> Bold</label>
+
+                <div>Baris 4</div>
+                <input
+                  type="number"
+                  id="kop-font-4"
+                  value="12"
+                  min="8"
+                  step="1"
+                />
+                <input
+                  type="number"
+                  id="kop-line-4"
+                  value="1.2"
+                  min="1"
+                  step="0.1"
+                />
+                <label><input type="checkbox" id="kop-bold-4" /> Bold</label>
+              </div>
               <button
                 class="btn btn-preview"
                 style="font-size: 0.75rem; padding: 10px"
@@ -961,7 +1157,13 @@ Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku
             <div class="header-text">
               <h2 id="out-instansi"></h2>
               <h2 id="out-kab">KABUPATEN MALUKU BARAT DAYA</h2>
-              <p id="out-kota" style="font-weight: normal">Kota Tiakur</p>
+              <p id="out-kota" style="font-weight: normal; margin-bottom: 0">
+                Kota Tiakur
+              </p>
+              <p
+                id="out-gmail"
+                style="font-weight: normal; font-size: 0.9rem; margin-top: 0"
+              ></p>
             </div>
           </header>
           <div class="line-double"></div>
