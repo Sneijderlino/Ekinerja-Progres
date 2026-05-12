@@ -661,8 +661,8 @@ input:hover, textarea:hover {
 .photo-grid { 
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-    gap: 12px; 
-    margin-top: 16px;
+    gap: 8px; 
+    margin-top: 4px;
 }
 .box-photo { 
     border: 2px solid rgba(15, 159, 255, 0.2);

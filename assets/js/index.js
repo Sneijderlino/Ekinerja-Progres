@@ -1381,9 +1381,55 @@ function previewImg(input, targetId) {
         try {
             const reader = new FileReader();
             reader.onload = (e) => {
-                const image = document.createElement('img');
-                image.src = e.target.result;
-                target.appendChild(image);
+                const img = new Image();
+                img.onload = () => {
+                    // Get target box dimensions dynamically
+                    const rect = target.getBoundingClientRect();
+                    const targetWidth = Math.max(rect.width || 150, 120); // min 120px
+                    const targetHeight = Math.max(rect.height || 150, 150); // min 150px
+                    
+                    // Resize and compress image to fit box
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = targetWidth;
+                    canvas.height = targetHeight;
+                    
+                    // Calculate crop to cover the entire canvas
+                    const imgAspect = img.width / img.height;
+                    const targetAspect = targetWidth / targetHeight;
+                    
+                    let srcX, srcY, srcWidth, srcHeight;
+                    
+                    if (imgAspect > targetAspect) {
+                        // Image is wider (landscape), crop width
+                        srcHeight = img.height;
+                        srcWidth = img.height * targetAspect;
+                        srcX = (img.width - srcWidth) / 2;
+                        srcY = 0;
+                    } else {
+                        // Image is taller (portrait), crop height
+                        srcWidth = img.width;
+                        srcHeight = img.width / targetAspect;
+                        srcX = 0;
+                        srcY = (img.height - srcHeight) / 2;
+                    }
+                    
+                    // Draw cropped image
+                    ctx.drawImage(img, srcX, srcY, srcWidth, srcHeight, 0, 0, targetWidth, targetHeight);
+                    
+                    // Convert to data URL with compression
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    // Create and append image element
+                    const image = document.createElement('img');
+                    image.src = compressedDataUrl;
+                    image.style.width = '100%';
+                    image.style.height = '100%';
+                    image.style.objectFit = 'cover';
+                    target.appendChild(image);
+                };
+                img.src = e.target.result;
             };
             reader.onerror = () => {
                 showToast('Error: File foto terlalu besar atau tidak valid. Coba file yang lebih kecil.');
