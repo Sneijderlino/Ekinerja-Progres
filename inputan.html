@@ -727,6 +727,28 @@
                 accept="image/*"
                 onchange="previewLogo(this)"
               />
+              <div style="margin-top: 10px">
+                <label
+                  for="logo-size"
+                  style="display: block; margin-bottom: 5px; font-weight: 600"
+                  >Ukuran Logo:</label
+                >
+                <input
+                  type="range"
+                  id="logo-size"
+                  min="30"
+                  max="150"
+                  value="60"
+                  step="5"
+                  oninput="updateLogoSize(this.value)"
+                  style="width: 100%"
+                />
+                <div
+                  style="text-align: center; margin-top: 5px; font-size: 0.9rem"
+                >
+                  <span id="logo-size-value">60</span>px
+                </div>
+              </div>
               <textarea
                 id="in-instansi"
                 rows="3"

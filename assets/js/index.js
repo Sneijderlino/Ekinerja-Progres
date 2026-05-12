@@ -423,6 +423,13 @@ function previewLogo(input) {
     }
 }
 
+function updateLogoSize(size) {
+    const logoElement = document.getElementById('out-logo');
+    logoElement.style.width = size + 'px';
+    document.getElementById('logo-size-value').innerText = size;
+    localStorage.setItem('ghost_logo_size', size);
+}
+
 function lockIdentity() {
     const data = {
         nama: document.getElementById('in-nama').value,
@@ -833,6 +840,7 @@ async function saveReport() {
         kopStyle: JSON.parse(localStorage.getItem('ghost_kop_style') || '[]'),
         tasks: JSON.parse(localStorage.getItem('ghost_tasks') || '[]'),
         logo: localStorage.getItem('ghost_logo') || document.getElementById('out-logo').src,
+        logoSize: localStorage.getItem('ghost_logo_size') || '60',
         photos: await compressReportPhotos(getReportPhotoSources()),
         ttd: ttdData,
         ttdEnabled: document.getElementById('use-ttd-feature')?.checked || false,
@@ -1026,6 +1034,9 @@ function renderPreviewData(report) {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
     document.getElementById('out-logo').src = report.logo || document.getElementById('out-logo').src;
+    if (report.logoSize) {
+        document.getElementById('out-logo').style.width = report.logoSize + 'px';
+    }
     ['img1','img2','img3','img4'].forEach((id, i) => {
         const target = document.getElementById(id);
         if (report.photos && report.photos[i]) {
@@ -1362,6 +1373,13 @@ function renderKop() {
 
     const savedLogo = localStorage.getItem('ghost_logo');
     if (savedLogo) document.getElementById('out-logo').src = savedLogo;
+
+    const savedLogoSize = localStorage.getItem('ghost_logo_size');
+    if (savedLogoSize) {
+        document.getElementById('logo-size').value = savedLogoSize;
+        document.getElementById('logo-size-value').innerText = savedLogoSize;
+        document.getElementById('out-logo').style.width = savedLogoSize + 'px';
+    }
 }
 
 function previewImg(input, targetId) {
