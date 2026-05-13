@@ -168,35 +168,45 @@
       letter-spacing: 0.5px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: 0.3s;
-      padding: 8px 12px;
-      border-radius: 6px;
+      gap: 8px;
+      transition: 0.25s ease;
+      padding: 10px 14px;
+      border-radius: 10px;
       white-space: nowrap;
       flex-shrink: 0;
+      border: 1px solid transparent;
+      background: rgba(255,255,255,0.02);
     }
     .nav-link i { font-size: 16px; }
     .nav-link.active {
       color: var(--primary);
-      background: rgba(59, 130, 246, 0.2);
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: rgba(59, 130, 246, 0.18);
+      border-color: rgba(59, 130, 246, 0.32);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.08);
     }
     .nav-link:hover {
       color: var(--text);
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(59, 130, 246, 0.16);
+      border-color: rgba(59, 130, 246, 0.18);
+      transform: translateY(-1px);
     }
     .nav-hamburger {
       display: none;
-      background: none;
-      border: none;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(56, 189, 248, 0.18);
       color: var(--text);
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       cursor: pointer;
-      padding: 8px 12px;
-      border-radius: 8px;
-      transition: 0.2s;
+      padding: 10px 12px;
+      border-radius: 12px;
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+      box-shadow: 0 12px 30px rgba(8, 12, 30, 0.18);
     }
-    .nav-hamburger:hover { background: rgba(59, 130, 246, 0.15); }
+    .nav-hamburger:hover {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.35);
+      transform: translateY(-1px);
+    }
     .mobile-nav {
       width: 100%;
       overflow: hidden;
@@ -582,12 +592,12 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
       z-index: 1999;
       opacity: 0;
       visibility: hidden;
-      transition: 0.3s ease;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
     }
     .side-drawer-overlay.open {
       opacity: 1;
@@ -597,17 +607,19 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: 85%;
-      max-width: 320px;
+      width: 88%;
+      max-width: 340px;
       height: 100%;
-      background: #0f172a;
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(180deg, rgba(7, 10, 22, 0.96), rgba(14, 20, 46, 0.98));
+      border-left: 1px solid rgba(4, 9, 27, 0.7);
+      box-shadow: -12px 0 45px rgba(0, 0, 0, 0.6), -4px 0 32px rgba(0, 210, 255, 0.08);
       z-index: 2000;
       transform: translateX(100%);
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
       overflow-y: auto;
-      padding: 20px 0;
+      padding: 22px 0 28px;
+      border-top-left-radius: 24px;
+      border-bottom-left-radius: 24px;
     }
     .side-drawer.open {
       transform: translateX(0);
@@ -616,118 +628,144 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 20px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 15px;
+      padding: 0 22px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 18px;
     }
     .side-drawer-header h3 {
       margin: 0;
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 1.05rem;
+      font-weight: 800;
       color: #f8fafc;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
     }
     .side-drawer-close {
       width: 36px;
       height: 36px;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      border-radius: 10px;
-      color: #f87171;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      color: #f8fafc;
       font-size: 1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: 0.2s;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     }
     .side-drawer-close:hover {
-      background: rgba(239, 68, 68, 0.25);
+      background: rgba(255, 255, 255, 0.12);
       transform: scale(1.05);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .side-drawer-section-title {
+      color: #94a3b8;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: 0 22px 10px;
+      font-weight: 700;
     }
     .side-drawer-links {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      padding: 0 15px;
+      gap: 10px;
+      padding: 0 16px;
+      margin-bottom: 20px;
     }
     .side-drawer-link {
-      color: #94a3b8;
+      color: #cbd5e1;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
+      font-weight: 700;
+      font-size: 0.97rem;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       padding: 14px 16px;
-      border-radius: 12px;
-      transition: 0.25s;
-      background: transparent;
-      border: 1px solid transparent;
+      border-radius: 16px;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(10px);
     }
     .side-drawer-link i {
-      font-size: 1.1rem;
-      width: 24px;
+      font-size: 1.05rem;
+      width: 26px;
       text-align: center;
+      color: #38bdf8;
     }
     .side-drawer-link:hover {
-      background: rgba(59, 130, 246, 0.12);
-      color: var(--primary);
-      border-color: rgba(59, 130, 246, 0.25);
+      background: rgba(14, 165, 233, 0.14);
+      color: #ffffff;
+      transform: translateX(-1px);
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.18);
+      border-color: rgba(14, 165, 233, 0.28);
+    }
+    .side-drawer-link:hover i {
+      color: #7dd3fc;
     }
     .side-drawer-link.active {
-      background: rgba(59, 130, 246, 0.2);
-      color: var(--primary);
-      border-color: rgba(59, 130, 246, 0.35);
+      background: rgba(56, 189, 248, 0.18);
+      color: #ffffff;
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 12px 25px rgba(56, 189, 248, 0.2);
+    }
+    .side-drawer-link.active i {
+      color: #38bdf8;
     }
     .side-drawer-divider {
       height: 1px;
-      background: rgba(255, 255, 255, 0.1);
-      margin: 15px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      margin: 15px 22px;
     }
     .side-drawer-auth {
-      padding: 0 15px;
-      margin-top: 10px;
+      padding: 0 16px;
+      margin-top: 6px;
     }
     .side-drawer-auth-btn {
       width: 100%;
       padding: 14px 16px;
-      border-radius: 12px;
-      font-weight: 600;
+      border-radius: 14px;
+      font-weight: 700;
       font-size: 0.95rem;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       cursor: pointer;
-      transition: 0.2s;
+      transition: all 0.2s ease;
       text-decoration: none;
     }
     .side-drawer-auth-btn.masuk {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: var(--primary);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.22), rgba(56, 189, 248, 0.18));
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #ffffff;
     }
     .side-drawer-auth-btn.masuk:hover {
-      background: linear-gradient(135deg, var(--primary), #2563eb);
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.95), rgba(14, 165, 233, 0.9));
       color: #fff;
+      transform: translateY(-1px);
     }
     .side-drawer-auth-btn.daftar {
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(14, 165, 233, 0.9));
       border: none;
       color: #fff;
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+      box-shadow: 0 6px 22px rgba(56, 189, 248, 0.3);
     }
     .side-drawer-auth-btn.daftar:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.45);
+      box-shadow: 0 12px 26px rgba(56, 189, 248, 0.4);
     }
     .side-drawer-auth-btn.keluar {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
+      background: rgba(248, 113, 113, 0.16);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      color: #fee2e2;
     }
     .side-drawer-auth-btn.keluar:hover {
-      background: rgba(239, 68, 68, 0.25);
+      background: rgba(248, 113, 113, 0.28);
+      transform: translateY(-1px);
+      border-color: rgba(248, 113, 113, 0.45);
     }
 
     /* Premium Android Profile Card Styles */
@@ -1093,20 +1131,37 @@
   <div class="side-drawer-overlay" id="sideDrawerOverlay" onclick="closeSideDrawer()"></div>
   <div class="side-drawer" id="sideDrawer">
     <div class="side-drawer-header">
-      <h3><i class="fas fa-bars" style="margin-right:10px;"></i>Menu</h3>
+      <h3><i class="fas fa-rocket" style="margin-right:10px;color:#00d9ff;"></i>Menu</h3>
       <button class="side-drawer-close" onclick="closeSideDrawer()">
         <i class="fas fa-times"></i>
       </button>
     </div>
+    
+    <!-- Dashboard Menu Section -->
+    <div class="side-drawer-section-title">Dashboard</div>
     <div class="side-drawer-links">
-      <a href="#" class="side-drawer-link active"><i class="fas fa-tower-broadcast"></i> Dash</a>
+      <a href="#" class="side-drawer-link active"><i class="fas fa-tower-broadcast"></i> Dashboard</a>
       <a href="inputan.html" class="side-drawer-link"><i class="fas fa-edit"></i> Input</a>
-      <a href="inputan-tabel.html" class="side-drawer-link"><i class="fas fa-table"></i> Inputan Tabel</a>
-      <a href="rekapan.html" class="side-drawer-link"><i class="fas fa-database"></i> Rekapan</a>
+      <a href="rekapan.html" class="side-drawer-link"><i class="fas fa-chart-bar"></i> Rekapan</a>
       <a href="panduan-penggunaan.html" class="side-drawer-link"><i class="fas fa-book-open"></i> Info</a>
+    </div>
+    
+    <!-- External Links Section -->
+    <div class="side-drawer-section-title">External Links</div>
+    <div class="side-drawer-links">
       <a href="Profil-admin.html" class="side-drawer-link"><i class="fas fa-user-shield"></i> Info Admin</a>
+      <a href="https://myasn.bkn.go.id/" class="side-drawer-link" target="_blank"><i class="fas fa-user"></i> Login MyASN</a>
+      <a href="https://inagov.go.id/" class="side-drawer-link" target="_blank"><i class="fas fa-check-circle"></i> Cek Status Kehadiran</a>
+      <a href="https://asndigital.bkn.go.id/" class="side-drawer-link" target="_blank"><i class="fas fa-clipboard-list"></i> Login SKP</a>
+    </div>
+    
+    <!-- Utilities Section -->
+    <div class="side-drawer-section-title">Utilities</div>
+    <div class="side-drawer-links">
+      <a href="inputan-tabel.html" class="side-drawer-link"><i class="fas fa-table"></i> Inputan Tabel</a>
       <a href="install-aplikasi.html" class="side-drawer-link"><i class="fas fa-download"></i> Install App</a>
     </div>
+    
     <div class="side-drawer-divider"></div>
     <div class="side-drawer-auth" id="sideDrawerAuth">
       <!-- Auth buttons injected by JavaScript -->
@@ -1174,25 +1229,28 @@
       <span style="text-align:center;line-height:1.2;color:#fff;text-shadow:0 0 8px rgba(255,193,7,0.5);">info admin</span>
     </a>
 
-    <a href="https://myasn.bkn.go.id/" class="dashboard-btn dashboard-btn-myasn-clean" style="background:linear-gradient(135deg,rgba(6,182,212,0.15),rgba(59,130,246,0.12));border:2px solid rgba(6,182,212,0.4);color:#fff;padding:18px 12px;border-radius:20px;font-weight:700;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.1s forwards,subtleShift 3s ease-in-out infinite 0.1s;box-shadow:0 8px 20px rgba(6,182,212,0.2);">
+    <a href="inputan.html" class="dashboard-btn dashboard-btn-input" style="background:linear-gradient(135deg,rgba(59,130,246,0.3),rgba(96,165,250,0.25),rgba(37,99,235,0.2));border:2px solid rgba(59,130,246,0.6);color:#fff;padding:18px 12px;border-radius:20px;font-weight:800;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.1s forwards;box-shadow:0 8px 25px rgba(59,130,246,0.4);">
       <div style="position:relative;">
-        <i class="fas fa-user" style="font-size:1.5rem;color:#00d9ff;"></i>
+        <i class="fas fa-edit" style="font-size:1.5rem;color:#60a5fa;filter:drop-shadow(0 0 8px rgba(59,130,246,0.6));"></i>
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;border:2px solid rgba(59,130,246,0.4);border-radius:50%;animation:simplePulse 3s ease-in-out infinite 0.3s;"></div>
       </div>
-      <span style="text-align:center;line-height:1.2;color:#fff;">login Myasn</span>
+      <span style="text-align:center;line-height:1.2;color:#fff;text-shadow:0 0 8px rgba(59,130,246,0.5);">input</span>
     </a>
 
-    <a href="https://inagov.go.id/" class="dashboard-btn dashboard-btn-status-clean" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(34,197,94,0.12));border:2px solid rgba(16,185,129,0.4);color:#fff;padding:18px 12px;border-radius:20px;font-weight:700;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.2s forwards,subtleFloat 4s ease-in-out infinite 0.2s;box-shadow:0 8px 20px rgba(16,185,129,0.2);">
+    <a href="rekapan.html" class="dashboard-btn dashboard-btn-rekapan" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(34,197,94,0.12));border:2px solid rgba(16,185,129,0.4);color:#fff;padding:18px 12px;border-radius:20px;font-weight:800;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.2s forwards;box-shadow:0 8px 25px rgba(16,185,129,0.3);">
       <div style="position:relative;">
-        <i class="fas fa-check-circle" style="font-size:1.5rem;color:#00ff88;"></i>
+        <i class="fas fa-chart-bar" style="font-size:1.5rem;color:#10b981;filter:drop-shadow(0 0 8px rgba(16,185,129,0.6));"></i>
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;border:2px solid rgba(16,185,129,0.4);border-radius:50%;animation:simplePulse 3s ease-in-out infinite 0.6s;"></div>
       </div>
-      <span style="text-align:center;line-height:1.2;color:#fff;">cek status<br>kehadiran</span>
+      <span style="text-align:center;line-height:1.2;color:#fff;text-shadow:0 0 8px rgba(16,185,129,0.5);">rekapan</span>
     </a>
 
-    <a href="https://asndigital.bkn.go.id/" class="dashboard-btn dashboard-btn-skp-clean" style="background:linear-gradient(135deg,rgba(139,69,19,0.15),rgba(168,85,247,0.12));border:2px solid rgba(139,69,19,0.4);color:#fff;padding:18px 12px;border-radius:20px;font-weight:700;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.3s forwards,subtleShift 3s ease-in-out infinite 0.3s;box-shadow:0 8px 20px rgba(139,69,19,0.2);">
+    <a href="panduan-penggunaan.html" class="dashboard-btn dashboard-btn-info" style="background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(196,181,253,0.25),rgba(126,34,206,0.2));border:2px solid rgba(168,85,247,0.6);color:#fff;padding:18px 12px;border-radius:20px;font-weight:800;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.3s forwards;box-shadow:0 8px 25px rgba(168,85,247,0.4);">
       <div style="position:relative;">
-        <i class="fas fa-clipboard-list" style="font-size:1.5rem;color:#c084fc;"></i>
+        <i class="fas fa-book-open" style="font-size:1.5rem;color:#c084fc;filter:drop-shadow(0 0 8px rgba(168,85,247,0.6));"></i>
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;border:2px solid rgba(168,85,247,0.4);border-radius:50%;animation:simplePulse 3s ease-in-out infinite 0.9s;"></div>
       </div>
-      <span style="text-align:center;line-height:1.2;color:#fff;">login SKP</span>
+      <span style="text-align:center;line-height:1.2;color:#fff;text-shadow:0 0 8px rgba(168,85,247,0.5);">info</span>
     </a>
   </div>
 </div>
