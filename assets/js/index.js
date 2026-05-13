@@ -1406,13 +1406,6 @@ function previewImg(input, targetId) {
                     const targetWidth = Math.max(rect.width || 150, 120); // min 120px
                     const targetHeight = Math.max(rect.height || 150, 150); // min 150px
                     
-                    // Resize and compress image to fit box
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    canvas.width = targetWidth;
-                    canvas.height = targetHeight;
-                    
                     // Calculate crop to cover the entire canvas
                     const imgAspect = img.width / img.height;
                     const targetAspect = targetWidth / targetHeight;
@@ -1433,11 +1426,24 @@ function previewImg(input, targetId) {
                         srcY = (img.height - srcHeight) / 2;
                     }
                     
-                    // Draw cropped image
-                    ctx.drawImage(img, srcX, srcY, srcWidth, srcHeight, 0, 0, targetWidth, targetHeight);
+                    // Limit maximum size to prevent overly large data URLs
+                    const maxSize = 800;
+                    const scale = Math.min(1, maxSize / Math.max(srcWidth, srcHeight));
+                    srcWidth *= scale;
+                    srcHeight *= scale;
                     
-                    // Convert to data URL with compression
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    // Create canvas with high resolution crop size
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = srcWidth;
+                    canvas.height = srcHeight;
+                    
+                    // Draw cropped image at high resolution
+                    ctx.drawImage(img, srcX, srcY, srcWidth / scale, srcHeight / scale, 0, 0, srcWidth, srcHeight);
+                    
+                    // Convert to data URL with high quality (no compression)
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 1.0);
                     
                     // Create and append image element
                     const image = document.createElement('img');
