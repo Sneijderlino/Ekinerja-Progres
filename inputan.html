@@ -1265,7 +1265,7 @@ Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku
               <span id="out-ttd-tempat">Tiakur</span>,
               <span id="out-ttd-tanggal">-</span>
             </div>
-            
+
             <div class="ttd-jabatan" id="out-ttd-jabatan">
               Kepala Satuan Polisi Pamong Praja<br />
               Dan Pemadam Kebakaran<br />
@@ -1291,8 +1291,6 @@ Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku
         var overlay = document.getElementById("sideDrawerOverlay");
         var drawer = document.getElementById("sideDrawer");
 
-
-        
         if (!overlay || !drawer) return;
 
         var isOpen = overlay.classList.contains("open");
@@ -1335,7 +1333,7 @@ Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku
 
         if (user) {
           container.innerHTML =
-            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
+            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="showConfirm(\'Yakin ingin keluar?\', function(confirmed){if(confirmed){window.EkinAuth.logout();closeSideDrawer();}}, \'Konfirmasi Keluar\');">' +
             '<i class="fas fa-sign-out-alt"></i> Keluar' +
             "</a>";
         } else {
@@ -1355,6 +1353,8 @@ Kepala Satuan Polisi Pamong Praja&#10;Dan Pemadam Kebakaran&#10;Kabupaten Maluku
         nav.classList.toggle("open");
       };
     </script>
+    <script src="assets/js/modal-dialog.js"></script>
+    <script src="assets/js/modal-alerts.js"></script>
     <script src="assets/js/index.js"></script>
   </body>
 </html>

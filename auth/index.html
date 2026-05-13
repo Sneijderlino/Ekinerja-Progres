@@ -8,8 +8,10 @@
     />
     <meta name="theme-color" content="#004a80" />
     <title>GHOST-DATABASE | Command Center</title>
-    <meta property="og:image"
-    content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png" />
+    <meta
+      property="og:image"
+      content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png"
+    />
 
     <link
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono&display=swap"
@@ -802,11 +804,17 @@
 
       // Fungsi logout
       function logout() {
-        if (confirm("Apakah Anda yakin ingin logout?")) {
-          localStorage.removeItem("current_user");
-          localStorage.removeItem("login_time");
-          window.location.href = "../login.html";
-        }
+        showConfirm(
+          "Apakah Anda yakin ingin logout?",
+          function (confirmed) {
+            if (confirmed) {
+              localStorage.removeItem("current_user");
+              localStorage.removeItem("login_time");
+              window.location.href = "../login.html";
+            }
+          },
+          "Konfirmasi Logout",
+        );
       }
 
       // Fungsi ubah password
@@ -817,30 +825,38 @@
           document.getElementById("confirmPassword").value;
 
         if (!oldPassword || !newPassword || !confirmPassword) {
-          alert("Semua field harus diisi!");
+          showAlert("Semua field harus diisi!", "Validation Error", "error");
           return;
         }
 
         if (newPassword !== confirmPassword) {
-          alert("Password baru dan konfirmasi password tidak cocok!");
+          showAlert(
+            "Password baru dan konfirmasi password tidak cocok!",
+            "Validation Error",
+            "error",
+          );
           return;
         }
 
         if (newPassword.length < 6) {
-          alert("Password baru minimal 6 karakter!");
+          showAlert(
+            "Password baru minimal 6 karakter!",
+            "Validation Error",
+            "error",
+          );
           return;
         }
 
         const currentUser = JSON.parse(localStorage.getItem("current_user"));
         if (!currentUser) {
-          alert("Sesi login tidak valid!");
+          showAlert("Sesi login tidak valid!", "Session Error", "error");
           logout();
           return;
         }
 
         // Cek password lama
         if (currentUser.password !== oldPassword) {
-          alert("Password lama salah!");
+          showAlert("Password lama salah!", "Password Error", "error");
           return;
         }
 
@@ -858,10 +874,10 @@
           currentUser.password = newPassword;
           localStorage.setItem("current_user", JSON.stringify(currentUser));
 
-          alert("Password berhasil diubah!");
+          showAlert("Password berhasil diubah!", "Success", "success");
           closeModal();
         } else {
-          alert("Terjadi kesalahan. Silakan coba lagi.");
+          showAlert("Terjadi kesalahan. Silakan coba lagi.", "Error", "error");
         }
       }
 

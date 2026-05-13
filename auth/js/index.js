@@ -56,7 +56,7 @@ function checkLicense() {
         showToast("SYSTEM ACTIVATED!");
         unlockApp();
     } else {
-        alert("ACCESS DENIED: KODE LISENSI SALAH!");
+        showLicenseError();
     }
 }
 
@@ -69,7 +69,7 @@ function copyDeviceId() {
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(deviceId).then(() => {
-            alert('ID tersalin, kirimkan ke admin 082292964110');
+            showCopySuccess();
         }).catch(() => {
             fallbackCopyText(deviceId);
         });
@@ -87,9 +87,9 @@ function fallbackCopyText(text) {
     textarea.select();
     try {
         document.execCommand('copy');
-        alert('ID tersalin, kirimkan ke admin 082292964110');
+        showCopySuccess();
     } catch (err) {
-        alert('Gagal menyalin ID perangkat. Silakan salin secara manual.');
+        showCopyFailed();
     }
     document.body.removeChild(textarea);
 }
@@ -141,7 +141,7 @@ function checkLoginAccess() {
     
     if (!currentUser) {
         console.warn('No user session found');
-        alert('Harap login terlebih dahulu untuk mengakses fitur input laporan!');
+        showLoginRequired();
         window.location.href = 'login.html';
         return;
     }
@@ -242,7 +242,7 @@ function lockIdentity() {
         nip: document.getElementById('in-nip').value,
         jabatan: document.getElementById('in-jabatan').value
     };
-    if(!data.nama || !data.nip) return alert("Isi nama dan NIP dulu!");
+    if(!data.nama || !data.nip) return showAlert("Isi nama dan NIP dulu!", 'Validation Error', 'error');
     localStorage.setItem('ghost_identity_new', JSON.stringify(data));
     renderIdentity();
     showToast("Profil Pegawai Berhasil Dikunci!");
@@ -267,7 +267,7 @@ function lockKop() {
 function addTask() {
     const input = document.getElementById('task-input');
     const value = input.value.trim();
-    if (!value) return alert('Masukkan item kegiatan terlebih dahulu.');
+    if (!value) return showAlert('Masukkan item kegiatan terlebih dahulu.', 'Input Required', 'error');
 
     const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
     tasks.push(value);
@@ -382,7 +382,7 @@ function editTask(index) {
     const newValue = prompt('Ubah detail kegiatan:', tasks[index]);
     if (newValue === null) return;
     const trimmed = newValue.trim();
-    if (!trimmed) return alert('Isi tidak boleh kosong.');
+    if (!trimmed) return showAlert('Isi tidak boleh kosong.', 'Validation Error', 'error');
     tasks[index] = trimmed;
     localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
     renderTaskList();
@@ -400,7 +400,7 @@ function deleteTask(index) {
 async function saveReport() {
     const currentUser = window.EkinAuth ? window.EkinAuth.getCurrentUser() : null;
     if (!currentUser) {
-        alert('Harap login terlebih dahulu untuk menyimpan laporan!');
+        showLoginRequired();
         window.location.href = 'login.html';
         return;
     }
@@ -424,22 +424,22 @@ async function saveReport() {
     };
 
     if (isEmptyValue(report.title)) {
-        return alert('Isi judul laporan sebelum menyimpan.');
+        return showFieldRequired('judul laporan');
     }
     if (isEmptyValue(report.subtitle)) {
-        return alert('Isi subjudul laporan sebelum menyimpan.');
+        return showFieldRequired('subjudul laporan');
     }
     if (isEmptyValue(report.date)) {
-        return alert('Pilih tanggal laporan terlebih dahulu.');
+        return showFieldRequired('tanggal laporan');
     }
     if (isEmptyValue(report.nama) || isEmptyValue(report.nip)) {
-        return alert('Isi nama dan NIP dulu sebelum menyimpan laporan!');
+        return showFieldRequired('nama dan NIP');
     }
     if (isEmptyValue(report.instansi) || isEmptyValue(report.kab) || isEmptyValue(report.kota)) {
-        return alert('Lengkapi data instansi sebelum menyimpan laporan!');
+        return showFieldRequired('instansi');
     }
     if (isEmptyValue(report.uraian)) {
-        return alert('Tuliskan uraian kegiatan sebelum menyimpan laporan!');
+        return showFieldRequired('uraian kegiatan');
     }
 
     const savedReports = getSavedReports();
@@ -463,7 +463,7 @@ async function saveReport() {
                     // Lanjut ke loop untuk hapus lebih banyak
                 }
             }
-            return alert('Penyimpanan gagal: ruang penyimpanan penuh. Silakan hapus beberapa laporan secara manual.');
+            return showStorageQuotaExceeded();
         } else {
             throw err;
         }
@@ -600,7 +600,7 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         await savePdfFile(blob, filename);
     }).catch((err) => {
         console.error(err);
-        alert('Gagal ekspor PDF dari laporan tersimpan. Pastikan koneksi internet tersedia atau gunakan browser Android dengan dukungan download.');
+        showAlert('Gagal ekspor PDF dari laporan tersimpan. Pastikan koneksi internet tersedia atau gunakan browser Android dengan dukungan download.', 'Export Error', 'error');
     }).finally(() => {
         document.getElementById('out-nama').innerText = currentPreview.nama;
         document.getElementById('out-nip').innerText = currentPreview.nip;
@@ -917,7 +917,7 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         showToast(saved ? "PDF Berhasil Diunduh!" : "PDF dibuat, silakan simpan dari tampilan PDF.");
     } catch (err) {
         console.error(err);
-        alert('Gagal ekspor PDF. Pastikan koneksi internet tersedia atau gunakan browser Android dengan dukungan download.');
+        showAlert('Gagal ekspor PDF. Pastikan koneksi internet tersedia atau gunakan browser Android dengan dukungan download.', 'Export Error', 'error');
     }
 }
 

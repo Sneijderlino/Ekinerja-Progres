@@ -280,7 +280,7 @@
             <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:0.8rem;">
               <div style="font-weight:700;color:#fff;">${user.username}</div>
               <div>${user.email}</div>
-            <a href="#" onclick="event.preventDefault();if(confirm('Yakin ingin keluar?')){window.EkinAuth.logout();}"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+            <a href="#" onclick="event.preventDefault();showConfirm('Yakin ingin keluar?', function(confirmed){if(confirmed){window.EkinAuth.logout();}}, 'Konfirmasi Keluar');"><i class="fas fa-sign-out-alt"></i> Keluar</a>
           </div>
       `;
     } else {

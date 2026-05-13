@@ -1070,7 +1070,7 @@
 
         if (user) {
           container.innerHTML =
-            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
+            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="showConfirm(\'Yakin ingin keluar?\', function(confirmed){if(confirmed){window.EkinAuth.logout();closeSideDrawer();}}, \'Konfirmasi Keluar\');">' +
             '<i class="fas fa-sign-out-alt"></i> Keluar' +
             "</a>";
         } else {

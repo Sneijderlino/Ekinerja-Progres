@@ -37,7 +37,7 @@ function checkLicense() {
         showToast("SYSTEM ACTIVATED!");
         unlockApp();
     } else {
-        alert("ACCESS DENIED: KODE LISENSI SALAH!");
+        showLicenseError(input);
     }
 }
 
@@ -50,7 +50,7 @@ function copyDeviceId() {
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(deviceId).then(() => {
-            alert('ID tersalin, kirimkan ke admin 082292964110');
+            showCopySuccess();
         }).catch(() => {
             fallbackCopyText(deviceId);
         });
@@ -68,9 +68,9 @@ function fallbackCopyText(text) {
     textarea.select();
     try {
         document.execCommand('copy');
-        alert('ID tersalin, kirimkan ke admin 082292964110');
+        showCopySuccess();
     } catch (err) {
-        alert('Gagal menyalin ID perangkat. Silakan salin secara manual.');
+        showCopyFailed();
     }
     document.body.removeChild(textarea);
 }
@@ -122,8 +122,10 @@ function checkLoginAccess() {
     
     if (!currentUser) {
         console.warn('No user session found');
-        alert('Harap login terlebih dahulu untuk mengakses fitur input laporan!');
-        window.location.href = 'login.html';
+        showLoginRequired('fitur input laporan');
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1500);
         return;
     }
     
@@ -436,10 +438,10 @@ function lockIdentity() {
         nip: document.getElementById('in-nip').value,
         jabatan: document.getElementById('in-jabatan').value
     };
-    if(!data.nama || !data.nip) return alert("Isi nama dan NIP dulu!");
+    if(!data.nama || !data.nip) return showValidationError('nama dan NIP', 'Silakan isi nama dan NIP terlebih dahulu sebelum mengunci profil.');
     localStorage.setItem('ghost_identity_new', JSON.stringify(data));
     renderIdentity();
-    showToast("Profil Pegawai Berhasil Dikunci!");
+    showProfileLocked();
 }
 
 function unlockIdentity() {
@@ -457,7 +459,7 @@ function lockKop() {
     localStorage.setItem('ghost_kop', JSON.stringify(data));
     localStorage.setItem('ghost_kop_style', JSON.stringify(getKopStyleFromUI()));
     renderKop();
-    showToast("Kop Instansi Berhasil Dikunci!");
+    showKopLocked();
 }
 
 function getKopStyleFromUI() {
@@ -554,10 +556,10 @@ function lockTtd() {
         pangkat: document.getElementById('in-ttd-pangkat').value,
         nip: document.getElementById('in-ttd-nip').value
     };
-    if (!data.nama || !data.nip) return alert("Isi nama dan NIP pejabat penandatangan dulu!");
+    if (!data.nama || !data.nip) return showValidationError('nama dan NIP', 'Silakan isi nama dan NIP pejabat penandatangan dulu.');
     localStorage.setItem('ghost_ttd', JSON.stringify(data));
     renderTtd();
-    showToast("Tanda Tangan Berhasil Dikunci!");
+    showSignatureLocked();
 }
 
 function unlockTtd() {
@@ -661,24 +663,40 @@ function renderTtdImagePreview() {
 }
 
 function clearTtdImage() {
-    if (!confirm('Anda yakin ingin menghapus foto tanda tangan?')) return;
-    localStorage.removeItem('ghost_ttd_image');
-    renderTtdImagePreview();
-    const fileInput = document.getElementById('in-ttd-image');
-    if (fileInput) fileInput.value = '';
+    showConfirm(
+        'Anda yakin ingin menghapus foto tanda tangan yang telah diupload?',
+        function(confirmed) {
+            if (!confirmed) return;
+            const ttdImageBox = document.getElementById('out-ttd-image');
+            if (ttdImageBox) {
+                ttdImageBox.innerHTML = '<span class="ttd-image-placeholder">(Tanda tangan)</span>';
+            }
+            localStorage.removeItem('ghost_ttd_image');
+            renderTtdImagePreview();
+            const fileInput = document.getElementById('in-ttd-image');
+            if (fileInput) fileInput.value = '';
+            showToast('Foto tanda tangan berhasil dihapus.');
+        },
+        'Konfirmasi Hapus Foto',
+        {
+            yesText: 'Hapus',
+            noText: 'Batal',
+            isDangerous: true
+        }
+    );
 }
 
 function addTask() {
     const input = document.getElementById('task-input');
     const value = input.value.trim();
-    if (!value) return alert('Masukkan item kegiatan terlebih dahulu.');
+    if (!value) return showTaskEmpty();
 
     const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
     tasks.push(value);
     localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
     input.value = '';
     renderTaskList();
-    showToast('Item kegiatan berhasil ditambahkan!');
+    showTaskAddSuccess();
 }
 
 function clearReportPhotos() {
@@ -788,30 +806,40 @@ function startNewReport() {
 
 function editTask(index) {
     const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
-    const newValue = prompt('Ubah detail kegiatan:', tasks[index]);
+    const currentValue = tasks[index] || '';
+    showAlert(
+        `Masukkan detail kegiatan yang diperbarui untuk item ${index + 1}:`,
+        'Edit Item Kegiatan',
+        'info'
+    );
+    const newValue = prompt('Ubah detail kegiatan:', currentValue);
     if (newValue === null) return;
     const trimmed = newValue.trim();
-    if (!trimmed) return alert('Isi tidak boleh kosong.');
+    if (!trimmed) return showValidationError('deskripsi kegiatan', 'Deskripsi kegiatan tidak boleh kosong.');
     tasks[index] = trimmed;
     localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
     renderTaskList();
-    showToast('Item kegiatan berhasil diperbarui!');
+    showTaskUpdateSuccess();
 }
 
 function deleteTask(index) {
-    if (!confirm('Anda yakin ingin menghapus item kegiatan ini?')) return;
-    const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
-    tasks.splice(index, 1);
-    localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
-    renderTaskList();
-    showToast('Item kegiatan berhasil dihapus!');
+    showDeleteTaskConfirm(function(confirmed) {
+        if (!confirmed) return;
+        const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
+        tasks.splice(index, 1);
+        localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
+        renderTaskList();
+        showTaskDeleteSuccess();
+    });
 }
 
 async function saveReport() {
     const currentUser = getCurrentLoginUser();
     if (!currentUser) {
-        alert('Harap login terlebih dahulu untuk menyimpan laporan!');
-        window.location.href = 'login.html';
+        showLoginRequired('penyimpanan laporan');
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1500);
         return;
     }
     const dateInput = document.getElementById('in-report-date');
@@ -848,22 +876,22 @@ async function saveReport() {
     };
 
     if (isEmptyValue(report.title)) {
-        return alert('Isi judul laporan sebelum menyimpan.');
+        return showValidationError('judul laporan', 'Silakan isi judul laporan sebelum menyimpan.');
     }
     if (isEmptyValue(report.subtitle)) {
-        return alert('Isi subjudul laporan sebelum menyimpan.');
+        return showValidationError('subjudul laporan', 'Silakan isi subjudul laporan sebelum menyimpan.');
     }
     if (isEmptyValue(report.date)) {
-        return alert('Pilih tanggal laporan terlebih dahulu.');
+        return showValidationError('tanggal laporan', 'Silakan pilih tanggal laporan terlebih dahulu.');
     }
     if (isEmptyValue(report.nama) || isEmptyValue(report.nip)) {
-        return alert('Isi nama dan NIP dulu sebelum menyimpan laporan!');
+        return showFieldRequired('nama dan NIP pegawai');
     }
     if (isEmptyValue(report.instansi) || isEmptyValue(report.kab) || isEmptyValue(report.kota)) {
-        return alert('Lengkapi data instansi sebelum menyimpan laporan!');
+        return showFieldRequired('data instansi (instansi, kabupaten, dan kota)');
     }
     if (isEmptyValue(report.uraian)) {
-        return alert('Tuliskan uraian kegiatan sebelum menyimpan laporan!');
+        return showValidationError('uraian kegiatan', 'Silakan tuliskan uraian kegiatan sebelum menyimpan laporan.');
     }
 
     const savedReports = getSavedReports();
@@ -887,7 +915,7 @@ async function saveReport() {
                     // Lanjut ke loop untuk hapus lebih banyak
                 }
             }
-            return alert('Penyimpanan gagal: ruang penyimpanan penuh. Silakan hapus beberapa laporan secara manual.');
+            return showStorageQuotaExceeded();
         } else {
             throw err;
         }
@@ -896,7 +924,7 @@ async function saveReport() {
     renderSavedReports();
     resetReportForm(true);
     renderKop();
-    showToast('Laporan tersimpan dan form otomatis disiapkan untuk laporan baru.');
+    showReportSaveSuccess();
 }
 
 function previewReport(index) {
@@ -975,12 +1003,14 @@ function editReport(index) {
 }
 
 function deleteSavedReport(index) {
-    if (!confirm('Anda yakin ingin menghapus laporan ini?')) return;
-    const savedReports = getSavedReports();
-    savedReports.splice(index, 1);
-    setSavedReports(savedReports);
-    renderSavedReports();
-    showToast('Laporan tersimpan berhasil dihapus.');
+    showReportDeleteConfirm(function(confirmed) {
+        if (!confirmed) return;
+        const savedReports = getSavedReports();
+        savedReports.splice(index, 1);
+        setSavedReports(savedReports);
+        renderSavedReports();
+        showTaskDeleteSuccess();
+    });
 }
 
 function renderPreviewData(report) {
@@ -1080,7 +1110,7 @@ function exportSavedReportPDF(index) {
     const report = savedReports[index];
     if (!report) {
         hidePdfLoading();
-        alert('Laporan tidak ditemukan. Silakan refresh halaman dan coba lagi.');
+        showAlert('Laporan tidak ditemukan. Silakan refresh halaman dan coba lagi.', 'Error', 'error');
         return;
     }
 
@@ -1124,7 +1154,7 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         await savePdfFile(blob, filename);
     }).catch((err) => {
         console.error(err);
-        alert('Gagal ekspor PDF dari laporan tersimpan. Pastikan koneksi internet tersedia atau gunakan browser Android dengan dukungan download.');
+        showAlert('Gagal ekspor PDF dari laporan tersimpan. Pastikan koneksi internet tersedia atau gunakan browser Android dengan dukungan download.', 'Gagal Ekspor PDF', 'error');
     }).finally(() => {
         hidePdfLoading();
         document.getElementById('out-nama').innerText = currentPreview.nama;
@@ -1580,14 +1610,14 @@ async function exportToPDF() {
     
     if (typeof html2pdf === 'undefined') {
         hidePdfLoading();
-        alert('Library html2pdf gagal dimuat. Periksa koneksi internet dan coba lagi.');
+        showAlert('Library html2pdf gagal dimuat. Periksa koneksi internet dan coba lagi.', 'Library Error', 'error');
         return;
     }
     
     const element = document.getElementById('printable-area');
     if (!element) {
         hidePdfLoading();
-        alert('Elemen laporan tidak ditemukan. Silakan refresh halaman.');
+        showAlert('Elemen laporan tidak ditemukan. Silakan refresh halaman.', 'Error', 'error');
         return;
     }
     
@@ -1608,7 +1638,7 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         showToast(saved ? "PDF Berhasil Diunduh!" : "PDF dibuat, silakan simpan dari tampilan PDF.");
     } catch (err) {
         console.error('PDF Export Error:', err);
-        alert('Gagal ekspor PDF: ' + (err.message || 'Terjadi kesalahan tidak terduga. Coba lagi.'));
+        showAlert('Gagal ekspor PDF: ' + (err.message || 'Terjadi kesalahan tidak terduga. Coba lagi.'), 'Export Error', 'error');
     } finally {
         hidePdfLoading();
     }

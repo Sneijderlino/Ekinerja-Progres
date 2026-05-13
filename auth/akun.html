@@ -7,8 +7,10 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>Buat Akun | E-Kinerja</title>
-    <meta property="og:image"
-    content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png" />
+    <meta
+      property="og:image"
+      content="https://ekinerja-pro.sneijderlino.workers.dev/assets/img/logo-apk.png"
+    />
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="css/index.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
@@ -203,13 +205,17 @@
           ).value;
 
           if (password !== confirmPassword) {
-            alert("Password dan konfirmasi password tidak cocok!");
+            showAlert(
+              "Password dan konfirmasi password tidak cocok!",
+              "Validation Error",
+              "error",
+            );
             return;
           }
 
           // Here you would typically send the data to a server
           // For now, we'll just show a success message
-          alert("Akun berhasil dibuat!");
+          showAlert("Akun berhasil dibuat!", "Success", "success");
 
           // Reset form
           form.reset();

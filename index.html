@@ -730,6 +730,316 @@
       background: rgba(239, 68, 68, 0.25);
     }
 
+    /* Premium Android Profile Card Styles */
+    @keyframes profileCardFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes profileAvatarGlow {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.6), 0 0 60px rgba(45, 212, 191, 0.3);
+      }
+    }
+
+    @keyframes ambientProfileGlow {
+      0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes profileButtonRipple {
+      0% {
+        box-shadow: 0 0 0 0 currentColor;
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+      }
+    }
+
+    .premium-profile-card {
+      background: linear-gradient(135deg, rgba(17, 24, 39, 0.8), rgba(30, 41, 59, 0.7));
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1.5px solid rgba(59, 130, 246, 0.3);
+      border-radius: 30px;
+      padding: 28px;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+      animation: profileCardFadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      box-shadow:
+        0 0 50px rgba(59, 130, 246, 0.15),
+        0 25px 50px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .premium-profile-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: ambientProfileGlow 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .premium-profile-card::after {
+      content: '';
+      position: absolute;
+      bottom: -50%;
+      left: -50%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(45, 212, 191, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: ambientProfileGlow 5s ease-in-out infinite 0.5s;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .premium-profile-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .premium-profile-avatar {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .premium-profile-avatar:hover {
+      transform: scale(1.05);
+    }
+
+    .premium-avatar-frame {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(45, 212, 191, 0.6));
+      border-radius: 50%;
+      padding: 3px;
+      animation: profileAvatarGlow 3s ease-in-out infinite;
+    }
+
+    .premium-avatar-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .premium-profile-info {
+      flex: 1;
+      min-width: 150px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .premium-profile-username {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 4px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.8));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .premium-profile-email {
+      font-size: 0.8rem;
+      color: rgba(148, 163, 184, 0.9);
+      margin: 0 0 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.3px;
+    }
+
+    .premium-profile-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .premium-profile-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1.5px solid rgba(59, 130, 246, 0.4);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .premium-profile-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+    }
+
+    .premium-profile-btn:hover {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.15));
+      border-color: rgba(59, 130, 246, 0.6);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 20px rgba(59, 130, 246, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .premium-profile-btn i {
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .premium-profile-btn-camera {
+      border-color: rgba(59, 130, 246, 0.4);
+      color: rgba(59, 130, 246, 0.9);
+    }
+
+    .premium-profile-btn-camera:hover {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.4), inset 0 0 20px rgba(59, 130, 246, 0.1);
+    }
+
+    .premium-profile-hint {
+      font-size: 0.7rem;
+      color: rgba(148, 163, 184, 0.7);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+
+    .premium-logout-btn {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15));
+      border: 1.5px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 8px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .premium-logout-btn:hover {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.25));
+      border-color: rgba(239, 68, 68, 0.6);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.3), inset 0 0 20px rgba(239, 68, 68, 0.08);
+      transform: translateY(-2px);
+      color: #fecaca;
+    }
+
+    .premium-logout-btn i {
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .premium-profile-hint-text {
+      font-size: 0.7rem;
+      color: rgba(148, 163, 184, 0.65);
+      letter-spacing: 0.4px;
+      position: relative;
+      z-index: 2;
+    }
+
+    @media (max-width: 480px) {
+      .premium-profile-card {
+        padding: 20px;
+        border-radius: 25px;
+        gap: 14px;
+      }
+
+      .premium-profile-avatar {
+        width: 60px;
+        height: 60px;
+      }
+
+      .premium-profile-username {
+        font-size: 1rem;
+      }
+
+      .premium-profile-email {
+        font-size: 0.75rem;
+      }
+
+      .premium-profile-btn,
+      .premium-logout-btn {
+        padding: 6px 12px;
+        font-size: 0.7rem;
+      }
+
+      .premium-profile-wrapper {
+        gap: 14px;
+      }
+
+      .premium-profile-actions {
+        width: 100%;
+      }
+    }
+
     .footer {
       text-align: center;
       padding: 50px 0;
@@ -848,50 +1158,97 @@
 </div>
 
 <!-- Quick Links Container -->
-<div class="quick-links-container" style="width:100%;max-width:600px;margin:0 auto;padding:12px 15px;overflow:hidden;background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(45,212,191,0.04));border-radius:0 0 8px 8px;border-top:1px solid rgba(59,130,246,0.15);animation:slideInUp 0.5s ease-out forwards;">
-  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
-    <a href="Profil-admin.html" class="quick-btn quick-btn-admin" style="background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(59,130,246,0.18));border:1px solid rgba(245,158,11,0.35);color:var(--primary);padding:10px 18px;border-radius:12px;font-weight:800;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.05s forwards;"><i class="fas fa-user-shield" style="font-size:1rem;color:#fbbf24;"></i> info admin</a>
+<div class="dashboard-container" style="width:100%;max-width:600px;margin:0 auto;padding:20px 15px;overflow:hidden;position:relative;border-radius:25px;background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(45,212,191,0.04));border:1px solid rgba(59,130,246,0.15);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,0.3),0 0 100px rgba(59,130,246,0.1);animation:slideInUp 0.5s ease-out forwards;">
+  <!-- Ambient Blue Light Background -->
+  <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 30% 20%, rgba(59,130,246,0.08) 0%, transparent 50%),radial-gradient(circle at 70% 80%, rgba(45,212,191,0.06) 0%, transparent 50%);pointer-events:none;border-radius:25px;"></div>
 
-<a href="https://myasn.bkn.go.id/" class="quick-btn" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(59,130,246,0.1));border:1px solid rgba(59,130,246,0.3);color:var(--primary);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.1s forwards;"><i class="fas fa-user" style="font-size:1rem;"></i> login Myasn</a>
-<a href="https://inagov.go.id/" class="quick-btn" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(59,130,246,0.1));border:1px solid rgba(59,130,246,0.3);color:var(--primary);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.2s forwards;"><i class="fas fa-check-circle" style="font-size:1rem;"></i> cek status kehadiran</a>
-<a href="https://asndigital.bkn.go.id/" class="quick-btn" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(59,130,246,0.1));border:1px solid rgba(59,130,246,0.3);color:var(--primary);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.3s forwards;"><i class="fas fa-clipboard-list" style="font-size:1rem;"></i> login SKP</a>
+  <!-- Futuristic Glow Effect -->
+  <div style="position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(45deg, rgba(59,130,246,0.3), rgba(45,212,191,0.2), rgba(59,130,246,0.3));border-radius:27px;opacity:0.6;animation:glowPulse 3s ease-in-out infinite;z-index:-1;"></div>
 
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;position:relative;z-index:1;">
+    <a href="Profil-admin.html" class="dashboard-btn dashboard-btn-admin" style="background:linear-gradient(135deg,rgba(255,193,7,0.3),rgba(245,158,11,0.25),rgba(217,119,6,0.2));border:2px solid rgba(255,193,7,0.6);color:#fff;padding:18px 12px;border-radius:20px;font-weight:800;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.05s forwards;box-shadow:0 8px 25px rgba(255,193,7,0.4);">
+      <div style="position:relative;">
+        <i class="fas fa-user-shield" style="font-size:1.5rem;color:#ffd700;filter:drop-shadow(0 0 8px rgba(255,193,7,0.6));"></i>
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;border:2px solid rgba(255,193,7,0.4);border-radius:50%;animation:simplePulse 3s ease-in-out infinite;"></div>
+      </div>
+      <span style="text-align:center;line-height:1.2;color:#fff;text-shadow:0 0 8px rgba(255,193,7,0.5);">info admin</span>
+    </a>
+
+    <a href="https://myasn.bkn.go.id/" class="dashboard-btn dashboard-btn-myasn" style="background:linear-gradient(135deg,rgba(6,182,212,0.3),rgba(59,130,246,0.25),rgba(2,136,209,0.2));border:2px solid rgba(6,182,212,0.6);color:#fff;padding:18px 12px;border-radius:20px;font-weight:700;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.1s forwards;box-shadow:0 8px 25px rgba(6,182,212,0.4);">
+      <div style="position:relative;">
+        <i class="fas fa-user" style="font-size:1.5rem;color:#00e5ff;filter:drop-shadow(0 0 8px rgba(6,182,212,0.6));"></i>
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;border:2px solid rgba(6,182,212,0.4);border-radius:50%;animation:simplePulse 3s ease-in-out infinite;"></div>
+      </div>
+      <span style="text-align:center;line-height:1.2;color:#fff;text-shadow:0 0 8px rgba(6,182,212,0.5);">login Myasn</span>
+    </a>
+
+    <a href="https://inagov.go.id/" class="dashboard-btn dashboard-btn-status" style="background:linear-gradient(135deg,rgba(16,185,129,0.3),rgba(34,197,94,0.25),rgba(5,150,105,0.2));border:2px solid rgba(16,185,129,0.6);color:#fff;padding:18px 12px;border-radius:20px;font-weight:700;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.2s forwards;box-shadow:0 8px 25px rgba(16,185,129,0.4);">
+      <div style="position:relative;">
+        <i class="fas fa-check-circle" style="font-size:1.5rem;color:#00ff88;filter:drop-shadow(0 0 8px rgba(16,185,129,0.6));"></i>
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;border:2px solid rgba(16,185,129,0.4);border-radius:50%;animation:simplePulse 3s ease-in-out infinite;"></div>
+      </div>
+      <span style="text-align:center;line-height:1.2;color:#fff;text-shadow:0 0 8px rgba(16,185,129,0.5);">cek status<br>kehadiran</span>
+    </a>
+
+    <a href="https://asndigital.bkn.go.id/" class="dashboard-btn dashboard-btn-skp" style="background:linear-gradient(135deg,rgba(139,69,19,0.3),rgba(168,85,247,0.25),rgba(124,58,237,0.2));border:2px solid rgba(139,69,19,0.6);color:#fff;padding:18px 12px;border-radius:20px;font-weight:700;font-size:0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all 0.3s ease;cursor:pointer;position:relative;overflow:hidden;opacity:0;animation:fadeInUp 0.4s ease-out 0.3s forwards;box-shadow:0 8px 25px rgba(139,69,19,0.4);">
+      <div style="position:relative;">
+        <i class="fas fa-clipboard-list" style="font-size:1.5rem;color:#c084fc;filter:drop-shadow(0 0 8px rgba(139,69,19,0.6));"></i>
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;border:2px solid rgba(139,69,19,0.4);border-radius:50%;animation:simplePulse 3s ease-in-out infinite;"></div>
+      </div>
+      <span style="text-align:center;line-height:1.2;color:#fff;text-shadow:0 0 8px rgba(139,69,19,0.5);">login SKP</span>
+    </a>
   </div>
 </div>
-<div class="sosmed-container" style="width:100%;max-width:600px;margin:10px auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;animation:fadeInUp 0.6s ease-out 0.3s forwards;opacity:0;">
+<div class="social-apps-container" style="width:100%;max-width:600px;margin:15px auto;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:15px 15px 20px;animation:fadeInUp 0.6s ease-out 0.3s forwards;opacity:0;">
   <!-- WhatsApp -->
-  <a href="https://wa.me/082292964110" target="_blank" class="btn-sosmed wa" style="position:relative;padding:12px 20px;background:linear-gradient(135deg,#25D366,#075E54);border-radius:12px;color:#fff;font-weight:700;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;">
-    <i class="fa-brands fa-whatsapp" style="font-size:1.1rem;"></i> WhatsApp
+  <a href="https://wa.me/082292964110" target="_blank" class="social-app-btn wa" style="position:relative;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:20px;color:#fff;font-weight:700;font-size:0.7rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;box-shadow:0 8px 25px rgba(37,211,102,0.3);border:1px solid rgba(37,211,102,0.2);">
+    <div style="position:relative;">
+      <i class="fa-brands fa-whatsapp" style="font-size:1.8rem;filter:drop-shadow(0 0 8px rgba(255,255,255,0.3));"></i>
+      <div style="position:absolute;top:-3px;left:-3px;right:-3px;bottom:-3px;border:1px solid rgba(255,255,255,0.2);border-radius:50%;animation:floatingGlow 3s ease-in-out infinite;"></div>
+    </div>
+    <span style="text-align:center;line-height:1.1;font-size:0.65rem;">WhatsApp</span>
   </a>
 
   <!-- TikTok -->
-  <a href="https://www.tiktok.com/@sneijderlino_official?_r=1&_t=ZS-968iM1kONc5" target="_blank" class="btn-sosmed tiktok" style="position:relative;padding:12px 20px;background:linear-gradient(135deg,#000000,#FE2C55);border-radius:12px;color:#fff;font-weight:700;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;">
-    <i class="fa-brands fa-tiktok" style="font-size:1.1rem;"></i> TikTok
+  <a href="https://www.tiktok.com/@sneijderlino_official?_r=1&_t=ZS-968iM1kONc5" target="_blank" class="social-app-btn tiktok" style="position:relative;background:linear-gradient(135deg,#FE2C55,#000000);border-radius:20px;color:#fff;font-weight:700;font-size:0.7rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;box-shadow:0 8px 25px rgba(254,44,85,0.3);border:1px solid rgba(254,44,85,0.2);">
+    <div style="position:relative;">
+      <i class="fa-brands fa-tiktok" style="font-size:1.8rem;filter:drop-shadow(0 0 8px rgba(255,255,255,0.3));"></i>
+      <div style="position:absolute;top:-3px;left:-3px;right:-3px;bottom:-3px;border:1px solid rgba(255,255,255,0.2);border-radius:50%;animation:floatingGlow 3s ease-in-out infinite;"></div>
+    </div>
+    <span style="text-align:center;line-height:1.1;font-size:0.65rem;">TikTok</span>
   </a>
 
   <!-- Facebook -->
-  <a href="https://www.facebook.com/share/17MqSwdbBQ/" target="_blank" class="btn-sosmed fb" style="position:relative;padding:12px 20px;background:linear-gradient(135deg,#1877F2,#0d65d9);border-radius:12px;color:#fff;font-weight:700;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;">
-    <i class="fa-brands fa-facebook-f" style="font-size:1.1rem;"></i> Facebook
+  <a href="https://www.facebook.com/share/17MqSwdbBQ/" target="_blank" class="social-app-btn fb" style="position:relative;background:linear-gradient(135deg,#1877F2,#0d65d9);border-radius:20px;color:#fff;font-weight:700;font-size:0.7rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;box-shadow:0 8px 25px rgba(24,119,242,0.3);border:1px solid rgba(24,119,242,0.2);">
+    <div style="position:relative;">
+      <i class="fa-brands fa-facebook-f" style="font-size:1.8rem;filter:drop-shadow(0 0 8px rgba(255,255,255,0.3));"></i>
+      <div style="position:absolute;top:-3px;left:-3px;right:-3px;bottom:-3px;border:1px solid rgba(255,255,255,0.2);border-radius:50%;animation:floatingGlow 3s ease-in-out infinite;"></div>
+    </div>
+    <span style="text-align:center;line-height:1.1;font-size:0.65rem;">Facebook</span>
   </a>
 
   <!-- Instagram -->
-  <a href="https://www.instagram.com/sneijderlino_official?igsh=YWs3NWU5MGVleWF5" target="_blank" class="btn-sosmed ig" style="position:relative;padding:12px 20px;background:linear-gradient(135deg,#833AB4,#FD1D1D,#F77737);border-radius:12px;color:#fff;font-weight:700;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;">
-    <i class="fa-brands fa-instagram" style="font-size:1.1rem;"></i> Instagram
+  <a href="https://www.instagram.com/sneijderlino_official?igsh=YWs3NWU5MGVleWF5" target="_blank" class="social-app-btn ig" style="position:relative;background:linear-gradient(135deg,#833AB4,#FD1D1D,#F77737);border-radius:20px;color:#fff;font-weight:700;font-size:0.7rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);overflow:hidden;cursor:pointer;box-shadow:0 8px 25px rgba(131,58,180,0.3);border:1px solid rgba(131,58,180,0.2);">
+    <div style="position:relative;">
+      <i class="fa-brands fa-instagram" style="font-size:1.8rem;filter:drop-shadow(0 0 8px rgba(255,255,255,0.3));"></i>
+      <div style="position:absolute;top:-3px;left:-3px;right:-3px;bottom:-3px;border:1px solid rgba(255,255,255,0.2);border-radius:50%;animation:floatingGlow 3s ease-in-out infinite;"></div>
+    </div>
+    <span style="text-align:center;line-height:1.1;font-size:0.65rem;">Instagram</span>
   </a>
 </div>
-<div class="line-gradient" style="width:100%;max-width:600px;margin:20px auto;position:relative;height:3px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.3),transparent);border-radius:2px;">
-  <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,var(--primary),var(--secondary),transparent);opacity:0.6;animation:lineGradientShift 3s ease-in-out infinite;border-radius:2px;"></div>
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:var(--primary);border-radius:50%;box-shadow:0 0 15px var(--primary),0 0 30px var(--secondary);animation:lineDotPulse 2s ease-in-out infinite;"></div>
+<div class="neon-divider" style="width:100%;max-width:600px;margin:20px auto;position:relative;height:2px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.4),rgba(45,212,191,0.3),rgba(59,130,246,0.4),transparent);border-radius:1px;">
+  <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,var(--primary),var(--secondary),var(--primary),transparent);opacity:0.7;animation:dividerGlow 4s ease-in-out infinite;border-radius:1px;"></div>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;background:linear-gradient(45deg,var(--primary),var(--secondary));border-radius:50%;box-shadow:0 0 20px var(--primary),0 0 40px var(--secondary);animation:dividerDotPulse 3s ease-in-out infinite;"></div>
 </div>
 
 <style>
-  @keyframes lineGradientShift {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+  @keyframes dividerGlow {
+    0%, 100% { background-position: -200% 0; opacity: 0.7; }
+    50% { background-position: 200% 0; opacity: 1; }
   }
-  @keyframes lineDotPulse {
-    0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 15px var(--primary), 0 0 30px var(--secondary); }
-    50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 25px var(--primary), 0 0 50px var(--secondary); }
+  @keyframes dividerDotPulse {
+    0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px var(--primary), 0 0 40px var(--secondary); }
+    50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.4); box-shadow: 0 0 35px var(--primary), 0 0 70px var(--secondary); }
   }
 </style>
 
@@ -909,6 +1266,216 @@
   70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
   100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
 }
+
+/* Modern Android Dashboard Styles */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes simplePulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes floatingGlow {
+  0%, 100% { opacity: 0.2; transform: scale(1) rotate(0deg); }
+  33% { opacity: 0.4; transform: scale(1.1) rotate(120deg); }
+  66% { opacity: 0.3; transform: scale(0.95) rotate(240deg); }
+}
+
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* Enhanced Dashboard Button Effects */
+.dashboard-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.dashboard-btn:hover::after {
+  opacity: 1;
+}
+
+.dashboard-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.dashboard-btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+.dashboard-btn:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5);
+  border-color: rgba(59, 130, 246, 0.8);
+}
+
+.dashboard-btn:active {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
+}
+
+.dashboard-btn-admin:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 45px rgba(255,193,7,0.6);
+  border-color: rgba(255,193,7,0.9);
+}
+
+.dashboard-btn-myasn:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 45px rgba(6,182,212,0.6);
+  border-color: rgba(6,182,212,0.9);
+}
+
+.dashboard-btn-status:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 45px rgba(16,185,129,0.6);
+  border-color: rgba(16,185,129,0.9);
+}
+
+.dashboard-btn-skp:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 45px rgba(139,69,19,0.6);
+  border-color: rgba(139,69,19,0.9);
+}
+
+/* Social App Button Styles */
+.social-app-btn {
+  position: relative;
+  overflow: hidden;
+  animation: floatUp 0.5s ease-out forwards;
+}
+
+.social-app-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.social-app-btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+.social-app-btn:hover {
+  transform: translateY(-8px) scale(1.05);
+  animation: floatingGlow 2s ease-in-out infinite;
+}
+
+.social-app-btn:active {
+  transform: scale(0.92);
+  transition: transform 0.1s ease;
+}
+
+/* Specific Social Media Hover Effects */
+.social-app-btn.wa:hover {
+  box-shadow: 0 15px 40px rgba(37, 211, 102, 0.6), 0 0 60px rgba(37, 211, 102, 0.3);
+}
+
+.social-app-btn.tiktok:hover {
+  box-shadow: 0 15px 40px rgba(254, 44, 85, 0.6), 0 0 60px rgba(254, 44, 85, 0.3);
+}
+
+.social-app-btn.fb:hover {
+  box-shadow: 0 15px 40px rgba(24, 119, 242, 0.6), 0 0 60px rgba(24, 119, 242, 0.3);
+}
+
+.social-app-btn.ig:hover {
+  box-shadow: 0 15px 40px rgba(131, 58, 180, 0.6), 0 0 60px rgba(131, 58, 180, 0.3);
+}
+
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Responsive Design for Android Mobile */
+@media (max-width: 480px) {
+  .dashboard-container {
+    margin: 0 10px;
+    padding: 15px 10px;
+    border-radius: 20px;
+  }
+
+  .social-apps-container {
+    margin: 10px 10px 0;
+    padding: 10px 10px 15px;
+    gap: 8px;
+  }
+
+  .dashboard-btn {
+    padding: 15px 8px;
+    font-size: 0.7rem;
+  }
+
+  .dashboard-btn i {
+    font-size: 1.3rem !important;
+  }
+
+  .social-app-btn {
+    padding: 12px 6px;
+  }
+
+  .social-app-btn i {
+    font-size: 1.5rem !important;
+  }
+
+  /* Simplified mobile hover effects */
+  .dashboard-btn-admin:hover {
+    box-shadow: 0 15px 35px rgba(255,193,7,0.7);
+  }
+
+  .dashboard-btn-myasn:hover {
+    box-shadow: 0 15px 35px rgba(6,182,212,0.7);
+  }
+
+  .dashboard-btn-status:hover {
+    box-shadow: 0 15px 35px rgba(16,185,129,0.7);
+  }
+
+  .dashboard-btn-skp:hover {
+    box-shadow: 0 15px 35px rgba(139,69,19,0.7);
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .dashboard-container {
+    max-width: 500px;
+  }
+
+  .social-apps-container {
+    max-width: 500px;
+  }
+}
+
+/* Remove old styles */
 .quick-btn:hover {
   background: linear-gradient(135deg, var(--primary), #2563eb) !important;
   color: #fff !important;
@@ -1028,6 +1595,8 @@
       Aplikasi Laporan E-kinerja // BY Sneijderlino<br/>
     </div>
 
+<script src="assets/js/modal-dialog.js"></script>
+  <script src="assets/js/modal-alerts.js"></script>
 <script src="assets/js/auth.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
@@ -1125,7 +1694,7 @@ window.EkinToggleMobileNav = function() {
       var user = (window.EkinAuth) ? window.EkinAuth.getCurrentUser() : null;
       if (user) {
         container.innerHTML = 
-          '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
+          '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="showConfirm(\'Yakin ingin keluar?\', function(confirmed){if(confirmed){window.EkinAuth.logout();closeSideDrawer();}}, \'Konfirmasi Keluar\');">' +
             '<i class="fas fa-sign-out-alt"></i> Keluar' +
           '</a>';
       } else {
@@ -1283,7 +1852,7 @@ window.EkinToggleMobileNav = function() {
       var file = event.target.files && event.target.files[0];
       if (!file) return;
       if (!file.type.startsWith('image/')) {
-        return alert('Pilih file gambar yang valid.');
+        return showAlert('Pilih file gambar yang valid.', 'Invalid File', 'error');
       }
       try {
         var reader = new FileReader();
@@ -1294,14 +1863,14 @@ window.EkinToggleMobileNav = function() {
           saveDashboardProfilePhoto(currentUser, dataUrl);
           var img = document.getElementById('dashboardProfilePhotoImg');
           if (img) img.src = dataUrl;
-          alert('Foto profil dashboard berhasil diperbarui!');
+          showAlert('Foto profil dashboard berhasil diperbarui!', 'Success', 'success');
         };
         reader.onerror = function () {
-          alert('Error: File foto profil terlalu besar atau tidak valid. Coba file yang lebih kecil.');
+          showAlert('Error: File foto profil terlalu besar atau tidak valid. Coba file yang lebih kecil.', 'File Error', 'error');
         };
         reader.readAsDataURL(file);
       } catch (error) {
-        alert('Error: Gagal memuat foto profil. Ukuran file mungkin terlalu besar.');
+        showAlert('Error: Gagal memuat foto profil. Ukuran file mungkin terlalu besar.', 'Error', 'error');
       }
     }
 
@@ -1324,24 +1893,28 @@ function updateFABVisibility() {
         var profilePhotoUrl = profilePhoto || defaultProfileAvatar;
 
         panel.innerHTML = 
-          '<div style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(45,212,191,0.1));border:1px solid rgba(59,130,246,0.25);border-radius:20px;padding:20px;display:flex;align-items:center;gap:16px;backdrop-filter:blur(10px);">' +
-            '<div style="position:relative;width:58px;height:58px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#3b82f6,#2dd4bf);cursor:pointer;flex-shrink:0;" onclick="document.getElementById(\'dashboardProfilePhotoInput\').click()">' +
-              '<img id="dashboardProfilePhotoImg" src="' + profilePhotoUrl + '" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;display:block;" />' +
-            '</div>' +
-            '<div style="flex:1;min-width:0;">' +
-              '<div style="font-weight:800;font-size:1rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + user.username + '</div>' +
-              '<div style="font-size:0.8rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + user.email + '</div>' +
-              '<div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
-                '<button onclick="document.getElementById(\'dashboardProfilePhotoInput\').click()" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.14);padding:6px 12px;border-radius:10px;font-weight:700;font-size:0.75rem;cursor:pointer;transition:0.2s;">' +
-                  '<i class="fas fa-camera"></i> Ubah Foto' +
-                '</button>' +
-                '<span style="font-size:0.75rem;color:#cbd5e1;">Klik foto untuk mengganti</span>' +
+          '<div class="premium-profile-card">' +
+            '<div class="premium-profile-wrapper">' +
+              '<div class="premium-profile-avatar" onclick="document.getElementById(\'dashboardProfilePhotoInput\').click()" title="Klik untuk mengubah foto profil">' +
+                '<div class="premium-avatar-frame">' +
+                  '<img id="dashboardProfilePhotoImg" src="' + profilePhotoUrl + '" alt="Foto Profil" class="premium-avatar-image" />' +
+                '</div>' +
               '</div>' +
+              '<div class="premium-profile-info">' +
+                '<h3 class="premium-profile-username">' + user.username + '</h3>' +
+                '<p class="premium-profile-email">' + user.email + '</p>' +
+                '<div class="premium-profile-actions">' +
+                  '<button class="premium-profile-btn premium-profile-btn-camera" onclick="document.getElementById(\'dashboardProfilePhotoInput\').click()" title="Ubah foto profil">' +
+                    '<i class="fas fa-camera"></i> Ubah Foto' +
+                  '</button>' +
+                  '<span class="premium-profile-hint">Klik untuk mengubah</span>' +
+                '</div>' +
+              '</div>' +
+              '<button class="premium-logout-btn" onclick="showConfirm(\'Yakin ingin keluar?\', function(confirmed){if(confirmed)window.EkinAuth.logout()}, \'Konfirmasi Keluar\');" title="Keluar dari akun Anda">' +
+                '<i class="fas fa-sign-out-alt"></i> Keluar' +
+              '</button>' +
+              '<input type="file" id="dashboardProfilePhotoInput" accept="image/*" style="display:none" onchange="handleDashboardProfilePhoto(event)" />' +
             '</div>' +
-            '<button onclick="if(confirm(\'Yakin ingin keluar?\'))window.EkinAuth.logout()" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);padding:8px 14px;border-radius:10px;font-weight:700;font-size:0.75rem;cursor:pointer;transition:0.2s;flex-shrink:0;">' +
-              '<i class="fas fa-sign-out-alt"></i> Keluar' +
-            '</button>' +
-            '<input type="file" id="dashboardProfilePhotoInput" accept="image/*" style="display:none" onchange="handleDashboardProfilePhoto(event)" />' +
           '</div>';
       } else {
         panel.innerHTML = 

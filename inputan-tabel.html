@@ -1784,6 +1784,8 @@ Kabupaten Maluku Barat Daya</textarea
       </main>
     </div>
 
+    <script src="assets/js/modal-dialog.js"></script>
+    <script src="assets/js/modal-alerts.js"></script>
     <script src="assets/js/auth.js"></script>
     <script>
       /* ========== SIDE DRAWER FUNCTIONS ========== */
@@ -1832,7 +1834,7 @@ Kabupaten Maluku Barat Daya</textarea
 
         if (user) {
           container.innerHTML =
-            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
+            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="showConfirm(\'Yakin ingin keluar?\', function(confirmed){if(confirmed){window.EkinAuth.logout();closeSideDrawer();}}, \'Konfirmasi Keluar\');">' +
             '<i class="fas fa-sign-out-alt"></i> Keluar' +
             "</a>";
         } else {
@@ -1901,7 +1903,7 @@ Kabupaten Maluku Barat Daya</textarea
           showToast("SYSTEM ACTIVATED!");
           unlockApp();
         } else {
-          alert("ACCESS DENIED: KODE LISENSI SALAH!");
+          showLicenseError();
         }
       }
 
@@ -1918,7 +1920,7 @@ Kabupaten Maluku Barat Daya</textarea
           navigator.clipboard
             .writeText(deviceId)
             .then(() => {
-              alert("ID tersalin, kirimkan ke admin 082292964110");
+              showCopySuccess();
             })
             .catch(() => {
               fallbackCopy(deviceId);
@@ -1937,9 +1939,9 @@ Kabupaten Maluku Barat Daya</textarea
         textarea.select();
         try {
           document.execCommand("copy");
-          alert("ID tersalin, kirimkan ke admin 082292964110");
+          showCopySuccess();
         } catch (err) {
-          alert("Gagal menyalin. Silakan salin secara manual.");
+          showCopyFailed();
         }
         document.body.removeChild(textarea);
       }
@@ -1977,7 +1979,7 @@ Kabupaten Maluku Barat Daya</textarea
       function checkLoginAccess() {
         const user = getCurrentLoginUser();
         if (!user) {
-          alert("Harap login terlebih dahulu!");
+          showLoginRequired();
           window.location.href = "login.html";
         }
       }
@@ -2252,7 +2254,7 @@ Kabupaten Maluku Barat Daya</textarea
       async function saveReport() {
         const currentUser = getCurrentLoginUser();
         if (!currentUser) {
-          alert("Harap login terlebih dahulu untuk menyimpan laporan!");
+          showLoginRequired();
           window.location.href = "login.html";
           return;
         }
@@ -2313,7 +2315,7 @@ Kabupaten Maluku Barat Daya</textarea
         };
 
         if (!report.title) {
-          alert("Isi judul laporan sebelum menyimpan.");
+          showFieldRequired("judul laporan");
           return;
         }
 
@@ -2351,9 +2353,7 @@ Kabupaten Maluku Barat Daya</textarea
                 // Lanjut ke loop untuk hapus lebih banyak
               }
             }
-            return alert(
-              "Penyimpanan gagal: ruang penyimpanan penuh. Silakan hapus beberapa laporan secara manual.",
-            );
+            return showStorageQuotaExceeded();
           } else {
             throw err;
           }
@@ -2705,7 +2705,7 @@ Kabupaten Maluku Barat Daya</textarea
         const kab = document.getElementById("in-kab").value.trim();
         const kota = document.getElementById("in-kota").value.trim();
         if (!instansi || !kab) {
-          alert("Harap isi instansi dan kabupaten!");
+          showFieldRequired("instansi dan kabupaten");
           return;
         }
         document.getElementById("kop-inputs").style.display = "none";
@@ -2837,7 +2837,7 @@ Kabupaten Maluku Barat Daya</textarea
         const nama = document.getElementById("in-ttd-nama").value.trim();
         const jabatan = document.getElementById("in-ttd-jabatan").value.trim();
         if (!nama || !jabatan) {
-          alert("Harap isi nama dan jabatan tanda tangan!");
+          showFieldRequired("nama dan jabatan tanda tangan");
           return;
         }
         document.getElementById("ttd-inputs").style.display = "none";
@@ -2878,7 +2878,7 @@ Kabupaten Maluku Barat Daya</textarea
         const nip = document.getElementById("in-nip").value.trim();
         const jabatan = document.getElementById("in-jabatan").value.trim();
         if (!nama || !nip) {
-          alert("Harap isi nama dan NIP!");
+          showFieldRequired("nama dan NIP");
           return;
         }
         document.getElementById("identitas-inputs").style.display = "none";
@@ -3106,7 +3106,11 @@ Kabupaten Maluku Barat Daya</textarea
 
         if (typeof html2pdf === "undefined") {
           hideLoading();
-          alert("Gagal memuat library PDF. Periksa koneksi internet.");
+          showAlert(
+            "Gagal memuat library PDF. Periksa koneksi internet.",
+            "Library Error",
+            "error",
+          );
           return;
         }
 
@@ -3127,7 +3131,11 @@ Kabupaten Maluku Barat Daya</textarea
           await html2pdf().set(opt).from(element).save();
           showToast("PDF Berhasil Dibuat!");
         } catch (err) {
-          alert("Gagal membuat PDF: " + err.message);
+          showAlert(
+            "Gagal membuat PDF: " + err.message,
+            "Export Error",
+            "error",
+          );
         } finally {
           hideLoading();
         }

@@ -1056,6 +1056,8 @@
         background: rgba(239, 68, 68, 0.25);
       }
     </style>
+    <script src="assets/js/modal-dialog.js"></script>
+    <script src="assets/js/modal-alerts.js"></script>
   </head>
   <body data-auth-init>
     <nav class="navbar animate__animated animate__fadeInDown">
@@ -1344,7 +1346,7 @@
 
           if (!user) {
             console.warn("No user session found on rekapan.html");
-            alert("Harap login terlebih dahulu untuk mengakses fitur rekapan!");
+            showLoginRequired();
             window.location.href = "login.html";
             return;
           }
@@ -1354,8 +1356,10 @@
           );
         } catch (error) {
           console.error("Error checking login:", error);
-          alert(
+          showAlert(
             "Terjadi kesalahan saat memverifikasi login. Silakan refresh halaman.",
+            "Error",
+            "error",
           );
           window.location.href = "login.html";
         }
@@ -1452,15 +1456,21 @@
 
         try {
           const saved = await savePdfFile(blob, options.filename);
-          alert(
-            saved
-              ? "PDF Berhasil Diunduh!"
-              : "PDF dibuat, silakan simpan dari tampilan PDF.",
-          );
+          if (saved) {
+            showReportExportSuccess();
+          } else {
+            showAlert(
+              "PDF dibuat, silakan simpan dari tampilan PDF.",
+              "Export Info",
+              "info",
+            );
+          }
         } catch (err) {
           console.error(err);
-          alert(
+          showAlert(
             "Gagal ekspor PDF. Pastikan koneksi internet tersedia atau gunakan browser Android dengan dukungan download.",
+            "Export Error",
+            "error",
           );
         }
       }
@@ -1820,7 +1830,7 @@
 
         if (user) {
           container.innerHTML =
-            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="if(confirm(\'Yakin ingin keluar?\')){window.EkinAuth.logout();closeSideDrawer();}">' +
+            '<a href="login.html" class="side-drawer-auth-btn keluar" onclick="showConfirm(\'Yakin ingin keluar?\', function(confirmed){if(confirmed){window.EkinAuth.logout();closeSideDrawer();}}, \'Konfirmasi Keluar\');">' +
             '<i class="fas fa-sign-out-alt"></i> Keluar' +
             "</a>";
         } else {
