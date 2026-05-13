@@ -1148,7 +1148,7 @@
       });
 
       function downloadAPK() {
-        const apkUrl = "base.apk";
+        const apkUrl = "E-kinerja.apk";
         fetch(apkUrl)
           .then((response) => {
             if (!response.ok) {
@@ -1160,7 +1160,7 @@
             const downloadLink = document.createElement("a");
             const url = URL.createObjectURL(blob);
             downloadLink.href = url;
-            downloadLink.download = "base.apk";
+            downloadLink.download = "E-kinerja.apk";
             downloadLink.style.display = "none";
             document.body.appendChild(downloadLink);
             downloadLink.click();
@@ -1173,7 +1173,7 @@
           })
           .catch(() => {
             showStatus(
-              "⚠️ Gagal mengunduh APK. Pastikan file base.apk tersedia di server.",
+              "⚠️ Gagal mengunduh APK. Pastikan file E-kinerja.apk tersedia di server.",
               "error",
             );
           });
