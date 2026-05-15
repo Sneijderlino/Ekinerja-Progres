@@ -227,12 +227,12 @@ body.profile-popup-open {
   inset: 0;
   z-index: 100100;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   min-height: 100vh;
-  padding: 20px;
-  padding-top: max(20px, env(safe-area-inset-top, 0));
-  padding-bottom: calc(140px + env(safe-area-inset-bottom, 0));
+  padding: 0;
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
   background: radial-gradient(circle at top center, rgba(59, 130, 246, 0.06), transparent 35%), rgba(4, 9, 24, 0.88);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -252,7 +252,8 @@ body.profile-popup-open {
 
 .profile-popup-card {
   width: min(640px, 100%);
-  max-height: calc(100vh - 180px);
+  max-width: 640px;
+  max-height: calc(100vh - 32px);
   border-radius: 28px;
   background: linear-gradient(180deg, rgba(8, 19, 44, 0.98), rgba(5, 11, 28, 0.99));
   border: 1px solid rgba(59, 130, 246, 0.22);
@@ -263,6 +264,7 @@ body.profile-popup-open {
   opacity: 0;
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
   box-sizing: border-box;
+  margin: auto;
 }
 
 .profile-popup-overlay.open .profile-popup-card {
@@ -539,13 +541,15 @@ body.profile-popup-open {
   }
   .profile-popup-card {
     width: 100%;
-    max-height: calc(100vh - 140px);
+    max-height: calc(100vh - env(safe-area-inset-top, 20px) - env(safe-area-inset-bottom, 20px));
     padding: 16px;
     border-radius: 18px;
+    margin: auto;
   }
   .profile-popup-overlay {
-    padding: 12px;
-    padding-bottom: calc(125px + env(safe-area-inset-bottom, 0));
+    padding: 10px 8px;
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0));
+    align-items: stretch;
   }
   .profile-popup-header {
     gap: 10px;
@@ -584,10 +588,16 @@ body.profile-popup-open {
     font-size: 0.85rem;
   }
   .profile-popup-actions {
+    flex-direction: column;
     gap: 10px;
     margin-top: 10px;
+    align-items: stretch;
   }
   .profile-popup-link {
+    min-width: 0;
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 100%;
     padding: 10px 12px;
     font-size: 0.85rem;
   }
@@ -633,9 +643,14 @@ body.profile-popup-open {
   }
   .profile-popup-actions {
     flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
   }
   .profile-popup-link {
+    min-width: 0;
+    flex: 1 1 auto;
     width: 100%;
+    max-width: 100%;
     justify-content: center;
   }
 }
