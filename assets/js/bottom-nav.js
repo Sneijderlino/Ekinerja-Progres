@@ -100,6 +100,9 @@
       '<div class="profile-popup-row"><span class="profile-popup-label">Email</span><span class="profile-popup-value">' + (user.email || '-') + '</span></div>';
 
     actionsEl.innerHTML =
+      '<button type="button" class="profile-popup-link profile-popup-my-nav" id="profilePopupMyNav">' +
+      '  <i class="fas fa-user-circle"></i> Saya' +
+      '</button>' +
       '<button type="button" class="profile-popup-link" id="profilePopupChangePhoto">' +
       '  <i class="fas fa-camera"></i> Ubah Foto' +
       '</button>' +
@@ -110,6 +113,7 @@
 
     var changePhotoBtn = document.getElementById('profilePopupChangePhoto');
     var logoutBtn = document.getElementById('profilePopupLogout');
+    var myNavBtn = document.getElementById('profilePopupMyNav');
     var fileInput = document.getElementById('profilePopupPhotoInput');
 
     if (changePhotoBtn && fileInput) {
@@ -141,6 +145,16 @@
         localStorage.removeItem('ekin_session');
         closeProfilePopup();
         window.location.href = 'login.html';
+      });
+    }
+
+    if (myNavBtn) {
+      myNavBtn.addEventListener('click', function() {
+        var profileNav = document.querySelector('.bottom-nav-link[data-nav="profil"]');
+        if (profileNav) {
+          setActiveBottomNav(profileNav);
+        }
+        closeProfilePopup();
       });
     }
   }
