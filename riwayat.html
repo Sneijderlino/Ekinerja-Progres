@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Riwayat Laporan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="assets/css/index.css" />
+    <link rel="stylesheet" href="assets/css/bottom-nav.css" />
+    <style>
+      /* Theme variables copied from index.html for exact color parity */
+      :root{
+        --bg: #060912;
+        --surface: #111827;
+        --primary: #3b82f6;
+        --secondary: #2dd4bf;
+        --accent: #f59e0b;
+        --text: #f8fafc;
+        --text-dim: #94a3b8;
+        --border: rgba(255,255,255,0.06);
+        --glass: rgba(17,24,39,0.7);
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--bg);
+        background-image: radial-gradient(circle at 10% 20%, rgba(59,130,246,0.12) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(45,212,191,0.08) 0%, transparent 40%);
+        min-height: 100vh;
+        color: var(--text);
+        margin: 0; padding: 0; overflow-x: hidden;
+      }
+
+      main { padding: 28px; max-width: 980px; margin: 28px auto; background: linear-gradient(180deg, rgba(17,24,39,0.92), rgba(17,24,39,0.88)); border-radius: 18px; border: 1px solid rgba(59,130,246,0.08); box-shadow: 0 20px 60px rgba(2,6,23,0.6); }
+      .page-header { display:flex; align-items:flex-end; gap:12px; margin-bottom:12px; }
+      .page-header h1 { margin:0; font-size:1.4rem; color:var(--text); }
+      .page-intro { margin:8px 0 18px; color:var(--text-dim); }
+
+      .saved-report-toolbar {
+        display:flex;
+        gap:10px;
+        margin-bottom:14px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(17,24,39,0.96);
+        border: 1px solid rgba(255,255,255,0.12);
+      }
+      .saved-report-toolbar input,
+      .saved-report-toolbar select {
+        padding:12px 14px;
+        border-radius:12px;
+        border:1px solid rgba(255,255,255,0.18);
+        background: rgba(17,24,39,0.96);
+        color: var(--text);
+        min-width: 0;
+        font-weight: 600;
+      }
+      .saved-report-toolbar input::placeholder {
+        color: rgba(248,250,252,0.85);
+      }
+      .saved-report-toolbar select {
+        color: var(--text);
+        background: rgba(17,24,39,0.96);
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+      }
+      .saved-report-toolbar select option {
+        color: #f8fafc;
+        background: #111827;
+      }
+      .saved-report-toolbar input:focus,
+      .saved-report-toolbar select:focus {
+        outline:none;
+        box-shadow: 0 0 0 6px rgba(59,130,246,0.18);
+        border-color:var(--primary);
+        background: rgba(255,255,255,0.18);
+      }
+
+      .saved-report-list { display:grid; gap:12px; }
+      .saved-report-card {
+        padding:14px;
+        border-radius:12px;
+        background: rgba(17,24,39,0.96);
+        border:1px solid rgba(255,255,255,0.12);
+        display:grid;
+        grid-template-columns:1fr auto;
+        align-items:center;
+        gap:12px;
+        color: #f8fafc !important;
+      }
+      .saved-report-card * {
+        color: #f8fafc !important;
+      }
+      .saved-report-card button,
+      .saved-report-card a {
+        color: inherit !important;
+      }
+      .report-title { margin:0; font-weight:800; color: #f8fafc !important; }
+      .saved-report-card .meta { color:#f8fafc !important; font-size:0.95rem; }
+      .saved-report-actions { display:flex; gap:10px; }
+      .saved-report-actions button { padding:8px 12px; border-radius:999px; border:none; font-weight:700; color:#fff; background: linear-gradient(135deg, var(--primary), #06b6d4); box-shadow:0 8px 20px rgba(59,130,246,0.12); cursor:pointer; }
+      .saved-report-actions .delete-report { background: linear-gradient(135deg,#ef4444 0%, #dc2626 100%); }
+
+      .btn-back { display:none; position:fixed; top:14px; right:14px; z-index:9999; padding:10px 14px; border-radius:999px; color:#fff; background: linear-gradient(135deg,var(--primary),var(--secondary)); border:none; }
+
+      @media (max-width:780px){ .saved-report-toolbar{flex-direction:column;} .saved-report-actions button{width:100%;} }
+
+      /* preview offscreen until activated */
+      .preview-stage{ position:absolute; top:-9999px; left:-9999px; width:210mm; height:auto; opacity:0; pointer-events:none; }
+      .fullscreen-active .preview-stage{ position:fixed; inset:0; z-index:9998; opacity:1; pointer-events:auto; background:#fff; overflow:auto; }
+      .fullscreen-active .canvas-a4{ width:100vw!important; min-height:100vh!important; padding:15mm!important; box-shadow:none!important; }
+      .fullscreen-active .btn-back{ display:block!important; }
+    </style>
+  </head>
+  <body id="main-body">
+  <button class="btn-back" onclick="togglePreview()">← KEMBALI EDIT</button>
+    <main>
+      <header style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <a href="index.html" style="text-decoration:none;color:var(--text-dim);font-weight:600;">← Kembali</a>
+        <h1>Riwayat Laporan</h1>
+      </header>
+
+      <section class="section-card" id="saved-reports-section">
+        <div class="saved-report-toolbar">
+          <input type="text" id="report-search" placeholder="Cari laporan..." />
+          <select id="report-filter">
+            <option value="all">Semua</option>
+            <option value="nama">Nama</option>
+            <option value="nip">NIP</option>
+            <option value="jabatan">Jabatan</option>
+            <option value="instansi">Instansi</option>
+          </select>
+        </div>
+
+        <div id="saved-reports" class="saved-report-list">
+          <p style="color:#64748b;margin:0">Memuat daftar laporan tersimpan...</p>
+        </div>
+      </section>
+    
+      <div id="pdf-loading-overlay" style="display: none">
+        <div class="spinner"></div>
+        <div style="letter-spacing: 3px; font-weight: bold; font-size: 0.8rem">MEMBUAT PDF...</div>
+      </div>
+
+      <div class="preview-stage">
+        <div class="canvas-a4" id="printable-area">
+          <header class="report-header">
+            <img id="out-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Lambang_Kabupaten_Maluku_Barat_Daya.png/150px-Lambang_Kabupaten_Maluku_Barat_Daya.png" class="report-logo" />
+            <div class="header-text">
+              <h2 id="out-instansi"></h2>
+              <h2 id="out-kab">KABUPATEN MALUKU BARAT DAYA</h2>
+              <p id="out-kota" style="font-weight: normal; margin-bottom: 0">Kota Tiakur</p>
+              <p id="out-gmail" style="font-weight: normal; font-size: 0.9rem; margin-top: 0"></p>
+            </div>
+          </header>
+          <div class="line-double"></div>
+
+          <div style="text-align: center; margin: 20px 0">
+            <h3 id="out-report-title" class="report-main-title">LAPORAN E-KINERJA HARIAN</h3>
+            <p id="out-report-subtitle" class="report-subtitle">Koordinasi Dengan Kepala Regu Terkait Informasi Kejadian Kebakaran</p>
+          </div>
+
+          <table class="data-table">
+            <tr>
+              <td width="100">Nama</td>
+              <td width="15">:</td>
+              <td id="out-nama" style="font-weight: bold">-</td>
+            </tr>
+            <tr>
+              <td>NIP</td>
+              <td>:</td>
+              <td id="out-nip">-</td>
+            </tr>
+            <tr>
+              <td>Jabatan</td>
+              <td>:</td>
+              <td id="out-jabatan">-</td>
+            </tr>
+            <tr>
+              <td>Tanggal</td>
+              <td>:</td>
+              <td id="out-tanggal" style="font-weight: bold; color: #000000">-</td>
+            </tr>
+          </table>
+
+          <div class="report-body">
+            <p style="font-weight: bold">Uraian Kegiatan:</p>
+            <p id="out-uraian" style="text-align: justify; min-height: 60px; white-space: pre-line; margin-bottom: 10px;">-</p>
+            <div id="out-task-list-container" style="margin-top: 8px; display: none">
+              <p style="font-weight: bold; margin-bottom: 8px">Daftar Kegiatan:</p>
+              <ol id="out-task-list" style="margin: 0 0 0 20px; padding: 0"></ol>
+            </div>
+            <p style="font-weight: bold; margin-top: 10px; margin-bottom: 8px">Foto Bukti:</p>
+            <div class="photo-grid">
+              <div class="box-photo" id="img1">Foto 1</div>
+              <div class="box-photo" id="img2">Foto 2</div>
+              <div class="box-photo" id="img3">Foto 3</div>
+              <div class="box-photo" id="img4">Foto 4</div>
+            </div>
+          </div>
+
+          <div class="ttd-block hidden" id="out-ttd-block">
+            <div class="ttd-place-date">
+              <span id="out-ttd-tempat">Tiakur</span>,
+              <span id="out-ttd-tanggal">-</span>
+            </div>
+
+            <div class="ttd-jabatan" id="out-ttd-jabatan">Kepala Satuan Polisi Pamong Praja<br />Dan Pemadam Kebakaran<br />Kabupaten Maluku Barat Daya</div>
+            <div class="ttd-image-box" id="out-ttd-image"><span class="ttd-image-placeholder">(Tanda tangan)</span></div>
+            <div class="ttd-spasi"></div>
+            <div class="ttd-nama" id="out-ttd-nama">-</div>
+            <div class="ttd-pangkat" id="out-ttd-pangkat">-</div>
+            <div class="ttd-nip">NIP. <span id="out-ttd-nip">-</span></div>
+          </div>
+          <div style="clear: both"></div>
+        </div>
+      </div>
+    </main>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="assets/js/modal-dialog.js"></script>
+    <script src="assets/js/modal-alerts.js"></script>
+    <script src="assets/js/index.js"></script>
+    <script src="assets/js/bottom-nav.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (typeof renderSavedReports === 'function') {
+          renderSavedReports();
+        }
+        var style = document.createElement('style');
+        style.innerHTML = '.edit-report{display:none !important;}';
+        document.head.appendChild(style);
+        function removeEditButtons(){ document.querySelectorAll('.edit-report').forEach(function(btn){ btn.remove(); }); }
+        setTimeout(removeEditButtons, 250);
+        var container = document.getElementById('saved-reports');
+        if (container) {
+          var mo = new MutationObserver(removeEditButtons);
+          mo.observe(container, { childList:true, subtree:true });
+        }
+      });
+    </script>
+  </body>
+</html>

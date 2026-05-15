@@ -932,9 +932,21 @@ function previewReport(index) {
     const report = savedReports[index];
     if (!report) return;
     renderPreviewData(report);
-    if (!document.body.classList.contains('fullscreen-active')) {
+    if (!document.getElementById('main-body').classList.contains('fullscreen-active')) {
         togglePreview();
     }
+}
+
+function previewReportOnRiwayat(index) {
+    const savedReports = getSavedReports();
+    const report = savedReports[index];
+    if (!report) return;
+    renderPreviewData(report);
+    const mainBody = document.getElementById('main-body');
+    if (mainBody && !mainBody.classList.contains('fullscreen-active')) {
+        mainBody.classList.add('fullscreen-active');
+    }
+    window.scrollTo(0, 0);
 }
 
 function editReport(index) {
@@ -1249,7 +1261,13 @@ function renderSavedReports() {
         previewBtn.type = 'button';
         previewBtn.className = 'preview-report';
         previewBtn.innerText = 'Preview Laporan';
-        previewBtn.onclick = () => previewReport(index);
+        previewBtn.onclick = () => {
+            if (window.location.href.includes('riwayat.html')) {
+                previewReportOnRiwayat(index);
+            } else {
+                previewReport(index);
+            }
+        };
 
         const editBtn = document.createElement('button');
         editBtn.type = 'button';
