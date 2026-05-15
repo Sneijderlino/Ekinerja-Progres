@@ -96,11 +96,8 @@
       '    <p class="profile-popup-email">' + (user.email || 'Tidak tersedia') + '</p>' +
       '  </div>' +
       '</div>' +
-      '<div class="profile-popup-row"><span class="profile-popup-label">ID Akun</span><span class="profile-popup-value">' + (user.id || '-') + '</span></div>' +
       '<div class="profile-popup-row"><span class="profile-popup-label">Username</span><span class="profile-popup-value">' + (user.username || '-') + '</span></div>' +
-      '<div class="profile-popup-row"><span class="profile-popup-label">Email</span><span class="profile-popup-value">' + (user.email || '-') + '</span></div>' +
-      '<div class="profile-popup-label">Status</div>' +
-      '<div class="profile-popup-status">Akun aktif</div>';
+      '<div class="profile-popup-row"><span class="profile-popup-label">Email</span><span class="profile-popup-value">' + (user.email || '-') + '</span></div>';
 
     actionsEl.innerHTML =
       '<button type="button" class="profile-popup-link" id="profilePopupChangePhoto">' +
@@ -287,7 +284,7 @@
       '        <span class="bottom-nav-icon"><i class="fab fa-google-drive"></i></span>' +
       '        <span class="bottom-nav-text">Google Drive</span>' +
       '      </a>' +
-      '      <a href="Profil-admin.html" class="bottom-nav-link" data-nav="profil">' +
+      '      <a href="#" class="bottom-nav-link" data-nav="profil" aria-label="Profil Pengguna">' +
       '        <span class="bottom-nav-icon"><i class="fas fa-user"></i></span>' +
       '        <span class="bottom-nav-text">Profil</span>' +
       '      </a>' +
