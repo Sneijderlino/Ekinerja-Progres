@@ -101,7 +101,7 @@
 
     actionsEl.innerHTML =
       '<button type="button" class="profile-popup-link profile-popup-my-nav" id="profilePopupMyNav">' +
-      '  <i class="fas fa-user-circle"></i> Saya' +
+      '  <i class="fas fa-user-circle"></i> Kembali Ke Dash' +
       '</button>' +
       '<button type="button" class="profile-popup-link" id="profilePopupChangePhoto">' +
       '  <i class="fas fa-camera"></i> Ubah Foto' +
