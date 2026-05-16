@@ -296,7 +296,7 @@
       '      </div>' +
       '      <a href="https://drive.google.com/drive/u/0/my-drive" class="bottom-nav-link" data-nav="drive" target="_blank" rel="noopener">' +
       '        <span class="bottom-nav-icon"><i class="fab fa-google-drive"></i></span>' +
-      '        <span class="bottom-nav-text">Google Drive</span>' +
+      '        <span class="bottom-nav-text" style="display:block;text-align:center">Google Drive</span>' +
       '      </a>' +
       '      <a href="#" class="bottom-nav-link" data-nav="profil" aria-label="Profil Pengguna">' +
       '        <span class="bottom-nav-icon"><i class="fas fa-user"></i></span>' +
