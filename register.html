@@ -411,32 +411,20 @@
     <script>
       AOS.init({ duration: 800, once: true });
 
+      // PASTIKAN URL INI sesuai dengan URL Web App hasil Deploy Anda
+      const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbymZlvZgsCvjpIRaSDlN_3NGZ9aTSRErEy7BDPVvlpN0x_eGxWa1AHhCdI54krE8KSevw/exec'; 
+
       // Mobile nav
       window.EkinToggleMobileNav = function() {
         document.getElementById('mobileNav').classList.toggle('open');
       };
 
-      // Toast
-      function showToast(msg, type = 'error') {
-        const toast = document.getElementById('toast');
-        toast.textContent = msg;
-        toast.className = 'toast ' + (type === 'success' ? 'success' : '');
-        requestAnimationFrame(() => toast.classList.add('show'));
-        setTimeout(() => toast.classList.remove('show'), 3000);
-      }
-
-      // LocalStorage helpers
-      function getUsers() {
-        try { return JSON.parse(localStorage.getItem('ekin_users')) || []; } catch { return []; }
-      }
-      function saveUsers(users) {
-        localStorage.setItem('ekin_users', JSON.stringify(users));
-      }
-
       // Register handler
-      document.getElementById('registerForm').addEventListener('submit', function(e) {
+      document.getElementById('registerForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
         const username = document.getElementById('regUsername').value.trim();
         const email = document.getElementById('regEmail').value.trim();
         const password = document.getElementById('regPassword').value;
@@ -455,28 +443,39 @@
           return;
         }
 
-        const users = getUsers();
-        const exists = users.find(u =>
-          u.email.toLowerCase() === email.toLowerCase() ||
-          u.username.toLowerCase() === username.toLowerCase()
-        );
-        if (exists) {
-          showToast('Email atau username sudah terdaftar!');
-          return;
+        // Aktifkan status loading
+        submitBtn.disabled = true;
+        showLoading('Mendaftarkan akun Anda...');
+
+        try {
+          const res = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'register',
+              username: username,
+              gmail: email,
+              password: password
+            })
+          });
+
+          const result = await res.json();
+
+          if (result.success) {
+            showToast(result.message, 'success');
+            // Simpan sesi sementara jika perlu atau langsung redirect
+            this.reset();
+            setTimeout(() => window.location.href = 'login.html', 2000);
+          } else {
+            showToast(result.message);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          showToast('Gagal terhubung ke server. Pastikan URL Script benar.');
+        } finally {
+          // Kembalikan tombol ke keadaan semula
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
         }
-
-        const newUser = {
-          id: 'u_' + Date.now().toString(36),
-          username: username,
-          email: email.toLowerCase(),
-          password: password,
-          createdAt: new Date().toISOString(),
-        };
-        users.push(newUser);
-        saveUsers(users);
-
-        showToast('Pendaftaran berhasil! Mengalihkan ke login...', 'success');
-        setTimeout(() => window.location.href = 'login.html', 1500);
       });
 
       // Redirect if already logged in

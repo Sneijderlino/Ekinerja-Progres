@@ -9,7 +9,7 @@
 function showLicenseError(keyInput) {
     showAlert(
         'Kode lisensi yang Anda masukkan salah. Silakan coba lagi atau hubungi admin.',
-        'AKSES DITOLAK',
+        'Akses Ditolak',
         'error'
     );
 }
@@ -17,7 +17,7 @@ function showLicenseError(keyInput) {
 function showLicenseSuccess() {
     showAlert(
         'Sistem berhasil diaktifkan! Selamat menggunakan aplikasi E-Kinerja.',
-        'AKTIVASI BERHASIL',
+        'Aktivasi Berhasil',
         'success'
     );
 }

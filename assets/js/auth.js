@@ -81,18 +81,16 @@
     login(credentials) {
       const { identifier, password } = credentials;
       if (!identifier || !password) {
-        return { success: false, message: 'Email/Username dan password harus diisi!' };
+        return { success: false, message: 'Gmail dan password harus diisi!' };
       }
 
       const users = getUsers();
       const user = users.find(
-        (u) =>
-          u.email.toLowerCase() === identifier.toLowerCase() ||
-          u.username.toLowerCase() === identifier.toLowerCase()
+        (u) => u.email.toLowerCase() === identifier.toLowerCase()
       );
 
       if (!user) {
-        return { success: false, message: 'Akun tidak ditemukan!' };
+        return { success: false, message: 'data user tidak ada di data base, silahkan buat akun baru' };
       }
       if (user.password !== password) {
         return { success: false, message: 'Password salah!' };
@@ -106,7 +104,7 @@
       clearSession();
       // Dispatch event untuk update UI
       window.dispatchEvent(new CustomEvent('authStateChanged'));
-      window.location.href = 'index.html';
+      setTimeout(() => window.location.href = 'index.html', 500);
     },
 
     isLoggedIn() {
@@ -135,7 +133,7 @@
       const users = getUsers();
       const idx = users.findIndex((u) => u.email.toLowerCase() === email.toLowerCase());
       if (idx === -1) {
-        return { success: false, message: 'Email tidak ditemukan!' };
+        return { success: false, message: 'data user tidak ada di data base, silahkan buat akun baru' };
       }
 
       users[idx].password = newPassword;
@@ -173,46 +171,6 @@
      UI HELPERS
      ======================== */
 
-  function showToast(message, type = 'info') {
-    const existing = document.getElementById('ekin-toast');
-    if (existing) existing.remove();
-
-    const toast = document.createElement('div');
-    toast.id = 'ekin-toast';
-    toast.style.cssText = `
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: ${type === 'error' ? 'linear-gradient(135deg, #ef4444, #dc2626)' : type === 'success' ? 'linear-gradient(135deg, #22c55e, #15803d)' : 'linear-gradient(135deg, #0f9fff, #0d7fcc)'};
-      color: white;
-      padding: 14px 28px;
-      border-radius: 50px;
-      z-index: 10001;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
-      font-weight: 700;
-      font-size: 0.9rem;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-      opacity: 0;
-      pointer-events: none;
-      text-align: center;
-      max-width: 90vw;
-      word-break: break-word;
-    `;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-
-    requestAnimationFrame(() => {
-      toast.style.transform = 'translateX(-50%) translateY(0)';
-      toast.style.opacity = '1';
-    });
-
-    setTimeout(() => {
-      toast.style.transform = 'translateX(-50%) translateY(100px)';
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 400);
-    }, 3000);
-  }
 
   // Auto-init when DOM is ready if data-auth-init attribute is present on body
   document.addEventListener('DOMContentLoaded', function () {

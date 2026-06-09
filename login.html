@@ -314,15 +314,15 @@
       /* Toast */
       .toast {
         position: fixed;
-        bottom: 30px;
+        top: 50%;
         left: 50%;
-        transform: translateX(-50%) translateY(100px);
+        transform: translate(-50%, -50%) scale(0.8);
         background: linear-gradient(135deg, #ef4444, #dc2626);
         color: white;
         padding: 14px 28px;
         border-radius: 50px;
         z-index: 10001;
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
         font-weight: 700;
         font-size: 0.9rem;
         box-shadow: 0 8px 25px rgba(0,0,0,0.3);
@@ -332,7 +332,7 @@
         max-width: 90vw;
       }
       .toast.show {
-        transform: translateX(-50%) translateY(0);
+        transform: translate(-50%, -50%) scale(1);
         opacity: 1;
       }
       .toast.success {
@@ -341,6 +341,11 @@
 
       /* Forgot password section */
       .hidden { display: none !important; }
+
+      /* Fix agar alert, modal, toast, dan loading muncul di depan kotak login/lupa password */
+      .modal-overlay, .loading-overlay, .modal-container, .modal-dialog, #toast-container {
+        z-index: 999999 !important;
+      }
     </style>
     <script src="assets/js/modal-dialog.js"></script>
     <script src="assets/js/modal-alerts.js"></script>
@@ -380,11 +385,11 @@
 
           <form id="loginForm">
             <div class="form-group">
-              <label for="loginIdentifier">Email atau Username</label>
+              <label for="loginIdentifier">Gmail</label>
               <input
                 type="text"
                 id="loginIdentifier"
-                placeholder="Masukkan email atau username"
+                placeholder="Masukkan alamat Gmail"
                 required
               />
             </div>
@@ -465,27 +470,14 @@
     <script>
       AOS.init({ duration: 800, once: true });
 
+      // PASTIKAN URL INI sama dengan yang ada di register.html
+      const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbymZlvZgsCvjpIRaSDlN_3NGZ9aTSRErEy7BDPVvlpN0x_eGxWa1AHhCdI54krE8KSevw/exec';
+
       // Mobile nav
       window.EkinToggleMobileNav = function() {
         document.getElementById('mobileNav').classList.toggle('open');
       };
 
-      // Toast
-      function showToast(msg, type = 'error') {
-        const toast = document.getElementById('toast');
-        toast.textContent = msg;
-        toast.className = 'toast ' + (type === 'success' ? 'success' : '');
-        requestAnimationFrame(() => toast.classList.add('show'));
-        setTimeout(() => toast.classList.remove('show'), 3000);
-      }
-
-      // LocalStorage helpers
-      function getUsers() {
-        try { return JSON.parse(localStorage.getItem('ekin_users')) || []; } catch { return []; }
-      }
-      function saveUsers(users) {
-        localStorage.setItem('ekin_users', JSON.stringify(users));
-      }
       function saveSession(user) {
         localStorage.setItem('ekin_session', JSON.stringify(user));
       }
@@ -509,84 +501,93 @@
       }
 
       // Login handler
-      document.getElementById('loginForm').addEventListener('submit', function(e) {
+      document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
         const identifier = document.getElementById('loginIdentifier').value.trim();
         const password = document.getElementById('loginPassword').value;
 
         if (!identifier || !password) {
-          showToast('Semua field wajib diisi!');
+          showToast('Gmail dan password wajib diisi!');
           return;
         }
 
-        const users = getUsers();
-        const user = users.find(u =>
-          u.email.toLowerCase() === identifier.toLowerCase() ||
-          u.username.toLowerCase() === identifier.toLowerCase()
-        );
+        submitBtn.disabled = true;
+        showLoading('Memverifikasi akun...');
 
-        if (!user) {
-          showToast('Akun tidak ditemukan!');
-          return;
-        }
-        if (user.password !== password) {
-          showToast('Password salah!');
-          return;
-        }
+        try {
+          const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'login',
+              gmail: identifier, // Script GS mengecek kolom Gmail/Username
+              password: password
+            })
+          });
 
-        saveSession(user);
-        showToast('Login berhasil! Mengalihkan...', 'success');
-        // Dispatch event untuk update UI di halaman lain
-        window.dispatchEvent(new CustomEvent('authStateChanged'));
-        setTimeout(() => window.location.href = 'index.html', 1000);
+          const result = await response.json();
+
+          if (window.hideLoading) hideLoading(); // Tutup loading modal
+
+          if (result.success) {
+            saveSession(result.user || { username: identifier, email: identifier });
+            showToast('Login berhasil! Mengalihkan...', 'success');
+            window.dispatchEvent(new CustomEvent('authStateChanged'));
+            setTimeout(() => window.location.href = 'index.html', 500);
+          } else {
+            showToast(result.message);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          if (window.hideLoading) hideLoading();
+          showToast('Gagal terhubung ke server.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        }
       });
 
       // Forgot password handler
-      let forgotUserIndex = -1;
-
-      document.getElementById('forgotForm').addEventListener('submit', function(e) {
+      document.getElementById('forgotForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
-        const newPass = document.getElementById('newPassword').value;
-        const confirmPass = document.getElementById('confirmNewPassword').value;
+        
+        const email = document.getElementById('forgotEmail').value.trim();
+        const forgotBtn = document.getElementById('forgotBtn');
+        
+        if (!email) {
+          showToast('Email harus diisi!');
+          return;
+        }
 
-        if (forgotUserIndex === -1) {
-          // Step 1: Find user
-          if (!email) {
-            showToast('Email harus diisi!');
-            return;
-          }
-          const users = getUsers();
-          const idx = users.findIndex(u => u.email.toLowerCase() === email);
-          if (idx === -1) {
-            showToast('Email tidak ditemukan!');
-            return;
-          }
-          forgotUserIndex = idx;
-          document.getElementById('newPasswordGroup').classList.remove('hidden');
-          document.getElementById('forgotBtn').innerHTML = '<i class="fas fa-save"></i> Simpan Password Baru';
-          showToast('Akun ditemukan! Silakan masukkan password baru.', 'success');
-        } else {
-          // Step 2: Reset password
-          if (!newPass || !confirmPass) {
-            showToast('Password baru dan konfirmasi harus diisi!');
-            return;
-          }
-          if (newPass !== confirmPass) {
-            showToast('Password baru dan konfirmasi tidak cocok!');
-            return;
-          }
-          if (newPass.length < 6) {
-            showToast('Password minimal 6 karakter!');
-            return;
-          }
+        forgotBtn.disabled = true;
+        if (window.showLoading) showLoading('Mencari akun...');
+        forgotBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...';
 
-          const users = getUsers();
-          users[forgotUserIndex].password = newPass;
-          saveUsers(users);
-          showToast('Password berhasil diubah! Silakan login.', 'success');
-          setTimeout(() => showLogin(), 1500);
-          forgotUserIndex = -1;
+        try {
+          const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'forgot',
+              gmail: email
+            })
+          });
+          const result = await response.json();
+          
+          if (window.hideLoading) hideLoading();
+
+          if (result.success) {
+            showToast(result.message, 'success');
+          } else {
+            showToast(result.message);
+          }
+        } catch (error) {
+          if (window.hideLoading) hideLoading();
+          showToast('Gagal terhubung ke server.');
+        } finally {
+          forgotBtn.disabled = false;
+          forgotBtn.innerHTML = '<i class="fas fa-search"></i> Cari Akun';
         }
       });
 

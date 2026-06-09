@@ -105,8 +105,8 @@ function unlockApp() {
             document.getElementById('loading-overlay').style.display = 'none';
             // Check login setelah loading selesai
             checkLoginAccess();
-        }, 500);
-    }, 1500);
+        }, 300);
+    }, 400);
 }
 
 // Helper function untuk mendapatkan current user (robust dengan fallback)

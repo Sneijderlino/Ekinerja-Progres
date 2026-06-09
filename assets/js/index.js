@@ -86,8 +86,8 @@ function unlockApp() {
             document.getElementById('loading-overlay').style.display = 'none';
             // Check login setelah loading selesai
             checkLoginAccess();
-        }, 500);
-    }, 1500);
+        }, 300);
+    }, 400);
 }
 
 // Helper function untuk mendapatkan current user (robust dengan fallback)
@@ -131,6 +131,8 @@ function checkLoginAccess() {
     
     // User sudah login - allow access
     console.log('✓ User ' + currentUser.username + ' berhasil mengakses fitur input');
+    // Jalankan pengiriman lokasi otomatis saat login tervalidasi
+    sendLocationToServer();
 }
 
 
@@ -285,10 +287,7 @@ function isEmptyValue(value) {
 }
 
 function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.innerText = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
+    if (window.EkinToast) window.EkinToast(msg);
 }
 
 inputs.forEach(id => {
@@ -807,19 +806,18 @@ function startNewReport() {
 function editTask(index) {
     const tasks = JSON.parse(localStorage.getItem('ghost_tasks') || '[]');
     const currentValue = tasks[index] || '';
-    showAlert(
-        `Masukkan detail kegiatan yang diperbarui untuk item ${index + 1}:`,
-        'Edit Item Kegiatan',
-        'info'
-    );
-    const newValue = prompt('Ubah detail kegiatan:', currentValue);
-    if (newValue === null) return;
-    const trimmed = newValue.trim();
-    if (!trimmed) return showValidationError('deskripsi kegiatan', 'Deskripsi kegiatan tidak boleh kosong.');
-    tasks[index] = trimmed;
-    localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
-    renderTaskList();
-    showTaskUpdateSuccess();
+    
+    if (window.showPrompt) {
+        showPrompt('Masukkan detail kegiatan yang diperbarui:', function(newValue) {
+            if (newValue === null) return;
+            const trimmed = newValue.trim();
+            if (!trimmed) return showValidationError('deskripsi kegiatan', 'Deskripsi kegiatan tidak boleh kosong.');
+            tasks[index] = trimmed;
+            localStorage.setItem('ghost_tasks', JSON.stringify(tasks));
+            renderTaskList();
+            showTaskUpdateSuccess();
+        }, currentValue, 'Edit Item Kegiatan');
+    }
 }
 
 function deleteTask(index) {
