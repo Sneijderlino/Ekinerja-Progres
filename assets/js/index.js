@@ -1159,8 +1159,9 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
         pagebreak: {
-            mode: ['css', 'legacy'],
-            avoid: ['.ttd-block', '.ttd-image-box']
+            mode: ['css'],
+            before: ['.force-page-break'],
+            avoid: ['.signature-block', '.ttd-block', '.ttd-image-box']
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
@@ -1557,9 +1558,9 @@ function prepareTtdPageBreak(element) {
     const pageHeight = elementRect.width * (297 / 210);
     const contentHeight = elementRect.width * (257 / 210);
     const ttdTop = ttdRect.top - elementRect.top;
-    const positionOnPage = ttdTop % pageHeight;
+    const pageStart = Math.floor(ttdTop / pageHeight) * pageHeight;
 
-    if (positionOnPage + ttdRect.height > contentHeight) {
+    if (ttdTop + ttdRect.height > pageStart + contentHeight) {
         ttdBlock.classList.add('force-page-break');
     }
 
@@ -1675,8 +1676,9 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
         pagebreak: {
-            mode: ['css', 'legacy'],
-            avoid: ['.ttd-block', '.ttd-image-box']
+            mode: ['css'],
+            before: ['.force-page-break'],
+            avoid: ['.signature-block', '.ttd-block', '.ttd-image-box']
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };

@@ -786,6 +786,7 @@
       .signature-block,
       .ttd-block {
         margin-top: 20px;
+        clear: both;
         display: block;
         width: 100%;
         box-sizing: border-box;
@@ -796,8 +797,8 @@
       }
       .signature-block.force-page-break,
       .ttd-block.force-page-break {
-        break-before: page;
-        page-break-before: always;
+        break-before: page !important;
+        page-break-before: always !important;
       }
 
       .ttd-col {
@@ -828,17 +829,37 @@
       }
 
       .ttd-image-box img {
-        max-width: 110px;
-        max-height: 110px;
+        max-width: 100px;
+        max-height: 100px;
         object-fit: contain;
+      }
+
+      .report-body,
+      .report-body p,
+      .report-body ol,
+      .photo-grid,
+      #out-uraian {
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+      }
+
+      .box-photo {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .ttd-nip {
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: keep-all;
       }
 
       .signature-block .qr-code,
       .signature-block img.qr-code,
       .ttd-block .qr-code,
       .ttd-block img.qr-code {
-        max-width: 110px;
-        max-height: 110px;
+        max-width: 100px;
+        max-height: 100px;
         object-fit: contain;
       }
 
@@ -3133,9 +3154,10 @@ Kabupaten Maluku Barat Daya</textarea
         const ttdRect = ttdBlock.getBoundingClientRect();
         const pageHeight = elementRect.width * (297 / 210);
         const contentHeight = elementRect.width * (257 / 210);
-        const positionOnPage = (ttdRect.top - elementRect.top) % pageHeight;
+        const ttdTop = ttdRect.top - elementRect.top;
+        const pageStart = Math.floor(ttdTop / pageHeight) * pageHeight;
 
-        if (positionOnPage + ttdRect.height > contentHeight) {
+        if (ttdTop + ttdRect.height > pageStart + contentHeight) {
           ttdBlock.classList.add("force-page-break");
         }
 
@@ -3174,8 +3196,9 @@ Kabupaten Maluku Barat Daya</textarea
           image: { type: "jpeg", quality: 0.98 },
           html2canvas: { scale: 2, useCORS: true, logging: false },
           pagebreak: {
-            mode: ["css", "legacy"],
-            avoid: [".ttd-block", ".ttd-image-box"],
+            mode: ["css"],
+            before: [".force-page-break"],
+            avoid: [".signature-block", ".ttd-block", ".ttd-image-box"],
           },
           jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         };

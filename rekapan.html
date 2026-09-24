@@ -454,12 +454,14 @@
       }
 
       @page {
-        margin-bottom: 2cm;
+        size: A4 portrait;
+        margin: 1.5cm 1.5cm 2.5cm 1.5cm;
       }
 
       .signature-block,
       .ttd-block {
-        margin-top: 40px;
+        margin-top: 20px;
+        clear: both;
         margin-left: auto;
         margin-right: 0;
         width: 50%;
@@ -467,8 +469,8 @@
         text-align: left;
         font-size: 11pt;
         color: #000;
-        line-height: 1.5;
-        display: inline-block;
+        line-height: 1.2;
+        display: block;
         float: right;
         box-sizing: border-box;
         break-inside: avoid !important;
@@ -480,15 +482,15 @@
       }
       .signature-block.force-page-break,
       .ttd-block.force-page-break {
-        break-before: page;
-        page-break-before: always;
+        break-before: page !important;
+        page-break-before: always !important;
       }
       .ttd-place-date {
-        margin-bottom: 8px;
+        margin-bottom: 4px;
       }
       .ttd-jabatan {
-        margin-bottom: 8px;
-        line-height: 1.4;
+        margin-bottom: 4px;
+        line-height: 1.2;
       }
       .ttd-image-box {
         margin: 15px 0;
@@ -504,6 +506,7 @@
       }
       .ttd-image-box img {
         max-width: 100%;
+        max-width: 100px;
         max-height: 100px;
         object-fit: contain;
         display: block;
@@ -515,7 +518,24 @@
         font-style: italic;
       }
       .ttd-spasi {
-        height: 10px;
+        height: 6px;
+      }
+      .ttd-nip {
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: keep-all;
+      }
+      .report-body,
+      .report-body p,
+      .report-body ol,
+      .photo-grid,
+      #out-uraian {
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+      }
+      .box-photo {
+        page-break-inside: avoid;
+        break-inside: avoid;
       }
       .ttd-nama {
         font-weight: bold;
@@ -1594,21 +1614,24 @@
           const canvas = renderArea.querySelector(".canvas-a4");
           const canvasRect = canvas.getBoundingClientRect();
           const ttdRect = ttdBlock.getBoundingClientRect();
-          const pageHeight = canvasRect.width * (277 / 210);
-          const positionOnPage = (ttdRect.top - canvasRect.top) % pageHeight;
-          if (positionOnPage + ttdRect.height > pageHeight) {
+          const pageHeight = canvasRect.width * (297 / 210);
+          const contentHeight = canvasRect.width * (257 / 210);
+          const ttdTop = ttdRect.top - canvasRect.top;
+          const pageStart = Math.floor(ttdTop / pageHeight) * pageHeight;
+          if (ttdTop + ttdRect.height > pageStart + contentHeight) {
             ttdBlock.classList.add("force-page-break");
           }
         }
 
         const options = {
-          margin: 10,
+          margin: [15, 15, 25, 15],
           filename: `E-Kinerja_${data.nama}_${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}.pdf`,
           image: { type: "jpeg", quality: 0.98 },
           html2canvas: { scale: 2, useCORS: true, logging: false },
           pagebreak: {
-            mode: ["css", "legacy"],
-            avoid: [".ttd-block", ".ttd-image-box"],
+            mode: ["css"],
+            before: [".force-page-break"],
+            avoid: [".signature-block", ".ttd-block", ".ttd-image-box"],
           },
           jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         };

@@ -683,6 +683,20 @@ input:hover, textarea:hover {
     object-fit: cover;
 }
 
+.report-body,
+.report-body p,
+.report-body ol,
+.photo-grid,
+#out-uraian {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+}
+
+.box-photo {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
 /* Utility */
 .hidden { display: none !important; }
 
@@ -695,6 +709,7 @@ input:hover, textarea:hover {
 .signature-block,
 .ttd-block {
     margin-top: 20px;
+    clear: both;
     margin-left: auto;
     margin-right: 0;
     width: 50%;
@@ -711,8 +726,8 @@ input:hover, textarea:hover {
 }
 .signature-block.force-page-break,
 .ttd-block.force-page-break {
-    break-before: page;
-    page-break-before: always;
+    break-before: page !important;
+    page-break-before: always !important;
 }
 .ttd-place-date {
     margin-bottom: 4px;
@@ -731,8 +746,8 @@ input:hover, textarea:hover {
 }
 .ttd-image-box img {
     max-width: 100%;
-    max-width: 110px;
-    max-height: 110px;
+    max-width: 100px;
+    max-height: 100px;
     object-fit: contain;
     display: block;
     margin: 0 auto;
@@ -743,8 +758,8 @@ input:hover, textarea:hover {
 .ttd-block img.qr-code {
     width: auto;
     height: auto;
-    max-width: 110px;
-    max-height: 110px;
+    max-width: 100px;
+    max-height: 100px;
     object-fit: contain;
 }
 .signature-block > *,
@@ -771,6 +786,9 @@ input:hover, textarea:hover {
 }
 .ttd-nip {
     margin-bottom: 0;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: keep-all;
 }
 
 /* Clearfix agar layout tidak rusak karena float */
