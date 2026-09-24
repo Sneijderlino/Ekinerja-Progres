@@ -724,6 +724,20 @@ input:hover, textarea:hover {
     break-inside: avoid !important;
     page-break-inside: avoid !important;
 }
+
+@media (max-width: 768px) {
+    .signature-block,
+    .ttd-block {
+        width: 100%;
+        max-width: 100%;
+        float: none;
+        margin-top: 12px;
+    }
+
+    .ttd-image-box {
+        min-height: 28px;
+    }
+}
 .signature-block.force-page-break,
 .ttd-block.force-page-break {
     break-before: page !important;

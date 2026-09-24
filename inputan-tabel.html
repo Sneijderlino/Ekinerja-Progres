@@ -3150,14 +3150,27 @@ Kabupaten Maluku Barat Daya</textarea
         }
 
         ttdBlock.classList.remove("force-page-break");
+
         const elementRect = element.getBoundingClientRect();
         const ttdRect = ttdBlock.getBoundingClientRect();
+        const isMobile =
+          window.matchMedia("(max-width: 768px)").matches ||
+          /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
         const pageHeight = elementRect.width * (297 / 210);
         const contentHeight = elementRect.width * (257 / 210);
+        const safeContentHeight = isMobile
+          ? elementRect.width * (248 / 210)
+          : contentHeight;
+        const safeGap = isMobile ? 24 : 12;
         const ttdTop = ttdRect.top - elementRect.top;
         const pageStart = Math.floor(ttdTop / pageHeight) * pageHeight;
+        const ttdBottom = ttdTop + ttdRect.height;
+        const pageLimit = pageStart + safeContentHeight - safeGap;
 
-        if (ttdTop + ttdRect.height > pageStart + contentHeight) {
+        if (
+          ttdBottom > pageLimit ||
+          (isMobile && ttdTop > pageStart + safeContentHeight * 0.72)
+        ) {
           ttdBlock.classList.add("force-page-break");
         }
 
