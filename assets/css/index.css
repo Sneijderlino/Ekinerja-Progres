@@ -688,12 +688,13 @@ input:hover, textarea:hover {
 
 /* Tanda Tangan Block */
 @page {
-    margin-bottom: 2cm;
+    size: A4 portrait;
+    margin: 1.5cm 1.5cm 2.5cm 1.5cm;
 }
 
 .signature-block,
 .ttd-block {
-    margin-top: 40px;
+    margin-top: 20px;
     margin-left: auto;
     margin-right: 0;
     width: 50%;
@@ -701,8 +702,8 @@ input:hover, textarea:hover {
     text-align: left;
     font-size: 11pt;
     color: #000;
-    line-height: 1.5;
-    display: inline-block;
+    line-height: 1.2;
+    display: block;
     float: right;
     box-sizing: border-box;
     break-inside: avoid !important;
@@ -714,15 +715,15 @@ input:hover, textarea:hover {
     page-break-before: always;
 }
 .ttd-place-date {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 .ttd-jabatan {
-    margin-bottom: 8px;
-    line-height: 1.4;
+    margin-bottom: 4px;
+    line-height: 1.2;
 }
 .ttd-image-box {
-    margin: 15px 0;
-    min-height: 50px;
+    margin: 8px 0;
+    min-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -730,10 +731,21 @@ input:hover, textarea:hover {
 }
 .ttd-image-box img {
     max-width: 100%;
-    max-height: 100px;
+    max-width: 110px;
+    max-height: 110px;
     object-fit: contain;
     display: block;
     margin: 0 auto;
+}
+.signature-block .qr-code,
+.signature-block img.qr-code,
+.ttd-block .qr-code,
+.ttd-block img.qr-code {
+    width: auto;
+    height: auto;
+    max-width: 110px;
+    max-height: 110px;
+    object-fit: contain;
 }
 .signature-block > *,
 .ttd-block > * {
@@ -746,19 +758,19 @@ input:hover, textarea:hover {
     font-style: italic;
 }
 .ttd-spasi {
-    height: 10px;
+    height: 6px;
 }
 .ttd-nama {
     font-weight: bold;
     text-decoration: underline;
     text-decoration-thickness: 2px;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 .ttd-pangkat {
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 .ttd-nip {
-    margin-bottom: 4px;
+    margin-bottom: 0;
 }
 
 /* Clearfix agar layout tidak rusak karena float */

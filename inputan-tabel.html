@@ -779,15 +779,17 @@
       }
 
       @page {
-        margin-bottom: 2cm;
+        size: A4 portrait;
+        margin: 1.5cm 1.5cm 2.5cm 1.5cm;
       }
 
       .signature-block,
       .ttd-block {
-        margin-top: 10px;
-        display: inline-block;
+        margin-top: 20px;
+        display: block;
         width: 100%;
         box-sizing: border-box;
+        line-height: 1.2;
         float: right;
         break-inside: avoid !important;
         page-break-inside: avoid !important;
@@ -805,29 +807,38 @@
       .ttd-place-date {
         text-align: left;
         font-size: 10pt;
-        margin-bottom: 10px;
+        margin-bottom: 4px;
       }
 
       .ttd-jabatan {
         font-size: 9pt;
         font-weight: normal;
-        line-height: 1.3;
-        margin-bottom: 15px;
+        line-height: 1.2;
+        margin-bottom: 4px;
       }
 
       .ttd-image-box {
-        min-height: 50px;
+        min-height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 5px;
+        margin: 8px 0;
         text-align: center;
         width: 100%;
       }
 
       .ttd-image-box img {
-        max-width: 80px;
-        max-height: 50px;
+        max-width: 110px;
+        max-height: 110px;
+        object-fit: contain;
+      }
+
+      .signature-block .qr-code,
+      .signature-block img.qr-code,
+      .ttd-block .qr-code,
+      .ttd-block img.qr-code {
+        max-width: 110px;
+        max-height: 110px;
         object-fit: contain;
       }
 
@@ -3120,10 +3131,11 @@ Kabupaten Maluku Barat Daya</textarea
         ttdBlock.classList.remove("force-page-break");
         const elementRect = element.getBoundingClientRect();
         const ttdRect = ttdBlock.getBoundingClientRect();
-        const pageHeight = elementRect.width * (190 / 297);
+        const pageHeight = elementRect.width * (297 / 210);
+        const contentHeight = elementRect.width * (257 / 210);
         const positionOnPage = (ttdRect.top - elementRect.top) % pageHeight;
 
-        if (positionOnPage + ttdRect.height > pageHeight) {
+        if (positionOnPage + ttdRect.height > contentHeight) {
           ttdBlock.classList.add("force-page-break");
         }
 
@@ -3157,7 +3169,7 @@ Kabupaten Maluku Barat Daya</textarea
         const filename = `${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}_E-Kinerja_${nama}.pdf`;
 
         const opt = {
-          margin: 10,
+          margin: [15, 15, 25, 15],
           filename: filename,
           image: { type: "jpeg", quality: 0.98 },
           html2canvas: { scale: 2, useCORS: true, logging: false },
@@ -3165,7 +3177,7 @@ Kabupaten Maluku Barat Daya</textarea
             mode: ["css", "legacy"],
             avoid: [".ttd-block", ".ttd-image-box"],
           },
-          jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         };
 
         try {

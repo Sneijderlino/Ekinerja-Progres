@@ -1154,7 +1154,7 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
     const element = document.getElementById('printable-area');
     const cleanupTtdPageBreak = prepareTtdPageBreak(element);
     const opt = {
-        margin: 10,
+        margin: [15, 15, 25, 15],
         filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
@@ -1554,11 +1554,12 @@ function prepareTtdPageBreak(element) {
     ttdBlock.classList.remove('force-page-break');
     const elementRect = element.getBoundingClientRect();
     const ttdRect = ttdBlock.getBoundingClientRect();
-    const pageHeight = elementRect.width * (277 / 210);
+    const pageHeight = elementRect.width * (297 / 210);
+    const contentHeight = elementRect.width * (257 / 210);
     const ttdTop = ttdRect.top - elementRect.top;
     const positionOnPage = ttdTop % pageHeight;
 
-    if (positionOnPage + ttdRect.height > pageHeight) {
+    if (positionOnPage + ttdRect.height > contentHeight) {
         ttdBlock.classList.add('force-page-break');
     }
 
@@ -1669,7 +1670,7 @@ async function exportToPDF() {
 const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_E-Kinerja_${nama}.pdf`;
 
     const opt = {
-        margin: 10,
+        margin: [15, 15, 25, 15],
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
