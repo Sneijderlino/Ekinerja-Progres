@@ -778,8 +778,24 @@
         text-align: center;
       }
 
+      @page {
+        margin-bottom: 2cm;
+      }
+
+      .signature-block,
       .ttd-block {
         margin-top: 10px;
+        display: inline-block;
+        width: 100%;
+        box-sizing: border-box;
+        float: right;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      .signature-block.force-page-break,
+      .ttd-block.force-page-break {
+        break-before: page;
+        page-break-before: always;
       }
 
       .ttd-col {
@@ -1078,7 +1094,7 @@
       }
     </style>
     <link rel="stylesheet" href="assets/css/bottom-nav.css" />
-</head>
+  </head>
   <body id="main-body">
     <div id="license-screen">
       <div class="license-card">
@@ -1762,7 +1778,7 @@ Kabupaten Maluku Barat Daya</textarea
             </tbody>
           </table>
 
-          <div class="ttd-block" id="out-ttd-block">
+          <div class="signature-block ttd-block" id="out-ttd-block">
             <div class="ttd-place-date">
               <span id="out-ttd-tempat">Tiakur</span>,
               <span id="out-ttd-tanggal">-</span>
@@ -3095,6 +3111,25 @@ Kabupaten Maluku Barat Daya</textarea
         });
       }
 
+      function prepareTtdPageBreak(element) {
+        const ttdBlock = document.getElementById("out-ttd-block");
+        if (!element || !ttdBlock || ttdBlock.classList.contains("hidden")) {
+          return () => {};
+        }
+
+        ttdBlock.classList.remove("force-page-break");
+        const elementRect = element.getBoundingClientRect();
+        const ttdRect = ttdBlock.getBoundingClientRect();
+        const pageHeight = elementRect.width * (190 / 297);
+        const positionOnPage = (ttdRect.top - elementRect.top) % pageHeight;
+
+        if (positionOnPage + ttdRect.height > pageHeight) {
+          ttdBlock.classList.add("force-page-break");
+        }
+
+        return () => ttdBlock.classList.remove("force-page-break");
+      }
+
       // --- PDF EXPORT ---
       async function exportToPDF() {
         showLoading("Mengekspor PDF...");
@@ -3116,6 +3151,7 @@ Kabupaten Maluku Barat Daya</textarea
         }
 
         const element = document.getElementById("printable-area");
+        const cleanupTtdPageBreak = prepareTtdPageBreak(element);
         const nama =
           document.getElementById("in-nama").value || "Laporan-Tabel";
         const filename = `${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}_E-Kinerja_${nama}.pdf`;
@@ -3125,6 +3161,10 @@ Kabupaten Maluku Barat Daya</textarea
           filename: filename,
           image: { type: "jpeg", quality: 0.98 },
           html2canvas: { scale: 2, useCORS: true, logging: false },
+          pagebreak: {
+            mode: ["css", "legacy"],
+            avoid: [".ttd-block", ".ttd-image-box"],
+          },
           jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
         };
 
@@ -3138,6 +3178,7 @@ Kabupaten Maluku Barat Daya</textarea
             "error",
           );
         } finally {
+          cleanupTtdPageBreak();
           hideLoading();
         }
       }
@@ -3378,5 +3419,5 @@ Kabupaten Maluku Barat Daya</textarea
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
     <script src="assets/js/bottom-nav.js"></script>
-</body>
+  </body>
 </html>
