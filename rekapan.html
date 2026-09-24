@@ -453,19 +453,35 @@
         color: var(--text-light);
       }
 
+      @page {
+        margin-bottom: 2cm;
+      }
+
+      .signature-block,
       .ttd-block {
         margin-top: 40px;
-        float: right;
+        margin-left: auto;
+        margin-right: 0;
         width: 50%;
         max-width: 260px;
         text-align: left;
         font-size: 11pt;
         color: #000;
         line-height: 1.5;
+        display: inline-block;
+        float: right;
+        box-sizing: border-box;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
         background: white;
         padding: 16px;
         border-radius: 12px;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      }
+      .signature-block.force-page-break,
+      .ttd-block.force-page-break {
+        break-before: page;
+        page-break-before: always;
       }
       .ttd-place-date {
         margin-bottom: 8px;
@@ -512,6 +528,11 @@
       }
       .ttd-nip {
         margin-bottom: 4px;
+      }
+      .signature-block > *,
+      .ttd-block > * {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
       }
 
       .ttd-block.hidden {
@@ -1059,7 +1080,7 @@
     <script src="assets/js/modal-dialog.js"></script>
     <script src="assets/js/modal-alerts.js"></script>
     <link rel="stylesheet" href="assets/css/bottom-nav.css" />
-</head>
+  </head>
   <body data-auth-init>
     <nav class="navbar animate__animated animate__fadeInDown">
       <div class="nav-container">
@@ -1298,7 +1319,7 @@
             <div class="box-photo" id="img4">Foto 4</div>
           </div>
 
-          <div class="ttd-block hidden" id="out-ttd-block">
+          <div class="signature-block ttd-block hidden" id="out-ttd-block">
             <div class="ttd-place-date">
               <span id="out-ttd-tempat">Tiakur</span>,
               <span id="out-ttd-tanggal">-</span>
@@ -1550,14 +1571,45 @@
                             }
                         </div>
                     </div>
+                    ${
+                      data.ttdEnabled && data.ttd
+                        ? `
+                    <div class="signature-block ttd-block">
+                        <div class="ttd-place-date">${data.ttd.tempat || "Tiakur"}, ${data.ttd.tanggal || "-"}</div>
+                        <div class="ttd-jabatan">${(data.ttd.jabatan || "-").replace(/\n/g, "<br>")}</div>
+                        <div class="ttd-image-box">${data.ttd.image ? `<img src="${data.ttd.image}" alt="Tanda Tangan">` : '<span class="ttd-image-placeholder">(Tanda tangan)</span>'}</div>
+                        <div class="ttd-spasi"></div>
+                        <div class="ttd-nama">${data.ttd.nama || "-"}</div>
+                        <div class="ttd-pangkat">${data.ttd.pangkat || "-"}</div>
+                        <div class="ttd-nip">NIP. ${data.ttd.nip || "-"}</div>
+                    </div>
+                    `
+                        : ""
+                    }
                 </div>
             `;
+
+        const ttdBlock = renderArea.querySelector(".ttd-block");
+        if (ttdBlock) {
+          const canvas = renderArea.querySelector(".canvas-a4");
+          const canvasRect = canvas.getBoundingClientRect();
+          const ttdRect = ttdBlock.getBoundingClientRect();
+          const pageHeight = canvasRect.width * (277 / 210);
+          const positionOnPage = (ttdRect.top - canvasRect.top) % pageHeight;
+          if (positionOnPage + ttdRect.height > pageHeight) {
+            ttdBlock.classList.add("force-page-break");
+          }
+        }
 
         const options = {
           margin: 10,
           filename: `E-Kinerja_${data.nama}_${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}.pdf`,
           image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
+          html2canvas: { scale: 2, useCORS: true, logging: false },
+          pagebreak: {
+            mode: ["css", "legacy"],
+            avoid: [".ttd-block", ".ttd-image-box"],
+          },
           jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         };
 
@@ -1871,5 +1923,5 @@
       });
     </script>
     <script src="assets/js/bottom-nav.js"></script>
-</body>
+  </body>
 </html>
