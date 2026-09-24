@@ -687,31 +687,15 @@ input:hover, textarea:hover {
 .hidden { display: none !important; }
 
 /* Tanda Tangan Block */
-@page {
-    margin-bottom: 2cm;
-}
-
-.signature-block,
 .ttd-block {
     margin-top: 40px;
-    margin-left: auto;
-    margin-right: 0;
+    float: right;
     width: 50%;
     max-width: 260px;
     text-align: left;
     font-size: 11pt;
     color: #000;
     line-height: 1.5;
-    display: inline-block;
-    float: right;
-    box-sizing: border-box;
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-}
-.signature-block.force-page-break,
-.ttd-block.force-page-break {
-    break-before: page;
-    page-break-before: always;
 }
 .ttd-place-date {
     margin-bottom: 8px;
@@ -735,11 +719,6 @@ input:hover, textarea:hover {
     display: block;
     margin: 0 auto;
 }
-.signature-block > *,
-.ttd-block > * {
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-}
 .ttd-image-placeholder {
     color: #94a3b8;
     font-size: 0.85rem;
@@ -762,7 +741,6 @@ input:hover, textarea:hover {
 }
 
 /* Clearfix agar layout tidak rusak karena float */
-.signature-block::after,
 .ttd-block::after {
     content: "";
     display: table;
@@ -772,7 +750,6 @@ input:hover, textarea:hover {
 @media print {
     .ttd-block {
         page-break-inside: avoid;
-        break-inside: avoid;
         float: right;
         width: 50%;
         max-width: 260px;
