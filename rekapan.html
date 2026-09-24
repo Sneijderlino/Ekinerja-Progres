@@ -453,44 +453,26 @@
         color: var(--text-light);
       }
 
-      @page {
-        size: A4 portrait;
-        margin: 1.5cm 1.5cm 2.5cm 1.5cm;
-      }
-
-      .signature-block,
       .ttd-block {
-        margin-top: 20px;
-        clear: both;
-        margin-left: auto;
-        margin-right: 0;
+        margin-top: 40px;
+        float: right;
         width: 50%;
         max-width: 260px;
         text-align: left;
         font-size: 11pt;
         color: #000;
-        line-height: 1.2;
-        display: block;
-        float: right;
-        box-sizing: border-box;
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
+        line-height: 1.5;
         background: white;
         padding: 16px;
         border-radius: 12px;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
       }
-      .signature-block.force-page-break,
-      .ttd-block.force-page-break {
-        break-before: page !important;
-        page-break-before: always !important;
-      }
       .ttd-place-date {
-        margin-bottom: 4px;
+        margin-bottom: 8px;
       }
       .ttd-jabatan {
-        margin-bottom: 4px;
-        line-height: 1.2;
+        margin-bottom: 8px;
+        line-height: 1.4;
       }
       .ttd-image-box {
         margin: 15px 0;
@@ -506,7 +488,6 @@
       }
       .ttd-image-box img {
         max-width: 100%;
-        max-width: 100px;
         max-height: 100px;
         object-fit: contain;
         display: block;
@@ -518,24 +499,7 @@
         font-style: italic;
       }
       .ttd-spasi {
-        height: 6px;
-      }
-      .ttd-nip {
-        white-space: nowrap;
-        overflow-wrap: normal;
-        word-break: keep-all;
-      }
-      .report-body,
-      .report-body p,
-      .report-body ol,
-      .photo-grid,
-      #out-uraian {
-        page-break-inside: auto !important;
-        break-inside: auto !important;
-      }
-      .box-photo {
-        page-break-inside: avoid;
-        break-inside: avoid;
+        height: 10px;
       }
       .ttd-nama {
         font-weight: bold;
@@ -548,11 +512,6 @@
       }
       .ttd-nip {
         margin-bottom: 4px;
-      }
-      .signature-block > *,
-      .ttd-block > * {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
       }
 
       .ttd-block.hidden {
@@ -1100,7 +1059,7 @@
     <script src="assets/js/modal-dialog.js"></script>
     <script src="assets/js/modal-alerts.js"></script>
     <link rel="stylesheet" href="assets/css/bottom-nav.css" />
-  </head>
+</head>
   <body data-auth-init>
     <nav class="navbar animate__animated animate__fadeInDown">
       <div class="nav-container">
@@ -1339,7 +1298,7 @@
             <div class="box-photo" id="img4">Foto 4</div>
           </div>
 
-          <div class="signature-block ttd-block hidden" id="out-ttd-block">
+          <div class="ttd-block hidden" id="out-ttd-block">
             <div class="ttd-place-date">
               <span id="out-ttd-tempat">Tiakur</span>,
               <span id="out-ttd-tanggal">-</span>
@@ -1591,60 +1550,14 @@
                             }
                         </div>
                     </div>
-                    ${
-                      data.ttdEnabled && data.ttd
-                        ? `
-                    <div class="signature-block ttd-block">
-                        <div class="ttd-place-date">${data.ttd.tempat || "Tiakur"}, ${data.ttd.tanggal || "-"}</div>
-                        <div class="ttd-jabatan">${(data.ttd.jabatan || "-").replace(/\n/g, "<br>")}</div>
-                        <div class="ttd-image-box">${data.ttd.image ? `<img src="${data.ttd.image}" alt="Tanda Tangan">` : '<span class="ttd-image-placeholder">(Tanda tangan)</span>'}</div>
-                        <div class="ttd-spasi"></div>
-                        <div class="ttd-nama">${data.ttd.nama || "-"}</div>
-                        <div class="ttd-pangkat">${data.ttd.pangkat || "-"}</div>
-                        <div class="ttd-nip">NIP. ${data.ttd.nip || "-"}</div>
-                    </div>
-                    `
-                        : ""
-                    }
                 </div>
             `;
 
-        const ttdBlock = renderArea.querySelector(".ttd-block");
-        if (ttdBlock) {
-          const canvas = renderArea.querySelector(".canvas-a4");
-          const canvasRect = canvas.getBoundingClientRect();
-          const ttdRect = ttdBlock.getBoundingClientRect();
-          const isMobile =
-            window.matchMedia("(max-width: 768px)").matches ||
-            /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-          const pageHeight = canvasRect.width * (297 / 210);
-          const contentHeight = canvasRect.width * (257 / 210);
-          const safeContentHeight = isMobile
-            ? canvasRect.width * (248 / 210)
-            : contentHeight;
-          const safeGap = isMobile ? 24 : 12;
-          const ttdTop = ttdRect.top - canvasRect.top;
-          const pageStart = Math.floor(ttdTop / pageHeight) * pageHeight;
-          const ttdBottom = ttdTop + ttdRect.height;
-          const pageLimit = pageStart + safeContentHeight - safeGap;
-          if (
-            ttdBottom > pageLimit ||
-            (isMobile && ttdTop > pageStart + safeContentHeight * 0.72)
-          ) {
-            ttdBlock.classList.add("force-page-break");
-          }
-        }
-
         const options = {
-          margin: [15, 15, 25, 15],
+          margin: 10,
           filename: `E-Kinerja_${data.nama}_${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}.pdf`,
           image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, logging: false },
-          pagebreak: {
-            mode: ["css"],
-            before: [".force-page-break"],
-            avoid: [".signature-block", ".ttd-block", ".ttd-image-box"],
-          },
+          html2canvas: { scale: 2, useCORS: true },
           jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         };
 
@@ -1958,5 +1871,5 @@
       });
     </script>
     <script src="assets/js/bottom-nav.js"></script>
-  </body>
+</body>
 </html>

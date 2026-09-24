@@ -778,28 +778,8 @@
         text-align: center;
       }
 
-      @page {
-        size: A4 portrait;
-        margin: 1.5cm 1.5cm 2.5cm 1.5cm;
-      }
-
-      .signature-block,
       .ttd-block {
-        margin-top: 20px;
-        clear: both;
-        display: block;
-        width: 50%;
-        max-width: 260px;
-        box-sizing: border-box;
-        line-height: 1.2;
-        float: right;
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-      }
-      .signature-block.force-page-break,
-      .ttd-block.force-page-break {
-        break-before: page !important;
-        page-break-before: always !important;
+        margin-top: 10px;
       }
 
       .ttd-col {
@@ -809,58 +789,29 @@
       .ttd-place-date {
         text-align: left;
         font-size: 10pt;
-        margin-bottom: 4px;
+        margin-bottom: 10px;
       }
 
       .ttd-jabatan {
         font-size: 9pt;
         font-weight: normal;
-        line-height: 1.2;
-        margin-bottom: 4px;
+        line-height: 1.3;
+        margin-bottom: 15px;
       }
 
       .ttd-image-box {
-        min-height: 40px;
+        min-height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 8px 0;
+        margin-bottom: 5px;
         text-align: center;
         width: 100%;
       }
 
       .ttd-image-box img {
-        max-width: 100px;
-        max-height: 100px;
-        object-fit: contain;
-      }
-
-      .report-body,
-      .report-body p,
-      .report-body ol,
-      .photo-grid,
-      #out-uraian {
-        page-break-inside: auto !important;
-        break-inside: auto !important;
-      }
-
-      .box-photo {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
-
-      .ttd-nip {
-        white-space: nowrap;
-        overflow-wrap: normal;
-        word-break: keep-all;
-      }
-
-      .signature-block .qr-code,
-      .signature-block img.qr-code,
-      .ttd-block .qr-code,
-      .ttd-block img.qr-code {
-        max-width: 100px;
-        max-height: 100px;
+        max-width: 80px;
+        max-height: 50px;
         object-fit: contain;
       }
 
@@ -1127,7 +1078,7 @@
       }
     </style>
     <link rel="stylesheet" href="assets/css/bottom-nav.css" />
-  </head>
+</head>
   <body id="main-body">
     <div id="license-screen">
       <div class="license-card">
@@ -1811,7 +1762,7 @@ Kabupaten Maluku Barat Daya</textarea
             </tbody>
           </table>
 
-          <div class="signature-block ttd-block" id="out-ttd-block">
+          <div class="ttd-block" id="out-ttd-block">
             <div class="ttd-place-date">
               <span id="out-ttd-tempat">Tiakur</span>,
               <span id="out-ttd-tanggal">-</span>
@@ -3144,40 +3095,6 @@ Kabupaten Maluku Barat Daya</textarea
         });
       }
 
-      function prepareTtdPageBreak(element) {
-        const ttdBlock = document.getElementById("out-ttd-block");
-        if (!element || !ttdBlock || ttdBlock.classList.contains("hidden")) {
-          return () => {};
-        }
-
-        ttdBlock.classList.remove("force-page-break");
-
-        const elementRect = element.getBoundingClientRect();
-        const ttdRect = ttdBlock.getBoundingClientRect();
-        const isMobile =
-          window.matchMedia("(max-width: 768px)").matches ||
-          /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-        const pageHeight = elementRect.width * (297 / 210);
-        const contentHeight = elementRect.width * (257 / 210);
-        const safeContentHeight = isMobile
-          ? elementRect.width * (248 / 210)
-          : contentHeight;
-        const safeGap = isMobile ? 24 : 12;
-        const ttdTop = ttdRect.top - elementRect.top;
-        const pageStart = Math.floor(ttdTop / pageHeight) * pageHeight;
-        const ttdBottom = ttdTop + ttdRect.height;
-        const pageLimit = pageStart + safeContentHeight - safeGap;
-
-        if (
-          ttdBottom > pageLimit ||
-          (isMobile && ttdTop > pageStart + safeContentHeight * 0.72)
-        ) {
-          ttdBlock.classList.add("force-page-break");
-        }
-
-        return () => ttdBlock.classList.remove("force-page-break");
-      }
-
       // --- PDF EXPORT ---
       async function exportToPDF() {
         showLoading("Mengekspor PDF...");
@@ -3199,22 +3116,16 @@ Kabupaten Maluku Barat Daya</textarea
         }
 
         const element = document.getElementById("printable-area");
-        const cleanupTtdPageBreak = prepareTtdPageBreak(element);
         const nama =
           document.getElementById("in-nama").value || "Laporan-Tabel";
         const filename = `${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}_E-Kinerja_${nama}.pdf`;
 
         const opt = {
-          margin: [15, 15, 25, 15],
+          margin: 10,
           filename: filename,
           image: { type: "jpeg", quality: 0.98 },
           html2canvas: { scale: 2, useCORS: true, logging: false },
-          pagebreak: {
-            mode: ["css"],
-            before: [".force-page-break"],
-            avoid: [".signature-block", ".ttd-block", ".ttd-image-box"],
-          },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
         };
 
         try {
@@ -3227,7 +3138,6 @@ Kabupaten Maluku Barat Daya</textarea
             "error",
           );
         } finally {
-          cleanupTtdPageBreak();
           hideLoading();
         }
       }
@@ -3468,5 +3378,5 @@ Kabupaten Maluku Barat Daya</textarea
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
     <script src="assets/js/bottom-nav.js"></script>
-  </body>
+</body>
 </html>

@@ -1152,17 +1152,11 @@ function exportSavedReportPDF(index) {
 
 const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_E-Kinerja_${report.nama || 'Laporan'}.pdf`;
     const element = document.getElementById('printable-area');
-    const cleanupTtdPageBreak = prepareTtdPageBreak(element);
     const opt = {
-        margin: [15, 15, 25, 15],
+        margin: 10,
         filename,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        pagebreak: {
-            mode: ['css'],
-            before: ['.force-page-break'],
-            avoid: ['.signature-block', '.ttd-block', '.ttd-image-box']
-        },
+        html2canvas: { scale: 2 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
@@ -1172,7 +1166,6 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         console.error(err);
         showAlert('Gagal ekspor PDF dari laporan tersimpan. Pastikan koneksi internet tersedia atau gunakan browser Android dengan dukungan download.', 'Gagal Ekspor PDF', 'error');
     }).finally(() => {
-        cleanupTtdPageBreak();
         hidePdfLoading();
         document.getElementById('out-nama').innerText = currentPreview.nama;
         document.getElementById('out-nip').innerText = currentPreview.nip;
@@ -1546,34 +1539,6 @@ function createPdfBlob(element, opt) {
     });
 }
 
-function prepareTtdPageBreak(element) {
-    const ttdBlock = document.getElementById('out-ttd-block');
-    if (!element || !ttdBlock || ttdBlock.classList.contains('hidden')) {
-        return () => {};
-    }
-
-    ttdBlock.classList.remove('force-page-break');
-
-    const elementRect = element.getBoundingClientRect();
-    const ttdRect = ttdBlock.getBoundingClientRect();
-    const isMobile = window.matchMedia('(max-width: 768px)').matches
-        || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-    const pageHeight = elementRect.width * (297 / 210);
-    const contentHeight = elementRect.width * (257 / 210);
-    const safeContentHeight = isMobile ? elementRect.width * (248 / 210) : contentHeight;
-    const safeGap = isMobile ? 24 : 12;
-    const ttdTop = ttdRect.top - elementRect.top;
-    const pageStart = Math.floor(ttdTop / pageHeight) * pageHeight;
-    const ttdBottom = ttdTop + ttdRect.height;
-    const pageLimit = pageStart + safeContentHeight - safeGap;
-
-    if (ttdBottom > pageLimit || (isMobile && ttdTop > pageStart + safeContentHeight * 0.72)) {
-        ttdBlock.classList.add('force-page-break');
-    }
-
-    return () => ttdBlock.classList.remove('force-page-break');
-}
-
 function downloadPdfBlob(blob, filename) {
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -1671,22 +1636,15 @@ async function exportToPDF() {
         showAlert('Elemen laporan tidak ditemukan. Silakan refresh halaman.', 'Error', 'error');
         return;
     }
-
-    const cleanupTtdPageBreak = prepareTtdPageBreak(element);
     
     const nama = document.getElementById('in-nama').value || 'Laporan-E-Kinerja';
 const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_E-Kinerja_${nama}.pdf`;
 
     const opt = {
-        margin: [15, 15, 25, 15],
+        margin: 10,
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        pagebreak: {
-            mode: ['css'],
-            before: ['.force-page-break'],
-            avoid: ['.signature-block', '.ttd-block', '.ttd-image-box']
-        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
@@ -1698,7 +1656,6 @@ const filename = `${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}_
         console.error('PDF Export Error:', err);
         showAlert('Gagal ekspor PDF: ' + (err.message || 'Terjadi kesalahan tidak terduga. Coba lagi.'), 'Export Error', 'error');
     } finally {
-        cleanupTtdPageBreak();
         hidePdfLoading();
     }
 }
